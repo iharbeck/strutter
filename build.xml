@@ -1,0 +1,118 @@
+<project name="strutter" default="all" basedir=".">
+
+	<property name="name" value="strutter" />
+	<property name="version" value="-0.4.1" />
+	
+	<property name="bin" value="WEB-INF/classes" />     
+	<property name="src" value="WEB-INF/src" />     
+	<property name="base" value="." />     
+	
+	
+	<target name="all" depends="binary,blank,full">
+	</target>
+		
+	<target name="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="${name}-?.?.?.jar"/>
+		 	<fileset dir="WEB-INF/lib" includes="${name}-?.?.?.jar"/>
+		 </delete>
+         <jar destfile="bin/${name}${version}.jar">
+         	<fileset dir="${bin}" >
+         	    <exclude name="**/sample**" />
+         		<exclude name="**/sample2**" />
+         		<exclude name="*" />
+         	</fileset>
+         	<fileset dir="${src}" >
+         	    <exclude name="**/sample**" />
+         		<exclude name="**/sample2**" />
+         		<exclude name="*" />
+         	</fileset>
+         </jar>
+	</target>
+	
+	<target name="binary" depends="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="${name}-bin*.zip"/>
+		 </delete>
+		
+		<zip destfile="bin/${name}-bin${version}.zip">
+			<zipfileset dir="doc" includes="doc.html" fullpath="doc/doc.html"/>
+			<zipfileset dir="bin" includes="${name}${version}.jar" fullpath="lib/${name}${version}.jar"/>
+			<zipfileset dir="WEB-INF/lib/" includes="htmlparser.jar" fullpath="lib/htmlparser.jar"/>
+		</zip>
+	</target>
+	
+	<target name="full" depends="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="${name}-full-**.war"/>
+		 </delete>
+		 <copy file="bin/${name}${version}.jar" todir="WEB-INF/lib/" />
+     	 <war destfile="bin/${name}-full${version}.war" webxml="WEB-INF/web.xml">
+           <fileset dir="${base}">
+           		<patternset refid="strutter.full"/>
+           		
+           		<!-- struts2 stuff -->
+           	    <patternset refid="webwork.configuration"/>
+           		<patternset refid="webwork.libs"/>
+           </fileset>
+         </war>
+    </target>
+		
+	<target name="blank" depends="jar">
+			 <delete>
+			 	<fileset dir="bin" includes="strutter-blank-*.war"/>
+			 </delete>
+	     	 <war destfile="bin/strutter-blank${version}.war" webxml="conf/web-blank.xml">
+	     	   <lib dir="bin">
+	     	 	  	<include name="${name}${version}.jar"/>
+	     	   </lib>
+	           <fileset dir="${base}">
+	           		<exclude name="**/build.xml"/>
+	           		<patternset refid="strutter.full"/>
+	           	
+	           	
+	           		<!-- struts2 stuff -->
+	           	    <patternset refid="webwork.configuration"/>
+	           		<patternset refid="webwork.libs"/>
+	           		
+	           		<!-- Sample stuff -->
+	           		<exclude name="sample**.jsp"/>
+	           		<exclude name="formless**.jsp"/>
+	           		<exclude name="spring**.jsp"/>
+	           		<exclude name="home**.jsp"/>
+	           		<exclude name="**/SampleAction**" />
+	           		<exclude name="**/FormlessAction**" />
+	           		<exclude name="**/SpringAction**" />
+	           		<exclude name="**/object**" />
+	           </fileset>
+	         </war>
+	 </target>
+	
+	<patternset id="strutter.full">
+		<exclude name="**/struts/**" />
+		<exclude name="**/struts2/**" />
+		<exclude name="**/bin**" />
+		<exclude name="**/conf**" />
+		<exclude name="**/work**" />
+		<exclude name="**/.settings**" />
+	</patternset>
+	
+	<patternset id="webwork.libs">
+		<exclude name="**/WEB-INF/lib/xwork.jar" />
+   		<exclude name="**/WEB-INF/lib/webwork-2.2.2.jar" />
+   		<exclude name="**/WEB-INF/lib/rife-continuations.jar" />
+   		<exclude name="**/WEB-INF/lib/oscore.jar" />
+   		<exclude name="**/WEB-INF/lib/ognl.jar" />
+   		<exclude name="**/WEB-INF/lib/freemarker.jar" />
+   		<exclude name="**/WEB-INF/lib/cglib-nodep.jar" />
+	</patternset>
+	
+	<patternset id="webwork.configuration">
+		<exclude name="**/sample2**" />
+   		<exclude name="**/xwork.xml" />
+   		<exclude name="**/webwork.properties" />
+   	
+   		<exclude name="**/home.jsp" />
+    </patternset>
+
+</project>
