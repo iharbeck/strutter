@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="autodetect">
+
+  <!-- Example Bean  -->
+<!-- <bean id="sample.action.SpringAction"
+		class="sample.action.SpringAction" dependency-check="none">  
+		<property name="mypar">
+            <value>99</value>
+        </property>
+    	 <property name="counterBean" ref="counterBean" /> 
+ 	</bean>
+
+    <bean id="counterBean" class="sample.object.CounterBean" singleton="true" />
+-->
+  <!--  Interceptors --> 
+<!-- 
+  <bean name="logger"    
+    class="sample.object.MyInterceptor"/>
+-->    
+  <!-- AutoProxies -->
+<!-- <bean name="loggingAutoProxy" 
+        class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+    <property name="beanNames">
+          <value>counterBean</value>
+    </property>
+    <property name="interceptorNames">
+        <list>
+          <value>logger</value>
+        </list>
+    </property>
+   </bean>
+-->
+</beans>
