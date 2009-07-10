@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" 
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<!-- Struts 1 configuration -->
+
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/struts-config.xml</param-value>
+        </init-param>
+        
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>        
+    </servlet-mapping>
+
+    
+
+  <!-- Struts1 Filter -->
+  <filter>
+    <filter-name>strutterview</filter-name>
+    <filter-class>strutter.view.PageFilter</filter-class>
+    <init-param>
+    	<param-name>encoding</param-name>
+		<param-value>UTF-8</param-value>    <!-- iso-8859-1 -->
+    </init-param>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>strutterview</filter-name>
+    <url-pattern>*.do</url-pattern> 
+  </filter-mapping>
+
+<!-- 
+  <filter>
+    <filter-name>strutter</filter-name>
+    <filter-class>strutter.optional.filter.BasicFilter</filter-class>
+    <init-param>
+    	<param-name>encoding</param-name>
+		<param-value>UTF-8</param-value>    < iso-8859-1->
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>strutter</filter-name>
+    <url-pattern>*.go</url-pattern> 
+  </filter-mapping>
+-->
+
+
+  <!-- Struts 2 configuration -->
+<!-- 
+  <filter>
+    <filter-name>action2cleanup</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.ActionContextCleanUp</filter-class>
+  </filter>
+  <filter>
+    <filter-name>strutter2view</filter-name>
+    <filter-class>strutter2.view.PageFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>action2</filter-name>
+    <filter-class>org.apache.struts2.dispatcher.FilterDispatcher</filter-class>
+  </filter>
+-->
+<!--  dis
+  <filter-mapping> 
+    <filter-name>action2cleanup</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+-->
+<!-- 
+  <filter-mapping>
+    <filter-name>strutter2view</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping> 
+  
+  <filter-mapping>
+    <filter-name>action2</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+ -->
+
+  <!-- Struts2 Filter -->
+<!-- 
+  <listener>
+        <listener-class>strutter2.config.ActionPlugin</listener-class>
+  </listener>
+
+ -->
+
+  <!--  SPRING  --> 
+<!-- 
+   <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+ -->
+  
+<!--   
+ <filter>
+    <filter-name>hibernate</filter-name>
+    <filter-class>org.springframework.orm.hibernate.support.OpenSessionInViewFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>hibernate</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+-->
+
+
+
+
+
+<!--
+ Optional security Filter 
+ Implements SSO Solution. see: login.do Action
+							   AuthSimpleImpl.java	
+
+ Alternative configure container managed security
+-->
+  <!-- Client -->
+<!-- 
+  <filter>
+    <filter-name>Security</filter-name>
+    <filter-class>strutter.optional.filter.SecurityFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>Security</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+ -->
+  
+  <!--  Server -->
+<!-- 
+  <context-param>
+     <param-name>AuthImpl</param-name>
+     <param-value>sample.sso.AuthSimpleImpl</param-value>
+  </context-param>
+ 
+ -->
+
+<!--
+ Optional Interceptor Filter 
+-->
+
+  <filter>
+    <filter-name>Interceptor</filter-name>
+    <filter-class>strutter.optional.filter.InterceptorFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>Interceptor</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+   
+ 
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+   
+</web-app>
+
