@@ -1,0 +1,207 @@
+a {
+		text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.error { color: red; border: thin; border-style: solid; border-color: red }
+.messages { font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	border: 1px solid silver;
+	color: gray;
+	background-color: white; }
+div.messages li { font-size: 9px;
+	color: silver;
+	list-style: none;
+	margin-top: 3px;
+}
+
+.errors { font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	border: 1px solid red;
+	color: black;
+	background-color: white; 
+	padding: 5px;
+}
+div.errors li { font-size: 9px;
+	color: red;
+	list-style: none;
+	margin-top: 3px;
+}
+
+.menulevel1, .menulevel1sel {
+		font-size: 12px;
+		padding-left: 0px;
+}
+.menuentry1  {
+ 		text-decoration: none;
+ 		color:black;
+}
+.menuentry1sel  {
+ 		text-decoration: none;
+ 		color:red;
+}
+.menulevel2, .menulevel2sel {
+		font-size: 10px;
+		padding-left: 20px;
+}
+.menuentry2 {
+ 		text-decoration: none;
+ 		color:black;
+}
+.menuentry2sel {
+ 		text-decoration: none;
+ 		color:red;
+}
+
+.menulevel3, .menulevel3sel {
+		font-size: 12px;
+		padding-left: 30px;
+}
+.menuentry3 {
+ 		text-decoration: none;
+ 		color:black;
+}
+
+
+
+
+input, select, textarea {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+
+.alert{
+	color:#FF0000;
+	font-weight: bold;
+}
+
+.info {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	border: 1px solid #FFFFFF;
+	color: #FFFFFF;
+	background-color: gray;
+	padding: 2px 12px;
+	text-align: center;
+	font-weight: bold;
+	cursor:hand;
+	line-height: 120%;
+}
+
+.button, .defaultbutton {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	border: 1px solid #FFFFFF;
+	color: #FFFFFF;
+	background-color: rgb(66,145,221);
+	padding: 2px 12px;
+	text-align: center;
+	font-weight: bold;
+	cursor:hand;
+	line-height: 120%;
+}
+
+.defaultbutton {
+
+	background-color: rgb(136,179,0);
+}
+
+.evenrow {
+	background: #D9E8F4;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #3088C9;
+	height: 18px;
+	padding-left: 5px;
+}
+.oddrow {
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #3088C9;
+	height: 18px;
+	padding-left: 5px;
+	background: #FFFFFF;
+}
+.outertable {
+	border:1px solid #A4CFEF;
+	background:#EAF1FA;
+	__width:628px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	padding: 10px;
+}
+
+
+
+.topheadermid {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14pt;
+	padding: 10px;
+	font-weight:bold;
+	color: rgb(0,46,108);
+	vertical-align: middle;
+}
+
+
+
+
+.L3innertable {
+	border-top: 1px solid #3088C9;
+	border-right: 2px solid #3088C9;
+	border-bottom: 1px solid #3088C9;
+	border-left: 1px solid #3088C9;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.L3total, .headercell {
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #3088C9;
+	height: 18px;
+	padding-left: 5px;
+	background: #FFFFFF;
+	border-top-width: 2px;
+	border-bottom-width: 1px;
+	border-top-color: #3088C9;
+	border-bottom-color: #3088C9;
+	border-top-style: solid;
+	border-bottom-style: solid;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+.headercell {
+border-top-width: 1px;
+border-bottom-width: 2px;
+}
+
+.footer{
+width:640px;
+padding:10px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align:right;
+}
+
+.pagewidth {width:650px;}
+
+.hat {
+	width: 650px;
+	height: 20px;
+ background-color: rgb(66,145,221);
+ background-image: url("images/aolbill_hat.gif");
+	background-repeat: no-repeat;
+}
+
+@media print {
+	.button, .defaultbutton, .noprint {display:none;}
+	}

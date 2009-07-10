@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<style>
+  
+  BODY { font-family: sans-serif; }
+  PRE { border-style: solid; border-width: 1px; background-color: aliceblue; padding: 10px }
+  TABLE { border-collapse: collapse; border-style: solid; border-width: 1px; border-color: black}
+  TD { border-collapse: collapse; border-style: solid; border-width: 1px; border-color: black; padding: 3px}
+
+  H1 { border-collapse: collapse; border-style: solid; border-width: 1px; border-color: black; padding: 3px}
+
+</style>
+
+<HTML><HEAD>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<BODY>
+<H1>Strutter EasyConfig</H1><B>Features</B> 
+<LI>Configure Struts by following conventions 
+<LI>Configure in Code with code completion 
+<LI>No API to be extended 
+<LI>Can run parallel to you existing configuration 
+<LI>Formless Actions (Thread Safe) 
+
+<P><B>The default conventions</B> </P>
+<LI>Action and corresponding ActionFrom (if any) are located in the same folder 
+<LI>Action and ActionForm classname end with a suffix like Action and ActionForm 
+
+<LI>Action and ActionForm are starting with the same prefix 
+<LI>Action prefix is simular to the Actionpath 
+<LI>ActionForm name equals ActionForm classname 
+<LI>Validation is done in your Action class 
+<P><B>Example (Dispatcher Pattern)</B><BR>
+<PRE>/* The Action */
+public class example.CustomerAction extends ActionDispatcher 
+{
+  public static ActionConfig struts = new ActionConfig();
+	
+  static {
+    struts.addForward("view", "/customer_view.jsp");
+  }
+}
+</PRE>
+<PRE>/* Optional ActionForm Class */
+public class example.CustomerActionForm extends ActionForm 
+{
+}
+</PRE>
+
+<b>Alternative mapping lookup (Multiple Action Pattern)</b><br>
+
+<PRE>/* The Action */
+public class example.CustomerEditAction extends Action 
+{
+  public static ActionConfig struts = new ActionConfig();
+	
+  static {
+    struts.addForward("view", "/customer_view.jsp");
+  }
+}
+</PRE>
+<PRE>
+public class example.CustomerEditActionForm extends ActionForm 
+{
+}
+</PRE>
+<b>or</b><br>
+<PRE>
+public class example.CustomerActionForm extends ActionForm 
+{
+}
+</PRE>
+
+
+
+
+<P><b>Equivalent configuration (Dispatcher Pattern):</b><BR><PRE>&lt;form-beans&gt;
+    &lt;form-bean name="CustomerActionForm" type="example.CustomerActionForm" /&gt;
+&lt;/form-beans&gt;
+</PRE><PRE>&lt;action-mappings&gt;
+    &lt;action name="CustomerActionForm" 
+            type="example.CustomerAction"
+            parameter="action" 
+            scope="session" 
+            path="/customer"&gt;
+            &lt;forward name="view" path="/customer_view.jsp" /&gt;
+    &lt;/action&gt;
+&lt;/action-mappings&gt;
+</PRE>
+
+<B>Formless Action</B><BR>
+
+Please have a look in the FormlessAction sample. Form attributes are included
+in the action directly. The implementation is thread safe and is following 
+the Dispatcher Pattern. You can access the form in the JSP like any other 
+form.<br>
+
+<PRE>/* The Action */
+public class example.FormlessAction extends FormlessDispatchAction 
+{
+  public static ActionConfig struts = new ActionConfig();
+	
+  static {
+    struts.addForward("view", "/customer_view.jsp");
+  }
+  
+  public void reset(ActionMapping arg0, ...
+  
+  String memo; // add Formattributes here
+}
+</PRE>
+
+<p>
+
+<B>Installation</B><BR>Strutter EasyConfig is implemented as Struts 
+Plugin. To get it running in default configuration just add the 
+<CODE>stutter.jar</CODE> in your WEB-INF/lib and add the following tag to your 
+struts-config.xml. <PRE>&lt;plug-in className="struts.easy.ActionPlugin" /&gt;
+</PRE>That's it! The plugin searches your classpath for Actionclasses (with 
+public static struts variable) and will add the configuration programmatically 
+on application startup. 
+<P><B>Customize conventions</B><BR>You can change some of default behavier. <PRE>&lt;plug-in className="struts.easy.ActionPlugin"&gt;
+    	&lt;set-property property="packageroot"  value="action"/&gt;  
+    	&lt;set-property property="aliasaction"  value="Action"/&gt;
+    	&lt;set-property property="aliasform"    value="ActionForm"/&gt;
+    	&lt;set-property property="aliasview"    value="view,list,update,create"/&gt;
+    	&lt;set-property property="pathformat"   value="{PATH}"/&gt;
+    	&lt;set-property property="pathlower"    value="0"/&gt;
+    	&lt;set-property property="parameter"    value="action"/&gt;
+    	&lt;set-property property="scope"        value="session"/&gt;
+&lt;/plug-in&gt;
+</PRE>
+<TABLE border=1>
+  <TBODY>
+  <TR>
+    <TD><B>name</B></TD>
+    <TD><B>default</B></TD>
+    <TD><B>description</B></TD></TR>
+  <TR>
+    <TD>packageroot</TD>
+    <TD>action</TD>
+    <TD>Comma separated list of package path</TD></TR>
+  <TR>
+    <TD>aliasaction</TD>
+    <TD>Action</TD>
+    <TD>Suffix to identify ActionClass</TD></TR>
+  <TR>
+    <TD>aliasform</TD>
+    <TD>ActionForm</TD>
+    <TD>Suffix to identify ActionFormClass</TD></TR>
+  <TR>
+    <TD>aliasview</TD>
+    <TD>view,list,update,create</TD>
+    <TD>Suffix of default views (only if no forwards are provided) actionname_alias.jsp</TD></TR>
+  <TR>
+    <TD>pathformat</TD>
+    <TD>{PATH}</TD>
+    <TD>Formatting of Actionpath. Example "Frm{PATH}" to add Frm in front of 
+      PATH generated from the classname</TD></TR>
+  <TR>
+    <TD>pathlower</TD>
+    <TD>0</TD>
+    <TD>1: convert PATH to lower, 0: PATH is unchanged</TD></TR>
+  
+  <TR>
+    <TD>parameter</TD>
+    <TD>action</TD>
+    <TD>Parameter for DispatcherAction alias variable</TD></TR>
+  
+  <TR>
+    <TD>scope</TD>
+    <TD>session</TD>
+    <TD>Default ActionForm scope [session | request]</TD></TR>
+    
+    
+  </TBODY></TABLE>
+<P><B>Optional configuration</B><BR>The following functions allow you to 
+overwrite the configuration generated by the plugin. 
+<PRE>  
+  struts.addForward("/customer_view.jsp", [false]);	// will lookup forward name between "_**name**."
+  struts.addForward("view", "/customer_view.jsp", [false]);
+  struts.addGlobalForward("/customer_view.jsp", [false]);
+  struts.addGlobalForward("view", "/customer_view.jsp", [false]);
+  struts.setForm(example.CustomerActionForm);
+  struts.setInput("/customer_input.jsp");
+  struts.setParameter("action");
+  struts.setPath("/customer");
+  struts.setRedirect(false);
+  struts.setScope("session");
+  struts.setUnknown(false);
+  struts.setValidate(false);
+  struts.setRoles("role1,role2");
+</PRE>
+<H1>Strutter View</H1><B>Features</B> 
+<LI>Automatic ActionForm population in standard HTML Tags 
+<LI>Option Tag handler with multiple sources 
+<P><B>Installation</B><BR>
+Strutter View is implemented as Filter. To get it 
+running in just add the <CODE>stutter.jar</CODE> and <CODE>htmlparser.jar</CODE> 
+to your WEB-INF/lib and add the following tag to your web.xml. <PRE>&lt;filter&gt;
+  &lt;filter-name&gt;strutsview&lt;/filter-name&gt;
+  &lt;filter-class&gt;struts.view.PageFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+  
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;strutsview&lt;/filter-name&gt;
+  &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+</PRE>The rendered page will be processed by the filter. All <CODE>INPUT, 
+SELECT, TEXTAREA</CODE> are compared with the ActionForm and the tags value is 
+filled with the forms content of the corresponding attibute.
+
+<P><B>Example</B><BR>
+
+<pre>
+	&lt;form action="sample.do"&gt;
+
+		&lt;input type="hidden" name="action"&gt;
+
+		&lt;select name="anrede"&gt;
+			&lt;option id="anreden" /&gt;
+		&lt;/select&gt;
+        
+		&lt;input type="text" name="firstname"&gt;
+        
+	&lt;/form&gt; 
+</pre>        
+
+This example will map the ActionForm attribut <code>anrede</code> to
+the select field anrede and firstname to the corresponding 
+form attribut.<br>
+The option values can be added manual or will be read from the attribute
+<code>anreden</code>. It is located in <code>session, request, form</code>
+in this order.<br>
+Nothing special just simple HTML. 
+        
+<P><B>Error Handler</B><BR>
+
+There is a simple extention to handle error messages:
+
+<pre>
+&lt;input type="text" name="firstname" error="behind"&gt;
+</pre>
+
+<table border="1">
+	<tr><td><b>error</td><td><b>text</td><td><b>class</td></tr>
+	<tr><td>behind</td><td>Error text behind the control</td><td>error_label</td></tr>
+	<tr><td>before</td><td>Error text before the control</td><td>error_label</td></tr>
+	<tr><td>class</td><td>Set error class in case of error</td><td>error_control</td></tr>
+</table>
+<p>
+The error message for each control is identified by the controls
+name.
+
+<P><B>DIV / SPAN</B><BR>
+
+Show property with id <code>label.name</code>:
+<pre>
+&lt;span type="resource" id="label.name"/&gt;
+</pre>
+
+Show all messages as list:
+<pre>
+&lt;div type="messages" /&gt;
+</pre>
+
+Show all errors as list:
+<pre>
+&lt;div type="errors" /&gt;
+</pre>
+
+Show error with id <code>firstname</code>:
+<pre>
+&lt;div type="error" id="firstname"/&gt;
+</pre>
+
+<hr>
+
+<b>Contact</b>: <a href="mailto:strutter@ingoharbeck.de">strutter@ingoharbeck.de</a>
+
+</BODY></HTML>
+
+
+
+

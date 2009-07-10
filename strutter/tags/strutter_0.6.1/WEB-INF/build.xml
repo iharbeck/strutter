@@ -1,0 +1,152 @@
+<project name="oak" basedir=".">
+<!--
+ watch this:
+ http://www.developer.com/open/article.php/998241 
+ http://www.astro.caltech.edu/~mbonati/WIRC/manual/DATARED/setting_up_no-password_ssh.html
+
+ local> cd ~
+ local> ssh-keygen -t dsa -f .ssh/id_dsa  !!!! NUR BEIM ERSTEN
+ local> cd .ssh
+ local> scp id_dsa.pub user@remote:~/.ssh/id_dsa.pub
+ 
+ local> ssh user@remote
+ remote> cd .ssh
+ remote> cat id_dsa.pub >> authorized_keys2
+ remote> chmod 640 authorized_keys2
+ remote> rm id_dsa.pub
+ remote> exit
+ 
+-->
+	
+<!--
+// SEARCH and DESTROY
+kill `ps -ef | grep asticat | grep -v grep | awk '{print $2}'`
+-->
+	
+	<property name="base" value="." />
+	
+	<property name="prod.serverlogin" value="harb05@debmu854" />
+	<property name="inte.serverlogin" value="root@bfslnxproud.debdid4" />
+	
+	<property name="inte.www.binfolder" value="/usr/local/asticat/bin/" />
+	<property name="test.www.binfolder" value="/usr/local/asttcat/bin/" />
+	
+	<property name="test.www.folder" value="/TDIS/WWW/oak/" />
+	<property name="inte.www.folder" value="/IDIS/WWW/oak/" />
+	<property name="prod.www.folder" value="/PDIS/PROUD/WWW/oak" />
+	
+
+	<target name="Test_D_clean">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} rm -rf ${test.www.folder}/WEB-INF/classes/de" />
+	  	</exec>
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} rm -f ${test.www.folder}/WEB-INF/lib/*.jar" />
+	  	</exec>
+	</target> 
+
+	<target name="Test_D_deploy">
+	  	<property name="test.server" value="${inte.serverlogin}:${test.www.folder}"/>
+	  	<exec executable="rsync">
+        	<arg line="-e ssh -Cavz --include-from=includer ${base} ${test.server}" />
+	  	</exec>
+	</target>
+	
+	<target name="Test_C_stop">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} ${test.www.binfolder}killer.sh" />
+	  	</exec>
+	</target>
+	
+	<target name="Test_B_start">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} ${test.www.binfolder}startup.sh" />
+	  	</exec>
+	</target>
+
+	<target name="Test_A_check">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} ${test.www.binfolder}find.sh" />
+	  	</exec>
+	</target>
+
+
+	<target name="Test_E_update" depends="Test_C_stop,Test_D_deploy,Test_B_start">
+	</target>
+
+	<target name="Inte_D_clean">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} rm -rf ${inte.www.folder}WEB-INF/classes/de" />
+	  	</exec>
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} rm -f ${inte.www.folder}WEB-INF/lib/*.jar" />
+	  	</exec>
+	</target> 
+
+	<target name="Inte_D_deploy">
+	  	<property name="inte.server" value="${inte.serverlogin}:${inte.www.folder}"/>
+	  	<exec executable="rsync">
+        	<arg line="-e ssh -Cavz --include-from=includer ${base} ${inte.server}" />
+	  	</exec>
+	</target>
+	
+	<target name="Inte_C_stop">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} ${inte.www.binfolder}killer.sh" />
+	  	</exec>
+	</target>
+	
+	<target name="Inte_B_start">
+	  	<exec executable="ssh">
+        	<arg line="${inte.serverlogin} ${inte.www.binfolder}startup.sh" />
+	  	</exec>
+	</target>
+
+	
+
+	
+	<target name="Inte_A_check">
+	   <exec executable="ssh" >
+        	<arg line="${inte.serverlogin} ${inte.www.binfolder}find.sh" />
+	   </exec>
+	</target>
+	
+	
+	<target name="Inte_E_update" depends="Inte_C_stop,Inte_D_deploy,Inte_B_start">
+	</target>
+	
+
+	<target name="Prod_D_deploy">
+		<antcall target="Zchecker"></antcall>
+		
+		<property name="prod.server" value="${prod.serverlogin}:${prod.www.folder}"/>
+		<exec executable="rsync">
+		    <arg line="-e ssh -Cavz --include-from=includer ${base} ${prod.server}" />
+		</exec>
+	</target>
+	
+	<target name="Prod_E_zip">
+		<antcall target="Zchecker"></antcall>
+		
+		<property name="prod.ftpferryarchive" value="/PDIS/PROUD/ftpferry/archive/*"/>
+		<exec executable="ssh">
+		    <arg line="${prod.serverlogin} gzip -f ${prod.ftpferryarchive}" />
+		</exec>
+		<exec executable="ssh">
+		    <arg line="${prod.serverlogin} df | grep /CSGPPROUD/PDIS" />
+		</exec>
+	</target>
+	
+	
+	
+	<target name="Zchecker">
+		<input message="Ganz sicher?:" addproperty="instance" />
+		<fail message="Abgebrochen [${instance}]">
+		     <condition>
+		       <not>
+		         <istrue value="${instance}"/>
+		       </not>
+		     </condition>
+		</fail>
+	</target>
+</project>

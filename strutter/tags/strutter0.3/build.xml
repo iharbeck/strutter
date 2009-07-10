@@ -1,0 +1,92 @@
+<project name="strutter" default="jar" basedir=".">
+
+	<property name="name" value="strutter" />
+	<property name="version" value="-0.3" />
+	
+	<property name="bin" value="WEB-INF/classes" />     
+	<property name="src" value="WEB-INF/src" />     
+	<property name="base" value="." />     
+	
+	<target name="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="**/${name}*.jar"/>
+		 	<fileset dir="WEB-INF/lib" includes="**/${name}*.jar"/>
+		 </delete>
+         <jar destfile="bin/${name}${version}.jar">
+         	<fileset dir="${bin}" >
+         	    <exclude name="**/sample**" />
+         		<exclude name="**/sample2**" />
+         		<exclude name="*" />
+         	</fileset>
+         	<fileset dir="${src}" >
+         	    <exclude name="**/sample**" />
+         		<exclude name="**/sample2**" />
+         		<exclude name="*" />
+         	</fileset>
+         </jar>
+	</target>
+	
+	<target name="war" depends="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="**/${name}**.war"/>
+		 </delete>
+		 <copy file="bin/${name}${version}.jar" todir="WEB-INF/lib/" />
+     	 <war destfile="bin/${name}_src${version}.war" webxml="WEB-INF/web.xml">
+           <fileset dir="${base}">
+           		<patternset refid="strutter.src"/>
+           </fileset>
+         </war>
+    </target>
+		
+	<target name="blank" depends="jar">
+			 <delete>
+			 	<fileset dir="bin" includes="**/blank*.war"/>
+			 </delete>
+	     	 <war destfile="bin/blank${version}.war" webxml="WEB-INF/web.xml">
+	           <fileset dir="${base}">
+	           		<exclude name="**/build.xml"/>
+	           		<patternset refid="strutter.src"/>
+	           		
+	           		<!-- struts2 stuff -->
+	           	    <patternset refid="webwork.configuration"/>
+	           		<patternset refid="webwork.libs"/>
+	           		
+	           		<!-- Sample stuff -->
+	           		<exclude name="sample**.jsp"/>
+	           		<exclude name="simple**.jsp"/>
+	           		<exclude name="home**.jsp"/>
+	           		<exclude name="index**.jsp"/>
+	           		<exclude name="**/SampleAction**" />
+	           		<exclude name="**/SimpleAction**" />
+	           		<exclude name="**/object**" />
+	           </fileset>
+	         </war>
+	 </target>
+	
+	<patternset id="strutter.src">
+		<exclude name="**/struts**" />
+		<exclude name="**/struts2**" />
+		<exclude name="**/bin**" />
+		<exclude name="**/work**" />
+		<exclude name="**/.settings**" />
+	</patternset>
+	
+	<patternset id="webwork.libs">
+		<exclude name="**/WEB-INF/lib/xwork.jar" />
+   		<exclude name="**/WEB-INF/lib/webwork-2.2.2.jar" />
+   		<exclude name="**/WEB-INF/lib/rife-continuations.jar" />
+   		<exclude name="**/WEB-INF/lib/oscore.jar" />
+   		<exclude name="**/WEB-INF/lib/ognl.jar" />
+   		<exclude name="**/WEB-INF/lib/freemarker.jar" />
+   		<exclude name="**/WEB-INF/lib/cglib-nodep.jar" />
+	</patternset>
+	
+	<patternset id="webwork.configuration">
+		<exclude name="**/sample2**" />
+   		<exclude name="**/xwork.xml" />
+   		<exclude name="**/webwork.properties" />
+   	
+   		<exclude name="**/home.jsp" />
+    </patternset>
+
+</project>

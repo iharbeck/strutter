@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" 
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <servlet>
+        <servlet-name>action</servlet-name>
+        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <init-param>
+            <param-name>config</param-name>
+            <param-value>/WEB-INF/struts-config.xml</param-value>
+        </init-param>
+        
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <url-pattern>*.do</url-pattern>        
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    
+
+  <!-- Struts1 Filter -->
+  <filter>
+    <filter-name>strutsview</filter-name>
+    <filter-class>struts.view.PageFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>strutsview</filter-name>
+    <url-pattern>*.do</url-pattern> 
+  </filter-mapping>
+
+
+  <!-- Struts2 Filter -->
+<!-- 
+  <filter>
+    <filter-name>webworkcleanup</filter-name>
+    <filter-class>com.opensymphony.webwork.dispatcher.ActionContextCleanUp</filter-class>
+  </filter>
+  <filter>
+    <filter-name>struts2view</filter-name>
+    <filter-class>struts2.view.PageFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>webwork</filter-name>
+    <filter-class>com.opensymphony.webwork.dispatcher.FilterDispatcher</filter-class>
+  </filter>
+-->
+
+<!--   
+ <filter>
+    <filter-name>hibernate</filter-name>
+    <filter-class>org.springframework.orm.hibernate.support.OpenSessionInViewFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>hibernate</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+-->
+
+<!-- 
+  <filter-mapping> Cleanup verzögern
+    <filter-name>webworkcleanup</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>struts2view</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>webwork</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+-->
+
+<!-- 
+  <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+-->
+
+<!--
+ Optional security Filter 
+ Implements SSO Solution. see: login.do Action
+							   AuthSimpleImpl.java	
+
+ Alternative configure container managed security
+-->
+  <!-- Client -->
+  <filter>
+    <filter-name>Security</filter-name>
+    <filter-class>struts.optional.filter.SecurityFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>Security</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+  
+  <!--  Server -->
+  <context-param>
+     <param-name>AuthImpl</param-name>
+     <param-value>sample.object.AuthSimpleImpl</param-value>
+  </context-param>
+ 
+
+<!--
+ Optional Interceptor Filter 
+-->
+
+  <filter>
+    <filter-name>Interceptor</filter-name>
+    <filter-class>struts.optional.filter.InterceptorFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+    <filter-name>Interceptor</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
+   
+ 
+ 
+   
+</web-app>
+
