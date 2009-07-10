@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon Jul 17 09:06:32 CEST 2006
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=strutter.jar
+manifest.mergeall=true
+manifest.mainclass=
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|strutter>~.svn/;<po|strutter>~sample/;<po|strutter>~sample2/;<po|strutter>~ApplicationResources_de.properties;<po|strutter>~ApplicationResources_en.properties;<po|strutter>~log4j.xml;<po|strutter>~webwork.properties;<po|strutter>~xwork.xml;<jar|commons-beanutils.jar>;<jar|struts.jar>;<jar|htmlparser.jar>;<jar|commons-logging-1.0.4.jar>;<jar|xwork.jar>;<jar|oscore.jar>;<jar|rife-continuations.jar>;<jar|ognl.jar>;<jar|freemarker.jar>;<jar|servlet-api.jar>;<jar|jasper-runtime.jar>;<jar|jsp-api.jar>;<jar|webwork-2.2.2.jar>;<jar|cglib-nodep.jar>;<jar|commons-attributes-api.jar>;<jar|commons-digester.jar>;<jar|commons-fileupload.jar>;<jar|commons-logging.jar>;<jar|log4j-1.2.11.jar>;<jar|spring.jar>
+includes=
