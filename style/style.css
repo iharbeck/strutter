@@ -1,0 +1,55 @@
+.error_control { color: red; border: thin; border-style: solid; border-color: red }
+.error_label { color: red; }
+
+.messages { font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	border: 1px solid silver;
+	color: gray;
+	background-color: white;
+	padding: 5px;
+}
+div.messages li { font-size: 9px;
+	color: blue;
+	list-style: square;
+	margin-top: 3px;
+}
+
+.errors { font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	border: 1px solid red;
+	color: black;
+	background-color: white;
+	padding: 5px;
+}
+div.errors li { font-size: 9px;
+	color: red;
+	list-style: square;
+	margin-top: 3px;
+}
+
+
+.topheadermid {
+	border:1px solid silver;
+	background:#EAF1FA;
+	font-family: sans-serif;
+	font-size:14pt;
+	padding: 5px;
+	margin-bottom: 3px;
+	font-weight:bold;
+	width: 300px;
+}
+
+.outertable {
+	border:1px solid gray;
+	background:#EAF1FA;
+	font-family: sans-serif;
+	font-size: 12px;
+	width: 800px;
+}
+
+
+
+
+
+
+

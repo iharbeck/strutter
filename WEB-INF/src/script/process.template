@@ -1,0 +1,41 @@
+
+<!-- Processing in Background Template -->
+
+<iframe style="display:none" width='0' height='0' name='struttertarget' onload="processdone()"></iframe>
+
+<style>
+.processing_back { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.disser 		 { position: absolute; overflow:auto;
+	               top: 0; left: 0; height: 100%;
+	               background-color: black; opacity:.20;filter: alpha(opacity=20); -moz-opacity: 0.20
+	    		 }
+.processing_dialog {
+	    		  position: absolute; top: 5; left: 5;
+	              background-color: white;
+	              border-style: solid; border-width: 2px; border-color: gray;
+	              padding-left: 10; padding-right: 10;
+	              font-family: sans-serif;
+	    		 }
+</style>
+
+<div class="processing_back" id="processing">
+	<div id="disser" class="disser">
+	</div>
+
+	<div class="processing_dialog">
+		<table border=0>
+		 <tr>
+		     <td><img src="false" id="ani" style="margin-right: 15px"></td>
+		     <td style="font-size: 12px;"><b>Processing... <span id="processtimer">0</span> sec</b><br>
+		        <a href="#" style="color: black; text-decoration: none;" onclick="doKill()">[Cancel]</a>
+		     </td>
+		 </tr>
+		</table>
+	</div>
+</div>
+
+<form style="display:none" name="strutterecho" action="strutter.do?echo" method="POST">
+	<textarea name="struttercache"></textarea>
+</form>
+
+<!-- Processing in Background Template ENDE -->
