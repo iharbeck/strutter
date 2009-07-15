@@ -8,26 +8,36 @@ import org.directwebremoting.ScriptBuffer;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ServerContext;
 import org.directwebremoting.ServerContextFactory;
+import org.directwebremoting.extend.CreatorManager;
 import org.directwebremoting.fluent.FluentConfigurator;
 import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.ui.browser.Window;
 import org.directwebremoting.ui.dwr.Util;
 
+import strutter.StrutterCreator;
 import strutter.helper.ActionHelper;
 
 public class ActionAjaxConfig extends FluentConfigurator {
 
 	public void configure() {
 		
+		withCreatorType("strutter", StrutterCreator.class.getName());
+		
 		ArrayList list = ActionPlugin.getActionclasses();	
     	
     	for(int i=0; i < list.size(); i++)
     	{
     		String classname = (String)list.get(i); //"sample.DWRAction";
-    	
-	    	withCreator("new", "DWRAction")
+
+	    	withCreator("strutter", "DWRAction")
 	    	  .addParam("scope", "request")
-	    	  .addParam("class", classname);
+	    	  .addParam("actionclass", classname)
+	    	  .addParam("javascript", classname.substring(classname.lastIndexOf(".")+1))
+	    	  ;
+
+//	    	withCreator("new", "DWRAction")
+//	    	  .addParam("scope", "request")
+//	    	  .addParam("class", classname);
     	}
     	
     	withConverterType("bean", "org.apache.struts.util.LabelValueBean");
