@@ -1,4 +1,4 @@
-package strutter;
+package strutter.config;
 
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.extend.AbstractCreator;
