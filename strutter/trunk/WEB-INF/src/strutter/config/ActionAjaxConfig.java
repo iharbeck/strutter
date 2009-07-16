@@ -3,18 +3,17 @@ package strutter.config;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.struts.util.LabelValueBean;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptBuffer;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ServerContext;
 import org.directwebremoting.ServerContextFactory;
-import org.directwebremoting.extend.CreatorManager;
 import org.directwebremoting.fluent.FluentConfigurator;
 import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.ui.browser.Window;
 import org.directwebremoting.ui.dwr.Util;
 
-import strutter.StrutterCreator;
 import strutter.helper.ActionHelper;
 
 public class ActionAjaxConfig extends FluentConfigurator {
@@ -30,7 +29,7 @@ public class ActionAjaxConfig extends FluentConfigurator {
     		String classname = (String)list.get(i); //"sample.DWRAction";
 
 	    	withCreator("strutter", "DWRAction")
-	    	  .addParam("scope", "request")
+	    	  //.addParam("scope", "request")
 	    	  .addParam("actionclass", classname)
 	    	  .addParam("javascript", classname.substring(classname.lastIndexOf(".")+1))
 	    	  ;
@@ -40,8 +39,8 @@ public class ActionAjaxConfig extends FluentConfigurator {
 //	    	  .addParam("class", classname);
     	}
     	
-    	withConverterType("bean", "org.apache.struts.util.LabelValueBean");
-    	withConverter("bean", "org.apache.struts.util.LabelValueBean");
+    	withConverterType("bean", LabelValueBean.class.getName());
+    	withConverter("bean", LabelValueBean.class.getName());
 		
 //		   withConverterType("dog", "com.yourcompany.beans.Dog");
 //
