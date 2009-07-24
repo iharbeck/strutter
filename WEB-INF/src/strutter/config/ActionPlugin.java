@@ -117,19 +117,27 @@ public class ActionPlugin implements PlugIn
 			}
 
 			// register classes
-			for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) 
+			{
+				String cname = (String) iterator.next();
+
+				try {
+					registAutorun(Class.forName(cname, false, this.getClass().getClassLoader()));
+				} catch(Exception e) {
+					System.out.println("### Strutter Problem Autorun: " + e + "###");
+				}
+			}
+
+			
+			for (Iterator iterator = list.iterator(); iterator.hasNext();) 
+			{
 				String cname = (String) iterator.next();
 
 				try {
 					registAction(module, Class.forName(cname, false, this.getClass().getClassLoader()));
 				} catch(Exception e) {
 					System.out.println("### Strutter Problem: " + e + "###");
-				}
-				
-				try {
-					registAutorun(Class.forName(cname, false, this.getClass().getClassLoader()));
-				} catch(Exception e) {
-					System.out.println("### Strutter Problem Autorun: " + e + "###");
 				}
 				
 				try {
