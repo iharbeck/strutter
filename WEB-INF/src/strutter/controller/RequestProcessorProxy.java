@@ -212,7 +212,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				
 				out.write("<script type='text/javascript' src='dwr/engine.js'> </script>\n");
 				out.write("<script type='text/javascript' src='dwr/util.js'> </script>\n");
-				out.write("<script type='text/javascript' src='dwr/interface/" + ActionHelper.getActionMapping().getAttribute() + ".js'> </script>\n");
+				out.write("<script type='text/javascript' src='dwr/interface/" + ActionHelper.getActionMapping().getType() + ".js'> </script>\n");
 			}
 			
 			
