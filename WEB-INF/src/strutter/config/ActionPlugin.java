@@ -564,7 +564,7 @@ public class ActionPlugin implements PlugIn
 	/**
 	 * FQN Klassennamen ermitteln
 	 */
-	private String getClassName(String fqn) {
+	public static String getClassName(String fqn) {
 		String className = fqn;
 		if(className.indexOf('.') > 0){
 			className = className.substring(className.lastIndexOf('.') + 1);
