@@ -36,6 +36,8 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.util.MessageResources;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
@@ -72,7 +74,19 @@ public class ActionHelper
 	private static final ThreadLocalActionHelper helper = new ThreadLocalActionHelper();
 
 	private static final ActionHelperData me() {
-		return (ActionHelperData)helper.get();
+		
+		ActionHelperData data = (ActionHelperData)helper.get();
+		
+		if(!data.initialized)
+		{
+			WebContext ctx = WebContextFactory.get();
+			
+			try{
+			    ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
+			}catch (Exception e) {
+			}
+		}
+		return data;
 	}
 
 	private static ConfigAuthorityInterface authority;
@@ -221,7 +235,7 @@ public class ActionHelper
 	
 	public static ActionHelper init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
-		ActionHelperData me = ActionHelper.me();
+		ActionHelperData me = (ActionHelperData)helper.get();
 		me.threadcount++;
 		//System.out.println("up:" + me.threadcount + " " + request.getRequestURI());
 
@@ -242,7 +256,7 @@ public class ActionHelper
 		//me.actionname  = Utils.getActionMappingName(request. getServletPath());
 		me.actionname  = Utils.getActionMappingName(request); //, response);
 
-		me.mapping     = ActionHelper.getActionMapping();
+		me.mapping     = getActionMapping(me.actionname);
 		me.initialized = true;
 		
 		return instance;
@@ -288,6 +302,7 @@ public class ActionHelper
 	}
 
 	public static HttpSession getSession() {
+		
 		return me().session;
 	}
 
