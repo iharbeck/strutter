@@ -49,6 +49,8 @@ public class ActionConfig
 
 	ArrayList forwards = new ArrayList();
 
+	ArrayList dwrpojos = new ArrayList();
+
 	public Class getForm() {
 		return form;
 	}
@@ -143,6 +145,15 @@ public class ActionConfig
 
 	private void addForward(Forward forward) {
 		this.forwards.add(forward);
+	}
+	
+	public void addDWRPOJO(Class clazz) {
+		this.dwrpojos.add(clazz);
+	}
+	
+	protected ArrayList getDWRPOJOS()
+	{
+		return dwrpojos;
 	}
 
 	public String getInput() {

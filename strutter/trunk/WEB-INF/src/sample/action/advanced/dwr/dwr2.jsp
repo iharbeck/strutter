@@ -39,4 +39,19 @@
     <table id="tab">
     </table>
 
+    <input type="button" onclick="gogo()" value="obj">
+    <input type="button" onclick="gogo2()" value="obj2">
 </form>
+
+
+<script>
+function gogo() {
+	DWR2Action.getMe( function(gg) { alert(gg.firstname) } );
+}
+
+function gogo2() {
+    DWR2Action.dodoMe( { firstname : 'blbl' }, 
+    		   function(gg) { alert(gg.firstname) } 
+    );
+}
+</script>

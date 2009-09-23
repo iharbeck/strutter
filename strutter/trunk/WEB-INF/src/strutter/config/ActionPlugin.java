@@ -77,6 +77,7 @@ public class ActionPlugin implements PlugIn
 	private String nocache = "1";
 	
 	private static ArrayList actionclasses = new ArrayList();
+	private static ArrayList dwrpojos = new ArrayList();
 	/**
 	 *  Initialisieren
 	 */
@@ -275,6 +276,9 @@ public class ActionPlugin implements PlugIn
 		ActionConfig action = (ActionConfig) conf;
 		ActionMappingExtended actionmapping = new ActionMappingExtended();
 
+		
+		dwrpojos.addAll(action.getDWRPOJOS());
+		
 		String fqn = actionClass.getName();
 
 		// store for dwr
@@ -767,5 +771,9 @@ public class ActionPlugin implements PlugIn
 
 	public static ArrayList getActionclasses() {
 		return actionclasses;
+	}
+	
+	public static ArrayList getDWRPOJOs() {
+		return dwrpojos;
 	}
 }
