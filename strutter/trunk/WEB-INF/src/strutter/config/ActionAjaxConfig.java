@@ -41,7 +41,10 @@ public class ActionAjaxConfig extends FluentConfigurator {
     	
     	withConverterType("bean", LabelValueBean.class.getName());
     	withConverter("bean", LabelValueBean.class.getName());
-		
+
+    	withConverterType("bean", "*");
+    	withConverter("bean", "*");
+
 //		   withConverterType("dog", "com.yourcompany.beans.Dog");
 //
 //		   withCreatorType("ejb", "com.yourcompany.dwr.creator.EJBCreator");
