@@ -277,7 +277,7 @@ public class ActionPlugin implements PlugIn
 		ActionMappingExtended actionmapping = new ActionMappingExtended();
 
 		
-		dwrpojos.addAll(action.getDWRPOJOS());
+		dwrpojos.addAll(action.getRemoting());
 		
 		String fqn = actionClass.getName();
 

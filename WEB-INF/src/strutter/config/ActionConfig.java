@@ -147,11 +147,11 @@ public class ActionConfig
 		this.forwards.add(forward);
 	}
 	
-	public void addDWRPOJO(Class clazz) {
+	public void addRemoting(Class clazz) {
 		this.dwrpojos.add(clazz);
 	}
 	
-	protected ArrayList getDWRPOJOS()
+	protected ArrayList getRemoting()
 	{
 		return dwrpojos;
 	}
