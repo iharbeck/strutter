@@ -23,7 +23,7 @@ public class DWR2Action extends FormlessDispatchAction implements ConfigInterfac
 	public void config(ActionConfig struts) {
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addForward("view", "dwr2.jsp");	
-		struts.addDWRPOJO(Address.class);
+		struts.addRemoting(Address.class);
 	}
 
 	ArrayList list = new ArrayList();
