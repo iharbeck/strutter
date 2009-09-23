@@ -11,6 +11,7 @@ import org.directwebremoting.ui.dwr.Util;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
+import sample.dao.Address;
 import strutter.action.FormlessDispatchAction;
 import strutter.config.ActionConfig;
 import strutter.config.tags.ConfigInterface;
@@ -21,7 +22,8 @@ public class DWR2Action extends FormlessDispatchAction implements ConfigInterfac
 {
 	public void config(ActionConfig struts) {
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
-		struts.addForward("view", "dwr2.jsp");		
+		struts.addForward("view", "dwr2.jsp");	
+		struts.addDWRPOJO(Address.class);
 	}
 
 	ArrayList list = new ArrayList();
@@ -29,6 +31,29 @@ public class DWR2Action extends FormlessDispatchAction implements ConfigInterfac
 	public ActionForward doView() throws Exception
 	{
 		return ActionHelper.findForward("view");
+	}
+	
+	
+    public String dodoMeMe(String address) {
+		
+		address = "ingo";
+		
+		return address;
+	}
+	
+    public Address getMe() {
+		
+    	Address address = new Address();
+		address.setFirstname("ingo");
+		
+		return address;
+	}
+
+	public Address dodoMe(Address address) {
+		
+		address.setFirstname( address.getFirstname() + "_ingo");
+		
+		return address;
 	}
 	
 	String[] values = new String[] { "erster", "zweiter", "dritter" };

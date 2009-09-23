@@ -39,11 +39,30 @@ public class ActionAjaxConfig extends FluentConfigurator {
 //	    	  .addParam("class", classname);
     	}
     	
-    	withConverterType("bean", LabelValueBean.class.getName());
+    	//withConverterType("bean", LabelValueBean.class.getName());
     	withConverter("bean", LabelValueBean.class.getName());
 
-    	withConverterType("bean", "*");
-    	withConverter("bean", "*");
+    	
+    	list = ActionPlugin.getDWRPOJOs();
+    	
+    	for(int i=0; i < list.size(); i++)
+    	{
+    		String classname = ((Class)list.get(i)).getName(); //"sample.DWRAction";
+
+        	withConverter("bean", classname)
+    			.addParam("javascript", classname.substring(classname.lastIndexOf(".")+1));
+
+    	}
+
+    	
+    	//withConverterType("bean", "sample.dao.Address");
+//    	withConverter("bean", "sample.dao.*")
+//    		.addParam("javascript", "Employee");
+
+    	
+    	//withConverter("bean", "sample.dao.Address");
+    	//withConverter("bean", ".*");
+
 
 //		   withConverterType("dog", "com.yourcompany.beans.Dog");
 //
