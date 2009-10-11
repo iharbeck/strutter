@@ -216,7 +216,7 @@ public class CSelectTag extends SelectTag
     final void generateOptionFrom(Map list, List selected) //HashMap
     {
     	 ArrayList key = new ArrayList(list.keySet());
-    	 Collections.sort(key);
+    	 //Collections.sort(key);
     	 
     	 for (Iterator it = key.iterator(); it.hasNext();) {
 			String k = (String) it.next();
