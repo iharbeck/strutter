@@ -126,7 +126,6 @@ function processdone()
 	}
 }
 
-<!-- prototype style -->
 // Element by ID
 function $(name) {
 	return document.getElementById(name);
@@ -174,7 +173,6 @@ function process(theform)
 
 var killed = 0;
 
-<!-- AJAX stuff -->
 function doKill()
 {
 	$("ani").src = 'strutter.do?img&name=img/progress.gif';

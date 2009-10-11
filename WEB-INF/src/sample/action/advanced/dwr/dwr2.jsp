@@ -49,9 +49,45 @@ function gogo() {
 	DWR2Action.getMe( function(gg) { alert(gg.firstname) } );
 }
 
-function gogo2() {
+function gogo2__() {
     DWR2Action.dodoMe( { firstname : 'blbl' }, 
     		   function(gg) { alert(gg.firstname) } 
     );
 }
+
+function gogo2() {
+
+	alert( syncall(DWR2Action.dodoMe, { firstname : 'blbl' }) );
+	
+/*    DWR2Action.dodoMe( { firstname : 'blbl' }, 
+    		   function(gg) { alert(gg.firstname) } 
+    );
+    */
+}
+
+
+
+function syncall(func) 
+{
+	var params = [];
+
+	for(i=1; i < arguments.length; i++)
+	{
+		params[i-1] = arguments[i];
+	}
+
+	alert(func);
+	alert(params[0]);
+	
+	var result;
+	func(params, { 
+	        async: false,
+	        callback: function(s) {
+	            result = s;
+	        }
+	    }
+	);
+	return result; 
+}
+
 </script>
