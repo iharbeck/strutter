@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -96,7 +97,7 @@ public class CSelectTag extends SelectTag
 	   		 // alle optionen ermitteln
     		 NodeList list = this.children.extractAllNodesThatMatch(new NodeClassFilter (OptionTag.class));
 
-    		 // Alle bestehenden optionen löschen
+    		 // Alle bestehenden optionen lï¿½schen
 	   		 this.getChildren().removeAll();
 	   		 
 			 for(int i=0; i < list.size();i++)
@@ -123,8 +124,8 @@ public class CSelectTag extends SelectTag
 			   			 generateOptionFrom((String[])listvalues, sellist, hasvalue);
 			   		 else if(listvalues instanceof LabelValueBean[])
 			   			 generateOptionFrom((LabelValueBean[])listvalues, sellist);
-			   		 else if(listvalues instanceof HashMap)
-			   			 generateOptionFrom((HashMap)listvalues, sellist);
+			   		 else if(listvalues instanceof Map)
+			   			 generateOptionFrom((Map)listvalues, sellist);
 
 				 }
 				 else 
@@ -212,7 +213,7 @@ public class CSelectTag extends SelectTag
 		 }
     }
 
-    final void generateOptionFrom(HashMap list, List selected) //HashMap
+    final void generateOptionFrom(Map list, List selected) //HashMap
     {
     	 ArrayList key = new ArrayList(list.keySet());
     	 Collections.sort(key);
