@@ -208,7 +208,8 @@ public class RequestProcessorProxy extends RequestProcessor
 			
 			if(ActionHelper.isRemoteAction())
 			{
-				out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");				
+				if(plugin.getDoctype().equals("1"))
+					out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");				
 				
 				out.write("<script type='text/javascript' src='dwr/engine.js'> </script>\n");
 				out.write("<script type='text/javascript' src='dwr/util.js'> </script>\n");
