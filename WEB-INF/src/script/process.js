@@ -7,7 +7,7 @@ function subberparameter(action, params)
 {
   for (var i in params) 
   {
-    var input = $N(i) || document.getElementById(i) ;
+    var input = $N(i);
     
     if(!input)
     {
@@ -210,7 +210,7 @@ function keepalive()
 
 function addkeepalive() {
 	// request 10 sec vor session timeout
-	window.setInterval("keepalive()", ##sessiontimeout## );
+	window.setInterval("keepalive()", parseInt('##sessiontimeout##') );
 }
 
 function setFocus() {
