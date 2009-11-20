@@ -18,8 +18,9 @@ function subberparameter(action, params)
 	    
 	    input.setAttribute('type', 'hidden');
 	    document.forms[0].appendChild(input);
-	}
-    input.setAttribute('value', params[i]);
+    }
+    //input.setAttribute('value', params[i]);
+    input.value = params[i];
   }
 
   subber(action);
