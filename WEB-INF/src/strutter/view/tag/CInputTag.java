@@ -40,6 +40,7 @@ public class CInputTag extends InputTag
 	 String actionname;
 	 
 	 String disabled = "";
+	 String checkboxfix = "";
 	 
 	 public CInputTag(Object form, ServletRequest request) {
 		 this.form = form;
@@ -88,9 +89,12 @@ public class CInputTag extends InputTag
 	    		   		sellist = Arrays.asList(sel);
 	    		   		 
 	    		    	setSelected(this.getAttribute("value"), sellist);
-	    		    	
-	    		    }
 
+	    		    	if("CHECKBOX".equals(type))
+	    		    		checkboxfix = ""; //"<input type='hidden' name='" + name + "' value='0'>";
+
+	    		    }
+	    			
 	    			disabled = getAttribute("disabled");
     		    	
     		    	if(disabled != null && getAttribute("CHECKED") != null)
@@ -141,7 +145,7 @@ public class CInputTag extends InputTag
 	   		tag = super.toHtml();
 	   	}
 	   	
-	   	return disabled + tag;
+	   	return checkboxfix + disabled + tag;
     }
 
 }
