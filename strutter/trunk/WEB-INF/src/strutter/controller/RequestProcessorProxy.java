@@ -122,6 +122,12 @@ public class RequestProcessorProxy extends RequestProcessor
 	{
 		try 
 		{
+			ActionHelper.init(getServletContext(), request, response);
+
+			// AJAX and so on
+			if(internalProcessing(request, response))
+				return;
+			
 			// do the character encoding staff
 			request.setCharacterEncoding(plugin.getEncoding());  // CharsetFilter
 			response.setCharacterEncoding(plugin.getEncoding());
@@ -133,7 +139,6 @@ public class RequestProcessorProxy extends RequestProcessor
 				response.setDateHeader("Expires", 1);
 			}
 			
-			ActionHelper.init(getServletContext(), request, response);
 	
 			if(ActionHelper.isWSAction())
 			{
@@ -150,9 +155,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				return;
 			}
 	
-			// AJAX and so on
-			if(internalProcessing(request, response))
-				return;
+			
 	
 	
 			if(interceptorBefore())
@@ -460,7 +463,19 @@ public class RequestProcessorProxy extends RequestProcessor
 		}
 	}
 
-	boolean internalProcessing(ServletRequest request, ServletResponse response) throws IOException, ServletException
+	final static String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
+	final static String IF_NONE_MATCH_HEADER = "If-None-Match";
+	
+	final static String CACHE_CONTROL_HEADER = "Cache-Control";
+	final static String CACHE_CONTROL_VALUE = "public, max-age=315360000, post-check=315360000, pre-check=315360000";
+	final static String LAST_MODIFIED_HEADER = "Last-Modified";
+	final static String LAST_MODIFIED_VALUE = "Sun, 06 Nov 2005 12:00:00 GMT";
+	final static String ETAG_HEADER = "ETag";
+	final static String ETAG_VALUE = "2740050219";
+	final static String EXPIRES_HEADER = "Expires"; 
+
+	
+	boolean internalProcessing(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		if(!ActionHelper.getActionname().equals("/strutter"))
 			return false;
@@ -470,7 +485,35 @@ public class RequestProcessorProxy extends RequestProcessor
 
 		if(internal != null)
 		{
-			if(internal.startsWith("killer"))
+			if(internal.startsWith("script"))
+			{
+				if (null != request.getHeader(IF_MODIFIED_SINCE_HEADER) || null != request.getHeader(IF_NONE_MATCH_HEADER)) 
+				{
+					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					return true;
+				} 
+				   
+				response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
+				response.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
+				response.setHeader(ETAG_HEADER, ETAG_VALUE);
+	 	        Calendar cal = Calendar.getInstance();
+			    cal.roll(Calendar.YEAR, 10);
+			    response.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
+			       
+				PrintWriter out = response.getWriter();
+
+				if(script == null)
+				{
+					script = getResource("script/process.js");
+					script = YUIFilter.compressJavaScriptString(script);
+					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
+					script = script.replaceAll("##actionname##", actionfieldname);
+				}
+
+				out.println(script);
+				out.flush();
+			}
+			else if(internal.startsWith("killer"))
 			{
 				try
 				{
@@ -490,48 +533,6 @@ public class RequestProcessorProxy extends RequestProcessor
 				PrintWriter out = response.getWriter();
 
 				out.println(request.getParameter("struttercache"));
-				out.flush();
-			}
-			else if(internal.startsWith("script"))
-			{
-				String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
-				String IF_NONE_MATCH_HEADER = "If-None-Match";
-				
-				String CACHE_CONTROL_HEADER = "Cache-Control";
-				String CACHE_CONTROL_VALUE = "public, max-age=315360000, post-check=315360000, pre-check=315360000";
-				String LAST_MODIFIED_HEADER = "Last-Modified";
-				String LAST_MODIFIED_VALUE = "Sun, 06 Nov 2005 12:00:00 GMT";
-				String ETAG_HEADER = "ETag";
-				String ETAG_VALUE = "2740050219";
-				String EXPIRES_HEADER = "Expires"; 
-				
-				HttpServletResponse httpresponse = ((HttpServletResponse)response); 
-				HttpServletRequest httprequest = ((HttpServletRequest)request); 
-				
-				if (null != httprequest.getHeader(IF_MODIFIED_SINCE_HEADER) || null != httprequest.getHeader(IF_NONE_MATCH_HEADER)) 
-				{
-					httpresponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					return true;
-				} 
-				   
-				httpresponse.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
-				httpresponse.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
-				httpresponse.setHeader(ETAG_HEADER, ETAG_VALUE);
-	 	        Calendar cal = Calendar.getInstance();
-			    cal.roll(Calendar.YEAR, 10);
-			    httpresponse.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
-			       
-				PrintWriter out = response.getWriter();
-
-				if(script == null)
-				{
-					script = getResource("script/process.js");
-					script = YUIFilter.compressJavaScriptString(script);
-					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
-					script = script.replaceAll("##actionname##", actionfieldname);
-				}
-
-				out.println(script);
 				out.flush();
 			}
 			else if(internal.startsWith("img"))
