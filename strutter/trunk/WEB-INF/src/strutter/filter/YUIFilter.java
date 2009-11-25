@@ -1,15 +1,14 @@
 package strutter.filter;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.Filter;
@@ -68,7 +67,7 @@ public class YUIFilter implements Filter
     private boolean preserveAllSemiColons = true; //Preserve unnecessary semicolons
     private boolean disableOptimizations = false;
     
-    private static Map<String, String> cache = new ConcurrentHashMap<String, String>();
+    private static Map<String, String> cache = new HashMap<String, String>();
 
 
     public void init(FilterConfig filterConfig) throws ServletException 
@@ -141,8 +140,14 @@ public class YUIFilter implements Filter
         
         GZIPOutputStream gzipstream = new GZIPOutputStream(out);
 		response.addHeader("Content-Encoding", "gzip");
-		    
-		gzipstream.write(s.getBytes());
+		
+		if(s != null) {
+			gzipstream.write(s.getBytes());
+		
+			Calendar cal = Calendar.getInstance();
+		    cal.roll(Calendar.YEAR, 10);
+		    response.setDateHeader("Expires", cal.getTimeInMillis()); 
+		}
 		gzipstream.close();
 		
         //out.print(s);   
