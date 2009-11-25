@@ -1,5 +1,7 @@
 package strutter.filter;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,6 +131,17 @@ public class YUIFilter implements Filter
     	String out = new YUIFilter().getCompressedJavaScript(stream);
     	System.out.println(out);
 	}
+    
+    public static String compressJavaScriptString(String script)
+    {
+    	try {
+	    	InputStream is = new ByteArrayInputStream(script.getBytes("UTF-8"));
+	    	
+	       	return new YUIFilter().getCompressedJavaScript(is);
+    	} catch (Exception e) {
+			return script;
+		}
+    }
 
     /**
      * Note that the inputStream is closed!
