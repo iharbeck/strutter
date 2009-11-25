@@ -1,5 +1,6 @@
 package strutter.filter;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -57,7 +58,7 @@ public class YUIFilter implements Filter
 
     private int lineBreakPos = -1;   //Insert a line break after the specified column number
     private boolean verbose = false; //Display possible errors in the code
-    private boolean munge = false; //Minify only, do not obfuscate
+    private boolean munge = true; //Minify only, do not obfuscate
     private boolean preserveAllSemiColons = true; //Preserve unnecessary semicolons
     private boolean disableOptimizations = false;
     
@@ -121,6 +122,13 @@ public class YUIFilter implements Filter
         out.print(s);   
     }
 
+    public static void main(String[] args) throws Exception {
+		
+    	InputStream stream = new FileInputStream("E:/users/harb05/work/strutter/WEB-INF/src/script/process.js");
+    	
+    	String out = new YUIFilter().getCompressedJavaScript(stream);
+    	System.out.println(out);
+	}
 
     /**
      * Note that the inputStream is closed!

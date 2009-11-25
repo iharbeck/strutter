@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -492,6 +493,23 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			else if(internal.startsWith("script"))
 			{
+				String CACHE_CONTROL_HEADER = "Cache-Control";
+				String CACHE_CONTROL_VALUE = "public, max-age=315360000, post-check=315360000, pre-check=315360000";
+				String LAST_MODIFIED_HEADER = "Last-Modified";
+//				String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
+//				   protected static final String IF_NONE_MATCH_HEADER = "If-None-Match";
+				String LAST_MODIFIED_VALUE = "Sun, 06 Nov 2005 12:00:00 GMT";
+				String ETAG_HEADER = "ETag";
+				String ETAG_VALUE = "2740050219";
+				String EXPIRES_HEADER = "Expires"; 
+				   
+				((HttpServletResponse)response).setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
+				((HttpServletResponse)response).setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
+				((HttpServletResponse)response).setHeader(ETAG_HEADER, ETAG_VALUE);
+	 	        Calendar cal = Calendar.getInstance();
+			    cal.roll(Calendar.YEAR, 10);
+			    ((HttpServletResponse)response).setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
+			       
 				PrintWriter out = response.getWriter();
 
 				if(script == null)
