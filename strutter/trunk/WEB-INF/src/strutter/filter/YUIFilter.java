@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,6 +22,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import strutter.controller.ResponseWrapper;
 
 import com.yahoo.platform.yui.compressor.CssCompressor;
 import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
@@ -104,7 +107,6 @@ public class YUIFilter implements Filter
     {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        ServletOutputStream out = response.getOutputStream();
 
         ServletContext context = filterConfig.getServletContext();
         
@@ -112,13 +114,16 @@ public class YUIFilter implements Filter
 
         InputStream inputStream = context.getResourceAsStream(requestPATH);
 
+        ResponseWrapper responsewrapper = new ResponseWrapper(response);
+		
+        String s = null;
         if(inputStream == null)
         {	
-        	filterChain.doFilter(servletRequest, servletResponse);
-        	return;
+        	filterChain.doFilter(servletRequest, responsewrapper);
+        	s = responsewrapper.toString();
+    	} else {
+    		s = cache.get(requestPATH);
     	}
-        String s = cache.get(requestPATH);
-    	
         if (s == null) 
         {
             if (requestPATH.endsWith(".js")) {
@@ -129,7 +134,15 @@ public class YUIFilter implements Filter
             cache.put(requestPATH, s);
         }
         
-        out.print(s);   
+        ServletOutputStream out = response.getOutputStream();
+        
+        GZIPOutputStream gzipstream = new GZIPOutputStream(out);
+		response.addHeader("Content-Encoding", "gzip");
+		    
+		gzipstream.write(s.getBytes());
+		gzipstream.close();
+		
+        //out.print(s);   
     }
 
     public static String stream2str(InputStream is)
