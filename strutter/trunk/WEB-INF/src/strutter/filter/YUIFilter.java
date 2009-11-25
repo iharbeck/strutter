@@ -107,19 +107,26 @@ public class YUIFilter implements Filter
         ServletOutputStream out = response.getOutputStream();
 
         ServletContext context = filterConfig.getServletContext();
-        String requestURI = request.getRequestURI();
-        InputStream inputStream = context.getResourceAsStream(requestURI);
+        
+        String requestPATH = request.getServletPath();
 
-        String s = cache.get(requestURI);
+        InputStream inputStream = context.getResourceAsStream(requestPATH);
+
+        if(inputStream == null)
+        {	
+        	filterChain.doFilter(servletRequest, servletResponse);
+        	return;
+    	}
+        String s = cache.get(requestPATH);
     	
         if (s == null) 
         {
-            if (requestURI.endsWith(".js")) {
+            if (requestPATH.endsWith(".js")) {
                 s = getCompressedJavaScript(inputStream);
-            } else if (requestURI.endsWith(".css")) {
+            } else if (requestPATH.endsWith(".css")) {
                 s = getCompressedCss(inputStream);
             } 
-            cache.put(requestURI, s);
+            cache.put(requestPATH, s);
         }
         
         out.print(s);   
@@ -153,7 +160,7 @@ public class YUIFilter implements Filter
     public static String compressJavaScriptString(String script)
     {
     	try {
-	    	InputStream is = new ByteArrayInputStream(script.getBytes("UTF-8"));
+	    	InputStream is = new ByteArrayInputStream(script.getBytes("ISO 8859-1"));
 	    	
 	       	return new YUIFilter().getCompressedJavaScript(is);
     	} catch (Exception e) {
@@ -169,7 +176,7 @@ public class YUIFilter implements Filter
      */
     private String getCompressedJavaScript(InputStream inputStream) throws IOException 
     {
-        InputStreamReader isr = new InputStreamReader(inputStream, "UTF-8");
+        InputStreamReader isr = new InputStreamReader(inputStream, "ISO 8859-1");
         JavaScriptCompressor compressor = new JavaScriptCompressor(isr, new YUIFilterErrorReporter());
         inputStream.close();
 
@@ -189,7 +196,7 @@ public class YUIFilter implements Filter
      */
     private String getCompressedCss(InputStream inputStream) throws IOException 
     {
-        InputStreamReader isr = new InputStreamReader(inputStream, "UTF-8");
+        InputStreamReader isr = new InputStreamReader(inputStream, "ISO 8859-1");
         CssCompressor compressor = new CssCompressor(isr);
         inputStream.close();
 
