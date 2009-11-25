@@ -526,9 +526,9 @@ public class RequestProcessorProxy extends RequestProcessor
 				if(script == null)
 				{
 					script = getResource("script/process.js");
+					script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
 					script = script.replaceAll("##actionname##", actionfieldname);
-					script = YUIFilter.compressJavaScriptString(script);
 				}
 
 				out.println(script);
