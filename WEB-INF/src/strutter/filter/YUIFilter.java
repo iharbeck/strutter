@@ -1,6 +1,7 @@
 package strutter.filter;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -124,13 +125,30 @@ public class YUIFilter implements Filter
         out.print(s);   
     }
 
-    public static void main(String[] args) throws Exception {
-		
-    	InputStream stream = new FileInputStream("E:/users/harb05/work/strutter/WEB-INF/src/script/process.js");
-    	
-    	String out = new YUIFilter().getCompressedJavaScript(stream);
-    	System.out.println(out);
-	}
+    public static String stream2str(InputStream is)
+    {
+    	BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        String ss = sb.toString();
+        
+        return ss;
+    }
     
     public static String compressJavaScriptString(String script)
     {
@@ -151,7 +169,7 @@ public class YUIFilter implements Filter
      */
     private String getCompressedJavaScript(InputStream inputStream) throws IOException 
     {
-        InputStreamReader isr = new InputStreamReader(inputStream);
+        InputStreamReader isr = new InputStreamReader(inputStream, "UTF-8");
         JavaScriptCompressor compressor = new JavaScriptCompressor(isr, new YUIFilterErrorReporter());
         inputStream.close();
 
@@ -171,7 +189,7 @@ public class YUIFilter implements Filter
      */
     private String getCompressedCss(InputStream inputStream) throws IOException 
     {
-        InputStreamReader isr = new InputStreamReader(inputStream);
+        InputStreamReader isr = new InputStreamReader(inputStream, "UTF-8");
         CssCompressor compressor = new CssCompressor(isr);
         inputStream.close();
 
