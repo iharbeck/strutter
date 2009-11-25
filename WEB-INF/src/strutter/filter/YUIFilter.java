@@ -160,7 +160,7 @@ public class YUIFilter implements Filter
     public static String compressJavaScriptString(String script)
     {
     	try {
-	    	InputStream is = new ByteArrayInputStream(script.getBytes("ISO 8859-1"));
+	    	InputStream is = new ByteArrayInputStream(script.getBytes("ISO8859-1"));
 	    	
 	       	return new YUIFilter().getCompressedJavaScript(is);
     	} catch (Exception e) {
@@ -176,7 +176,7 @@ public class YUIFilter implements Filter
      */
     private String getCompressedJavaScript(InputStream inputStream) throws IOException 
     {
-        InputStreamReader isr = new InputStreamReader(inputStream, "ISO 8859-1");
+        InputStreamReader isr = new InputStreamReader(inputStream, "ISO8859-1");
         JavaScriptCompressor compressor = new JavaScriptCompressor(isr, new YUIFilterErrorReporter());
         inputStream.close();
 
@@ -196,7 +196,7 @@ public class YUIFilter implements Filter
      */
     private String getCompressedCss(InputStream inputStream) throws IOException 
     {
-        InputStreamReader isr = new InputStreamReader(inputStream, "ISO 8859-1");
+        InputStreamReader isr = new InputStreamReader(inputStream, "ISO8859-1");
         CssCompressor compressor = new CssCompressor(isr);
         inputStream.close();
 
