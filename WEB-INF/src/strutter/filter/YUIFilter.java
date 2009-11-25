@@ -120,7 +120,10 @@ public class YUIFilter implements Filter
         if(inputStream == null)
         {	
         	filterChain.doFilter(servletRequest, responsewrapper);
-        	s = responsewrapper.toString();
+        	try {
+        		s = responsewrapper.toString("UTF-8");
+        	} catch (Exception e) {
+        	}
     	} else {
     		s = cache.get(requestPATH);
     	}

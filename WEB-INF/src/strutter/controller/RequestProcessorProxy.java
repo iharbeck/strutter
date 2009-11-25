@@ -500,7 +500,6 @@ public class RequestProcessorProxy extends RequestProcessor
 			    cal.roll(Calendar.YEAR, 10);
 			    response.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
 			       
-				PrintWriter out = response.getWriter();
 
 				if(script == null)
 				{
@@ -510,8 +509,17 @@ public class RequestProcessorProxy extends RequestProcessor
 					script = script.replaceAll("##actionname##", actionfieldname);
 				}
 
-				out.println(script);
-				out.flush();
+				ServletOutputStream out = response.getOutputStream();
+		        
+		        GZIPOutputStream gzipstream = new GZIPOutputStream(out);
+				response.addHeader("Content-Encoding", "gzip");
+				    
+				gzipstream.write(script.getBytes());
+				gzipstream.close();
+				
+				//PrintWriter out = response.getWriter();
+				//out.println(script);
+				//out.flush();
 			}
 			else if(internal.startsWith("killer"))
 			{
