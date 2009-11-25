@@ -493,22 +493,32 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			else if(internal.startsWith("script"))
 			{
+				String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
+				String IF_NONE_MATCH_HEADER = "If-None-Match";
+				
 				String CACHE_CONTROL_HEADER = "Cache-Control";
 				String CACHE_CONTROL_VALUE = "public, max-age=315360000, post-check=315360000, pre-check=315360000";
 				String LAST_MODIFIED_HEADER = "Last-Modified";
-//				String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
-//				   protected static final String IF_NONE_MATCH_HEADER = "If-None-Match";
 				String LAST_MODIFIED_VALUE = "Sun, 06 Nov 2005 12:00:00 GMT";
 				String ETAG_HEADER = "ETag";
 				String ETAG_VALUE = "2740050219";
 				String EXPIRES_HEADER = "Expires"; 
+				
+				HttpServletResponse httpresponse = ((HttpServletResponse)response); 
+				HttpServletRequest httprequest = ((HttpServletRequest)request); 
+				
+				if (null != httprequest.getHeader(IF_MODIFIED_SINCE_HEADER) || null != httprequest.getHeader(IF_NONE_MATCH_HEADER)) 
+				{
+					httpresponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					return true;
+				} 
 				   
-				((HttpServletResponse)response).setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
-				((HttpServletResponse)response).setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
-				((HttpServletResponse)response).setHeader(ETAG_HEADER, ETAG_VALUE);
+				httpresponse.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
+				httpresponse.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
+				httpresponse.setHeader(ETAG_HEADER, ETAG_VALUE);
 	 	        Calendar cal = Calendar.getInstance();
 			    cal.roll(Calendar.YEAR, 10);
-			    ((HttpServletResponse)response).setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
+			    httpresponse.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
 			       
 				PrintWriter out = response.getWriter();
 
