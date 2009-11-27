@@ -117,11 +117,14 @@ public class RequestProcessorProxy extends RequestProcessor
 		proxy.destroy();
 	}
 
-	public void process(HttpServletRequest request, HttpServletResponse response)
+	public void process(HttpServletRequest _request, HttpServletResponse response)
 			throws IOException, ServletException
 	{
 		try 
 		{
+			RequestWrapper request = new RequestWrapper((HttpServletRequest) _request);
+			
+			
 			ActionHelper.init(getServletContext(), request, response);
 
 			// AJAX and so on
@@ -239,11 +242,10 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(decorator != null) {
 				request.setAttribute("decorator_body", doc);
 				
-				RequestWrapper decorequestwrapper = new RequestWrapper((HttpServletRequest) request);
 				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse) response);
 				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/include/decorator/" + decorator);
-				dispatcher.include((ServletRequest)decorequestwrapper, (ServletResponse)decoresponsewrapper);
+				dispatcher.include((ServletRequest)request, (ServletResponse)decoresponsewrapper);
 				
 				try {
 					doc = decoresponsewrapper.toString(plugin.getEncoding());
