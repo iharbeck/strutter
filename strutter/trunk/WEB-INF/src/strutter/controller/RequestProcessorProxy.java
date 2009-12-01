@@ -287,6 +287,25 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 
 			
+			/** AUTOINCLUDE package JS */
+			
+			
+			String path = ActionHelper.getMapping().getType();
+			
+			String jspath = path.replace('.', '/');
+			
+			jspath = jspath + ".js";
+			
+			
+			String jsscript = getResource(jspath);
+			
+			if(jsscript != null)
+			{
+				out.write("<script>\n");
+				out.write(jsscript);
+				out.write("\n</script>");
+			}
+			
 
 			try 
 			{
