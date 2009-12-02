@@ -353,9 +353,26 @@ public class RequestProcessorProxy extends RequestProcessor
 		RequestProcessorProxy.proxyname = proxyname;
 	}
 
-
-
 	private String getResource(String name) 	
+	{
+		BufferedInputStream streamreader = new BufferedInputStream(
+						   getClass().getClassLoader().getResourceAsStream(name)
+				);
+
+				StringBuffer stream = new StringBuffer();
+
+				try {
+					int data;
+					while((data=streamreader.read()) != -1) {
+						stream.append((char)data);
+					}
+				} catch (Exception e) {
+				}
+
+		return stream.toString();
+	}
+
+	private String getResourceWithoutcache(String name) 	
 	{
 		try {
 			BufferedInputStream streamreader = new BufferedInputStream(
