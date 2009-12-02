@@ -1,7 +1,7 @@
 package strutter.controller;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -17,9 +17,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.chain.Catalog;
@@ -357,23 +355,28 @@ public class RequestProcessorProxy extends RequestProcessor
 
 
 
-	private String getResource(String name)
+	private String getResource(String name) 	
 	{
-		BufferedInputStream streamreader = new BufferedInputStream(
-				   getClass().getClassLoader().getResourceAsStream(name)
-				);
-
-				StringBuffer stream = new StringBuffer();
-
-				try {
-					int data;
-					while((data=streamreader.read()) != -1) {
-						stream.append((char)data);
+		try {
+			BufferedInputStream streamreader = new BufferedInputStream(
+					   new FileInputStream(
+							   getClass().getClassLoader().getResource(name).getFile() )
+					);
+	
+					StringBuffer stream = new StringBuffer();
+	
+					try {
+						int data;
+						while((data=streamreader.read()) != -1) {
+							stream.append((char)data);
+						}
+					} catch (Exception e) {
 					}
-				} catch (Exception e) {
-				}
-
-		return stream.toString();
+	
+			return stream.toString();
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	private BufferedInputStream getResourceAsStream(String name)
