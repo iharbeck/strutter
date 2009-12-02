@@ -534,12 +534,12 @@ public class RequestProcessorProxy extends RequestProcessor
 					//	return true;
 				//} 
 				   
-				response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
-				response.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
-				response.setHeader(ETAG_HEADER, ETAG_VALUE);
-	 	        Calendar cal = Calendar.getInstance();
-			    cal.roll(Calendar.YEAR, 10);
-			    response.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
+				//response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
+				//response.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
+				//response.setHeader(ETAG_HEADER, ETAG_VALUE);
+				//Calendar cal = Calendar.getInstance();
+				//cal.roll(Calendar.YEAR, 10);
+				//response.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
 			       
 
 				if(script == null)
