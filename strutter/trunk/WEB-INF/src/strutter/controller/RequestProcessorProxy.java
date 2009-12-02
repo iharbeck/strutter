@@ -356,7 +356,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	private String getResource(String name) 	
 	{
 		BufferedInputStream streamreader = new BufferedInputStream(
-						   getClass().getClassLoader().getResourceAsStream(name)
+				   getClass().getClassLoader().getResourceAsStream(name)
 				);
 
 				StringBuffer stream = new StringBuffer();
@@ -547,8 +547,10 @@ public class RequestProcessorProxy extends RequestProcessor
 					script = getResource("script/process.js");
 					script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
-					script = script.replaceAll("##actionname##", actionfieldname);
 				}
+
+				if(actionfieldname != null)
+					script = script.replaceAll("##actionname##", actionfieldname);
 
 				ServletOutputStream out = response.getOutputStream();
 		        
