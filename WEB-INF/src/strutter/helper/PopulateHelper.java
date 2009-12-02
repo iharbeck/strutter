@@ -32,25 +32,7 @@ public class PopulateHelper
 		populate(bean, null, null, request);
 	}
 
-	public static Map populate(Object bean, String prefix, String suffix, HttpServletRequest request) throws ServletException
-	{
-		Map properties = buildmap(prefix, suffix, request);
-
-		if (bean instanceof FormlessInterface) {    // Webservice will not implement FormlessInterface
-			((FormlessInterface)bean).reset();
-		}
-		
-		// Set the corresponding properties of our bean
-		try {
-		    BeanUtils.populate(bean, properties);
-		} catch(Exception e) {
-		    throw new ServletException("BeanUtils.populate", e);
-		}
-		
-		return properties;
-	}
-	
-	public static Map buildmap(String prefix, String suffix, HttpServletRequest request)
+	public static HashMap populate(Object bean, String prefix, String suffix, HttpServletRequest request)
     	throws ServletException
 	{
 		HashMap properties = new HashMap();
@@ -62,7 +44,9 @@ public class PopulateHelper
 		String method = request.getMethod();
 		boolean isMultipart = false;
 
-		
+		if (bean instanceof FormlessInterface) {    // Webservice will not implement FormlessInterface
+			((FormlessInterface)bean).reset();
+		}
 
 		MultipartRequestHandler multipartHandler = null;
 		if ((contentType != null) && (contentType.startsWith("multipart/form-data")) && (method.equalsIgnoreCase("POST")))
@@ -125,13 +109,20 @@ public class PopulateHelper
 		    }
 		}
 
+		// Set the corresponding properties of our bean
+		try {
+		    BeanUtils.populate(bean, properties);
+		} catch(Exception e) {
+		    throw new ServletException("BeanUtils.populate", e);
+		}
+		
 		return properties;
 	}
 
 	private static Map getAllParametersForMultipartRequest(
 	        HttpServletRequest request,
-	        MultipartRequestHandler multipartHandler) 
-	{
+	        MultipartRequestHandler multipartHandler) {
+
 	    Map parameters = new HashMap();
 	    Hashtable elements = multipartHandler.getAllElements();
 	    Enumeration e = elements.keys();
