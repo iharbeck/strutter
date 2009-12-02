@@ -528,11 +528,11 @@ public class RequestProcessorProxy extends RequestProcessor
 		{
 			if(internal.startsWith("script"))
 			{
-				if (null != request.getHeader(IF_MODIFIED_SINCE_HEADER) || null != request.getHeader(IF_NONE_MATCH_HEADER)) 
-				{
-					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					return true;
-				} 
+				//if (null != request.getHeader(IF_MODIFIED_SINCE_HEADER) || null != request.getHeader(IF_NONE_MATCH_HEADER)) 
+					//{
+					//	response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					//	return true;
+				//} 
 				   
 				response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
 				response.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
