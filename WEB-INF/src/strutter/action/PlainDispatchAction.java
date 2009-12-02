@@ -2,6 +2,7 @@ package strutter.action;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -125,7 +126,7 @@ public class PlainDispatchAction extends BaseAction
 	
 			action.setServlet(this.servlet);
 	
-			HashMap properties = PopulateHelper.populate(action, actionmapping.getPrefix(), actionmapping.getSuffix(), request);
+			Map properties = PopulateHelper.populate(action, actionmapping.getPrefix(), actionmapping.getSuffix(), request);
 	
 			if(name == null && properties.get(parameter) != null)
 				name = ((String[])properties.get(parameter))[0];
