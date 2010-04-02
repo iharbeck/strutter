@@ -197,7 +197,12 @@ public class RequestProcessorProxy extends RequestProcessor
 				return;
 
 
-			Object form = ActionHelper.getForm();
+			Object form = null;
+			
+			try {
+				form = ActionHelper.getForm();
+			} catch (Exception e1) {
+			}
 			
 			
 			StringWriter out = new StringWriter(10000);
