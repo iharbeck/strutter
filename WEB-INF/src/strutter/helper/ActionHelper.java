@@ -136,9 +136,14 @@ public class ActionHelper
 		return TagHelper.getFormValue(form, name);
 	}
 
-	public final static Object getForm()
+	public final static Object getForm() throws Exception
 	{
-		return Utils.getActionForm(me().request);
+		Object form = Utils.getActionForm(me().request);
+
+		if(form == null)
+			throw new Exception("FormularClass not defined use FormlessInterface");
+		
+		return form;
 	}
 
 	public final static Object getForm(Class clazz)
@@ -146,12 +151,12 @@ public class ActionHelper
 		return Utils.getActionForm(me().request, clazz);
 	}
 	
-	public final static String getFormAttribute(String name)
+	public final static String getFormAttribute(String name) throws Exception
 	{
 		return TagHelper.getFormValue(getForm(), name);
 	}
 	
-	public final static void setFormAttribute(String name, String value)
+	public final static void setFormAttribute(String name, String value) throws Exception
 	{
 	    TagHelper.setFormValue(getForm(), name, value);
 	}
