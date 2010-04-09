@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="WEB-INF/src"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/htmlparser.jar" sourcepath="D:/work/htmlparser/HTMLParser-2.0-SNAPSHOT/lexer/src/main/java"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-logging-1.0.4.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.11.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/SSO/SSOClient-0.1.0.jar"/>

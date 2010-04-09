@@ -42,7 +42,23 @@ function subbernowait(action) {
     process();
 }
 
-function setAction(action) { $N('##actionname##').value=action; }
+function setAction(action) { 
+
+	var input = $N('##actionname##');
+    
+    if(!input)
+    {
+		input = document.createElement('input');
+  
+	    input.setAttribute('id', '##actionname##');
+	    input.setAttribute('name', '##actionname##');
+	    
+	    input.setAttribute('type', 'hidden');
+	    document.forms[0].appendChild(input);
+    }
+    
+	input.value=action; 
+}
 
 function elementform(obj) {
 	var parent = obj.getParent();

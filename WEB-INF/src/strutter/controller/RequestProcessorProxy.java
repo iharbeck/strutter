@@ -238,7 +238,6 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(plugin.getViewer().equals("1"))
 				doc = htmlProcessing(request, response, form, doc);
 			
-			
 						
 			String decorator = (String)request.getAttribute("decorator_name");
 			
@@ -473,23 +472,19 @@ public class RequestProcessorProxy extends RequestProcessor
 				{
 					Node formtag = (Node)formtags.elementAt(0);
 	
-					NodeList inputtags = nl.extractAllNodesThatMatch(
+					/*NodeList inputtags = formtags.extractAllNodesThatMatch(
 							  new AndFilter (
 							   new TagNameFilter ("input"), new HasAttributeFilter("name", actionfieldname)), true
-					);
-	
-					if(inputtags.size() == 0)
-					{
-						InputTag input = new InputTag();
-	
-						input.setAttribute("name", actionfieldname, '"');
-						input.setAttribute("type", "hidden", '"');
-	
-						if(formtag.getChildren() != null)
-							formtag.getChildren().add(input);
-					}
+					);*/
 
-					// sendertoken
+					// hiddenfield action 
+					InputTag input = new InputTag();
+
+					input.setAttribute("name", actionfieldname, '"');
+					input.setAttribute("type", "hidden", '"');
+						
+
+					// hiddenfield sendertoken
 					InputTag inputToken = new InputTag();
 					
 					inputToken.setAttribute("name", "_TOKEN", '"');
@@ -497,10 +492,11 @@ public class RequestProcessorProxy extends RequestProcessor
 					inputToken.setAttribute("value", ""+System.currentTimeMillis(), '"');
 					
 					if(formtag.getChildren() != null)
+					{
+						formtag.getChildren().add(input);
 						formtag.getChildren().add(inputToken);
+					}
 				}
-				
-				
 			}
 		
 			return nl.toHtml();  // --as close to original as possible
