@@ -87,7 +87,9 @@ public class CSpanTag extends Span
 		   			val = ActionHelper.getResource(this.getAttribute("id"));
 		   		}
 		   		
-		   		if(type.endsWith("_plain"))
+		   		if(type.endsWith("_min"))
+		   			this.removeAttribute("id");
+		   		else if(type.endsWith("_plain"))
 		   			plain = true;
 
 		   		if(val == null || val.equals("")) {
@@ -98,14 +100,14 @@ public class CSpanTag extends Span
 		   		
 		   		this.removeAttribute("type");
 		   		
-		   		String oldclass = this.getAttribute("class");
+		  /* 		String oldclass = this.getAttribute("class");
 		   		if(oldclass == null)
 		   			this.setAttribute("class", "modify");
 		   		else
 		   			this.setAttribute("class", oldclass + " " + "modify");
 		   		
 		   		this.setAttribute("locale", ActionHelper.getLocale().getLanguage(), '"');
-		   		
+		  */ 		
 		   		this.setChildren(new NodeList());
 	    		this.getChildren().add(new TextNode(val)); 
 	   		}
