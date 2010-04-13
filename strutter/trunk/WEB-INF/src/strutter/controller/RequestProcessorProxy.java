@@ -347,6 +347,8 @@ public class RequestProcessorProxy extends RequestProcessor
             try {
             	ActionHelper.getSession().setAttribute("thread", null);
             } catch(Exception e) {}
+            
+            System.out.println("done" + System.currentTimeMillis());
 		}
 	}
 
