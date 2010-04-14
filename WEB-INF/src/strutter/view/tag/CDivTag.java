@@ -66,14 +66,14 @@ public class CDivTag extends Div
 	   		
 	   		try {
 			    
-		   		if(type.equals("text"))
+		   		if(type.startsWith("text"))
 			   		//val = BeanUtils.getProperty(form, this.getAttribute("id"));
 		   		    val = TagHelper.getFormValue(form, this.getAttribute("id"));
-		   		else if(type.equals("error") || type.equals("errors")) 
+		   		else if(type.startsWith("error") || type.startsWith("errors")) 
 		   			val = TagHelper.handleList(this, request, Utils.getErrors((HttpServletRequest)request));
-		   		else if(type.equals("message") || type.equals("messages")) 
+		   		else if(type.startsWith("message") || type.startsWith("messages")) 
 		   			val = TagHelper.handleList(this, request, Utils.getMessages((HttpServletRequest)request));
-		   		else if(type.equals("resource")) 
+		   		else if(type.startsWith("resource")) 
 		   		{
 //		   			Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
 //		   			
