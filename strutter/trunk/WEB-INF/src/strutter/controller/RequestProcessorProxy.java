@@ -205,7 +205,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			
 			
-			StringWriter out = new StringWriter(10000);
+			StringWriter out = new StringWriter(40000);
 			
 			if(ActionHelper.isMainThread() && ActionHelper.isHeading())
 			{
