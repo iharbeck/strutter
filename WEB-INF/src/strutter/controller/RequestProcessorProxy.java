@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -33,14 +32,8 @@ import org.apache.struts.chain.contexts.ServletActionContext;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.ModuleConfig;
-import org.htmlparser.Node;
 import org.htmlparser.Parser;
 import org.htmlparser.PrototypicalNodeFactory;
-import org.htmlparser.filters.AndFilter;
-import org.htmlparser.filters.HasAttributeFilter;
-import org.htmlparser.filters.TagNameFilter;
-import org.htmlparser.nodes.TagNode;
-import org.htmlparser.tags.InputTag;
 import org.htmlparser.tags.OptionTag;
 import org.htmlparser.util.NodeList;
 
@@ -56,6 +49,7 @@ import strutter.view.tag.CButtonTag;
 import strutter.view.tag.CDivTag;
 import strutter.view.tag.CFormTag;
 import strutter.view.tag.CInputTag;
+import strutter.view.tag.CMetaTag;
 import strutter.view.tag.CSelectTag;
 import strutter.view.tag.CSpanTag;
 import strutter.view.tag.CTextareaTag;
@@ -241,7 +235,8 @@ public class RequestProcessorProxy extends RequestProcessor
 						
 			String decorator = (String)request.getAttribute("decorator_name");
 			
-			if(decorator != null) {
+			if(decorator != null) 
+			{
 				request.setAttribute("decorator_body", doc);
 				
 				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse) response);
@@ -256,7 +251,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				}
 			}
 				
-			// localisierung ${nachname}
+			// localisierung #R{nachname}
 			doc = localisation.matchall(doc);
 			
 			out.write(doc);
@@ -424,39 +419,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	
 			if(form == null)
 				form = new Object();
-		
-			factory.registerTag (new CSelectTag   (form, request));
-			factory.registerTag (new CInputTag    (form, request));
-			factory.registerTag (new CButtonTag   (form, request));
-			factory.registerTag (new CDivTag      (form, request));
-			factory.registerTag (new CSpanTag     (form, request));
-			factory.registerTag (new CTextareaTag (form, request));
-			factory.registerTag (new OptionTag());
-			factory.registerTag (new CFormTag());
-			//factory.registerTag (new MetaTag());
-
-			hparser.setNodeFactory (factory);
-			hparser.setInputHTML(doc);
 	
-	        //for (NodeIterator e = hparser.elements (); e.hasMoreNodes (); )
-	        //	out.println(e.nextNode().toHtml());
-	
-			NodeList nl = hparser.parse(null);
-	
-			// META INFORMATION FOR DECORATOR
-			{
-				NodeList metatags = nl.extractAllNodesThatMatch(new TagNameFilter ("meta"), true);
-				
-				for(int i = 0; i < metatags.size(); i++)
-				{
-					TagNode metatag = (TagNode)metatags.elementAt(i);
-				
-					String name = metatag.getAttribute("NAME");
-					if(name != null && name.startsWith("decorator_"))
-						request.setAttribute(name, metatag.getAttribute("CONTENT"));
-				}
-			}
-			
 			// add hidden action field as named in configuration
 			if(actionfieldname == null)
 			{
@@ -465,42 +428,27 @@ public class RequestProcessorProxy extends RequestProcessor
 				if (mapping != null && mapping.getParameter() != null)
 					actionfieldname = mapping.getParameter();
 			}
-	
-			if(actionfieldname != null)
-			{
-				NodeList formtags = nl.extractAllNodesThatMatch(new TagNameFilter ("form"), true);
-	
-				if(formtags.size() > 0)
-				{
-					Node formtag = (Node)formtags.elementAt(0);
-	
-					/*NodeList inputtags = formtags.extractAllNodesThatMatch(
-							  new AndFilter (
-							   new TagNameFilter ("input"), new HasAttributeFilter("name", actionfieldname)), true
-					);*/
+			
+			factory.registerTag (new CSelectTag   (form, request));
+			factory.registerTag (new CInputTag    (form, request));
+			factory.registerTag (new CButtonTag   (form, request));
+			factory.registerTag (new CDivTag      (form, request));
+			factory.registerTag (new CSpanTag     (form, request));
+			factory.registerTag (new CTextareaTag (form, request));
+			factory.registerTag (new OptionTag());
+			factory.registerTag (new CFormTag(actionfieldname));		// Hiddenfield Handler
+			factory.registerTag (new CMetaTag(request));				// Dekorator Metainformation
 
-					// hiddenfield action 
-					InputTag input = new InputTag();
+			hparser.setNodeFactory (factory);
+			hparser.setInputHTML(doc);
+	
+	        //for (NodeIterator e = hparser.elements (); e.hasMoreNodes (); )
+	        //	out.println(e.nextNode().toHtml());
 
-					input.setAttribute("name", actionfieldname, '"');
-					input.setAttribute("type", "hidden", '"');
-						
-
-					// hiddenfield sendertoken
-					InputTag inputToken = new InputTag();
-					
-					inputToken.setAttribute("name", "_TOKEN", '"');
-					inputToken.setAttribute("type", "hidden", '"');
-					inputToken.setAttribute("value", ""+System.currentTimeMillis(), '"');
-					
-					if(formtag.getChildren() != null)
-					{
-						formtag.getChildren().add(input);
-						formtag.getChildren().add(inputToken);
-					}
-				}
-			}
-		
+			System.out.println("P" + System.currentTimeMillis());
+			NodeList nl = hparser.parse(null);
+			System.out.println("E" + System.currentTimeMillis());
+			
 			return nl.toHtml();  // --as close to original as possible
 		} catch (Exception e) {
 			return doc;
