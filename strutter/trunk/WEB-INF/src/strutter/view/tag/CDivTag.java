@@ -87,20 +87,23 @@ public class CDivTag extends Div
 		   		
 		   		this.removeAttribute("type");
 		   		
+		   		if(type.endsWith("_min"))
+		   			this.removeAttribute("id");
+		   		
 		   		if(val == null || val.equals("")) {
 		   			this.setAttribute("class", "nomessages", '"');
 		   			remove = true;
 		   			return;
 		   		}
 		   		
-				String oldclass = this.getAttribute("class");
+			/*	String oldclass = this.getAttribute("class");
 		   		if(oldclass == null)
 		   			this.setAttribute("class", "modify", '"');
 		   		else
 		   			this.setAttribute("class", oldclass + " " + "modify", '"');
 		   		
 		   		this.setAttribute("locale", ActionHelper.getLocale().getLanguage(), '"');
-		   		
+		   	*/	
 		   		this.setChildren(new NodeList());
 	    		this.getChildren().add(new TextNode(val)); 
 	   		}
