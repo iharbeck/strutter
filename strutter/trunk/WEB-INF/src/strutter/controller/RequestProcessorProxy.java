@@ -684,12 +684,10 @@ class BeforeRenderCommand implements Command {
 
 class RMatcher 
 {
-	final static String varpattern = "#R\\{(.*?)\\}";
-	
-	Pattern pattern;
+	static Pattern pattern;
 
-	public RMatcher() {
-		pattern = Pattern.compile(varpattern, Pattern.MULTILINE);
+	static {
+		pattern = Pattern.compile("#R\\{(.*?)\\}", Pattern.MULTILINE);
 	}
 	
 	public final String matchall(String val) 
@@ -699,16 +697,20 @@ class RMatcher
 		
 		Matcher matcher = pattern.matcher(val);
 		
-		StringBuilder target = new StringBuilder(4000);
-		
+		// without match return without copy / change
+		if(!matcher.find())
+			return val;
+
 		int pos = 0;
-		while(matcher.find())
+		StringBuilder target = new StringBuilder(40000);
+		
+		do
 		{
 			target.append(val.substring(pos, matcher.start()));
 			target.append(ActionHelper.getResource(matcher.group(1)));
 			
 			pos = matcher.end();
-		}
+		} while(matcher.find());
 		
 		target.append(val.substring(pos));
 		
