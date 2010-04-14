@@ -87,7 +87,6 @@ public class CSpanTag extends Span
 		   			val = ActionHelper.getResource(this.getAttribute("id"));
 		   		}
 		   		
-		   		//System.out.println(type);
 		   		if(type.endsWith("_min"))
 		   			this.removeAttribute("id");
 		   		else if(type.endsWith("_plain"))
