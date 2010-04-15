@@ -56,6 +56,7 @@ import strutter.view.tag.CTextareaTag;
 
 public class RequestProcessorProxy extends RequestProcessor 
 {
+	public final static int BUFFERSIZE = 40000;
 	static ActionPlugin plugin;
 	static String proxyname;
 
@@ -199,7 +200,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			
 			
-			StringWriter out = new StringWriter(40000);
+			StringWriter out = new StringWriter(RequestProcessorProxy.BUFFERSIZE);
 			
 			if(ActionHelper.isMainThread() && ActionHelper.isHeading())
 			{
@@ -357,18 +358,18 @@ public class RequestProcessorProxy extends RequestProcessor
 	private String getResource(String name) 	
 	{
 		BufferedInputStream streamreader = new BufferedInputStream(
-				   getClass().getClassLoader().getResourceAsStream(name)
-				);
+			getClass().getClassLoader().getResourceAsStream(name)
+		);
 
-				StringBuffer stream = new StringBuffer();
+		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
 
-				try {
-					int data;
-					while((data=streamreader.read()) != -1) {
-						stream.append((char)data);
-					}
-				} catch (Exception e) {
-				}
+		try {
+			int data;
+			while((data=streamreader.read()) != -1) {
+				stream.append((char)data);
+			}
+		} catch (Exception e) {
+		}
 
 		return stream.toString();
 	}
@@ -650,7 +651,7 @@ class RMatcher
 			return val;
 
 		int pos = 0;
-		StringBuilder target = new StringBuilder(40000);
+		StringBuilder target = new StringBuilder(RequestProcessorProxy.BUFFERSIZE);
 		
 		do
 		{
