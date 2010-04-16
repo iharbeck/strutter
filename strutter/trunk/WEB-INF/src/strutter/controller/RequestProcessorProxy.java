@@ -1,7 +1,6 @@
 package strutter.controller;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -66,6 +65,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	static String script = null;
 	static RMatcher localisation;
 	
+	String actionfieldname = "action";
 	
 	public void init(ActionServlet servlet, ModuleConfig moduleConfig)
 			throws ServletException
@@ -117,12 +117,23 @@ public class RequestProcessorProxy extends RequestProcessor
 		{
 			RequestWrapper request = new RequestWrapper((HttpServletRequest) _request);
 			
+			System.out.println(_request.getRequestURL());
 			
 			ActionHelper.init(getServletContext(), request, response);
 
+			ActionConfig mapping = ActionHelper.getMapping();
+
+			// add hidden action field as named in configuration
+			if(actionfieldname == null)
+			{
+				if (mapping != null && mapping.getParameter() != null)
+					actionfieldname = mapping.getParameter();
+			}
+			
 			// AJAX and so on
 			if(internalProcessing(request, response))
 				return;
+			
 			
 			// do the character encoding staff
 			request.setCharacterEncoding(plugin.getEncoding());  // CharsetFilter
@@ -139,10 +150,10 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(ActionHelper.isWSAction())
 			{
 				try {
-					Object direct = Class.forName( ActionHelper.getMapping().getType() ).newInstance(); 
+					Object direct = Class.forName( mapping.getType() ).newInstance(); 
 					PopulateHelper.populate(direct, request);
 				
-					String method = request.getParameter(ActionHelper.getMapping().getParameter());
+					String method = request.getParameter(mapping.getParameter());
 					WSActionHelper.dispatchMethod(direct, method);
 				} catch(Exception e) {
 					log.error("WSDispatcher", e);
@@ -151,23 +162,20 @@ public class RequestProcessorProxy extends RequestProcessor
 				return;
 			}
 	
-			
 	
-	
-			if(interceptorBefore())
-				return;
-
-
+//			if(interceptorBefore())
+//				return;
 			
+
 			ActionHelper.getSession().setAttribute("thread", Thread.currentThread());
 
 
-			ActionForward helperforward = ActionHelper.startInterceptors();
-
-			if(helperforward != null) {
-				Utils.processForwardConfig(request, response, helperforward);
-				return;
-			}
+//			ActionForward helperforward = ActionHelper.startInterceptors();
+//
+//			if(helperforward != null) {
+//				Utils.processForwardConfig(request, response, helperforward);
+//				return;
+//			}
 
 
 
@@ -207,7 +215,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				if(plugin.getDoctype().equals("1"))
 				   out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
 				
-					//out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
+				//out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
 				//out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 				
 				if(plugin.getScript().equals("1") || plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1") || plugin.getTemplate().equals("1") )
@@ -224,7 +232,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				out.write("<script type='text/javascript' src='dwr/engine.js'> </script>\n");
 				out.write("<script type='text/javascript' src='dwr/util.js'> </script>\n");
 				
-				String classname = ActionPlugin.getClassName(ActionHelper.getActionMapping().getType());
+				String classname = ActionPlugin.getClassName(mapping.getType());
 				
 				out.write("<script type='text/javascript' src='dwr/interface/" + classname + ".js'> </script>\n");
 			}
@@ -287,13 +295,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			
 			/** AUTOINCLUDE package JS */
 			
-			
-			String path = ActionHelper.getMapping().getType();
-			
-			String jspath = path.replace('.', '/');
-			
-			jspath = jspath + ".js";
-			
+			String jspath = mapping.getType().replace('.', '/') + ".js";
 			
 			String jsscript = getResource(jspath);
 			
@@ -303,7 +305,6 @@ public class RequestProcessorProxy extends RequestProcessor
 				out.write(jsscript);
 				out.write("\n</script>");
 			}
-			
 
 			try 
 			{
@@ -331,7 +332,8 @@ public class RequestProcessorProxy extends RequestProcessor
 				writer2.write(doc);
 				//writer2.flush();
 			}
-			interceptorAfter();
+			
+//			interceptorAfter();
 
 		}
 		finally
@@ -347,9 +349,6 @@ public class RequestProcessorProxy extends RequestProcessor
             System.out.println("done" + System.currentTimeMillis());
 		}
 	}
-
-	
-	
 	
 	public static void setProxyname(String proxyname) {
 		RequestProcessorProxy.proxyname = proxyname;
@@ -374,30 +373,6 @@ public class RequestProcessorProxy extends RequestProcessor
 		return stream.toString();
 	}
 
-	private String getResourceWithoutcache(String name) 	
-	{
-		try {
-			BufferedInputStream streamreader = new BufferedInputStream(
-					   new FileInputStream(
-							   getClass().getClassLoader().getResource(name).getFile() )
-					);
-	
-					StringBuffer stream = new StringBuffer();
-	
-					try {
-						int data;
-						while((data=streamreader.read()) != -1) {
-							stream.append((char)data);
-						}
-					} catch (Exception e) {
-					}
-	
-			return stream.toString();
-		} catch (Exception e) {
-			return "";
-		}
-	}
-
 	private BufferedInputStream getResourceAsStream(String name)
 	{
 		BufferedInputStream streamreader = new BufferedInputStream(
@@ -407,8 +382,6 @@ public class RequestProcessorProxy extends RequestProcessor
 		return streamreader;
 	}
 
-
-	String actionfieldname;
 
 	String htmlProcessing(ServletRequest request, ServletResponse response, Object form, String doc) throws ServletException
 	{
@@ -420,15 +393,6 @@ public class RequestProcessorProxy extends RequestProcessor
 	
 			if(form == null)
 				form = new Object();
-	
-			// add hidden action field as named in configuration
-			if(actionfieldname == null)
-			{
-				ActionConfig mapping = ActionHelper.getMapping();
-	
-				if (mapping != null && mapping.getParameter() != null)
-					actionfieldname = mapping.getParameter();
-			}
 			
 			factory.registerTag (new CSelectTag   (form, request));
 			factory.registerTag (new CInputTag    (form, request));
@@ -443,9 +407,6 @@ public class RequestProcessorProxy extends RequestProcessor
 			hparser.setNodeFactory (factory);
 			hparser.setInputHTML(doc);
 	
-	        //for (NodeIterator e = hparser.elements (); e.hasMoreNodes (); )
-	        //	out.println(e.nextNode().toHtml());
-
 			System.out.println("P" + System.currentTimeMillis());
 			NodeList nl = hparser.parse(null);
 			System.out.println("E" + System.currentTimeMillis());
@@ -474,12 +435,14 @@ public class RequestProcessorProxy extends RequestProcessor
 			return false;
 
 		String internal = ((HttpServletRequest)request).getQueryString();
-		HttpSession session = ((HttpServletRequest)request).getSession();
+		
 
 		if(internal != null)
 		{
 			if(internal.startsWith("script"))
 			{
+				HttpSession session = ((HttpServletRequest)request).getSession();
+				
 				//if (null != request.getHeader(IF_MODIFIED_SINCE_HEADER) || null != request.getHeader(IF_NONE_MATCH_HEADER)) 
 					//{
 					//	response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -499,8 +462,8 @@ public class RequestProcessorProxy extends RequestProcessor
 					script = getResource("script/process.js");
 					script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
-				}
 
+				}
 				if(actionfieldname != null)
 					script = script.replaceAll("##actionname##", actionfieldname);
 
@@ -518,6 +481,8 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			else if(internal.startsWith("killer"))
 			{
+				HttpSession session = ((HttpServletRequest)request).getSession();
+				
 				try
 				{
 					Thread thread = ((Thread)session.getAttribute("thread"));
@@ -551,7 +516,6 @@ public class RequestProcessorProxy extends RequestProcessor
 				response.setContentType("image/gif");
 				out.flush();
 				in.close();
-
 			}
 			else if(internal.startsWith("keepalive"))
 			{
@@ -560,10 +524,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		}
 
 		return true;
-
 	}
-
-
 
 	public boolean interceptorBefore() throws ServletException, IOException
 	{
@@ -613,7 +574,6 @@ public class RequestProcessorProxy extends RequestProcessor
 	public static void setPlugin(ActionPlugin plugin) {
 		RequestProcessorProxy.plugin = plugin;
 	}
-
 }
 
 class BeforeRenderCommand implements Command {
