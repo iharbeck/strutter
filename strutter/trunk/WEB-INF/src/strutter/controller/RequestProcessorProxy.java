@@ -65,7 +65,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	static String script = null;
 	static RMatcher localisation;
 	
-	String actionfieldname = "action";
+	String actionfieldname;
 	
 	public void init(ActionServlet servlet, ModuleConfig moduleConfig)
 			throws ServletException
