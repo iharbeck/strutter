@@ -475,7 +475,6 @@ public class RequestProcessorProxy extends RequestProcessor
 			else if(internal.startsWith("js_"))
 			{
 				String file = internal.substring(3);
-				System.out.println(file);
 	
 				String etag = ETAG_VALUES.get(file); 
 					
