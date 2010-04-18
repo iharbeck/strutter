@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -65,7 +66,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	static String script = null;
 	static RMatcher localisation;
 	
-	String actionfieldname;
+	static String actionfieldname;
 	
 	public void init(ActionServlet servlet, ModuleConfig moduleConfig)
 			throws ServletException
@@ -103,6 +104,8 @@ public class RequestProcessorProxy extends RequestProcessor
 		template = getResource("script/process.template");
 
 		localisation = new RMatcher();
+		
+		actionfieldname = plugin.getAliasaction();
 	}
 
 	public void destroy() {
@@ -110,40 +113,43 @@ public class RequestProcessorProxy extends RequestProcessor
 		proxy.destroy();
 	}
 
-	public void process(HttpServletRequest _request, HttpServletResponse response)
+	public void process(HttpServletRequest _request, HttpServletResponse _response)
 			throws IOException, ServletException
 	{
 		try 
 		{
-			RequestWrapper request = new RequestWrapper((HttpServletRequest) _request);
+			RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) _request);
 			
 			System.out.println(_request.getRequestURL());
 			
-			ActionHelper.init(getServletContext(), request, response);
+			// add hidden action field as named in configuration
+			//if(actionfieldname == null)
+			//{
+			//	if (mapping != null && mapping.getParameter() != null)
+			//		actionfieldname = mapping.getParameter();
+			//}
+
+			ActionHelper.init(getServletContext(), requestwrapper, _response);
+			
+			// AJAX and so on
+			if(ActionHelper.getActionname().equals("/strutter"))
+			{
+				if(internalProcessing(requestwrapper, _response))
+					return;
+			}
+
 
 			ActionConfig mapping = ActionHelper.getMapping();
 
-			// add hidden action field as named in configuration
-			if(actionfieldname == null)
-			{
-				if (mapping != null && mapping.getParameter() != null)
-					actionfieldname = mapping.getParameter();
-			}
-			
-			// AJAX and so on
-			if(internalProcessing(request, response))
-				return;
-			
-			
 			// do the character encoding staff
-			request.setCharacterEncoding(plugin.getEncoding());  // CharsetFilter
-			response.setCharacterEncoding(plugin.getEncoding());
+			requestwrapper.setCharacterEncoding(plugin.getEncoding());  // CharsetFilter
+			_response.setCharacterEncoding(plugin.getEncoding());
 			
 			// disable caching
 			if(plugin.getNocache().equals("1")) {
-				response.setHeader("Pragma", "No-cache");
-				response.setHeader("Cache-Control", "no-cache");
-				response.setDateHeader("Expires", 1);
+				_response.setHeader("Pragma", "No-cache");
+				_response.setHeader("Cache-Control", "no-cache");
+				_response.setDateHeader("Expires", 1);
 			}
 			
 	
@@ -151,9 +157,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			{
 				try {
 					Object direct = Class.forName( mapping.getType() ).newInstance(); 
-					PopulateHelper.populate(direct, request);
+					PopulateHelper.populate(direct, requestwrapper);
 				
-					String method = request.getParameter(mapping.getParameter());
+					String method = requestwrapper.getParameter(mapping.getParameter());
 					WSActionHelper.dispatchMethod(direct, method);
 				} catch(Exception e) {
 					log.error("WSDispatcher", e);
@@ -180,9 +186,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 
 			// Wrapper
-			RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) request);
-			ResponseWrapper responsewrapper = new ResponseWrapper((HttpServletResponse) response);
-
+			ResponseWrapper responsewrapper = new ResponseWrapper((HttpServletResponse) _response);
 
 			proxy.process(requestwrapper, responsewrapper);
 
@@ -219,7 +223,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				//out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 				
 				if(plugin.getScript().equals("1") || plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1") || plugin.getTemplate().equals("1") )
-				   out.write("<SCRIPT src='strutter.do?script' type='text/javascript'></SCRIPT>\n");
+				   out.write("<SCRIPT src='strutter.do?js' type='text/javascript'></SCRIPT>\n");
 			}
 			
 			if(ActionHelper.isRemoteAction())
@@ -239,19 +243,19 @@ public class RequestProcessorProxy extends RequestProcessor
 			
 			
 			if(plugin.getViewer().equals("1"))
-				doc = htmlProcessing(request, response, form, doc);
+				doc = htmlProcessing(requestwrapper, form, doc);
 			
 						
-			String decorator = (String)request.getAttribute("decorator_name");
+			String decorator = (String)requestwrapper.getAttribute("decorator_name");
 			
 			if(decorator != null) 
 			{
-				request.setAttribute("decorator_body", doc);
+				requestwrapper.setAttribute("decorator_body", doc);
 				
-				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse) response);
+				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse) _response);
 				
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/include/decorator/" + decorator);
-				dispatcher.include((ServletRequest)request, (ServletResponse)decoresponsewrapper);
+				RequestDispatcher dispatcher = requestwrapper.getRequestDispatcher("/include/decorator/" + decorator);
+				dispatcher.include((ServletRequest)requestwrapper, (ServletResponse)decoresponsewrapper);
 				
 				try {
 					doc = decoresponsewrapper.toString(plugin.getEncoding());
@@ -282,7 +286,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				}
 				if(plugin.getCookiecheck().equals("1")) {
 				    // Cookies enabled check
-					((HttpServletResponse)response).addCookie(new Cookie("strutter", "1"));
+					_response.addCookie(new Cookie("strutter", "1"));
 				}
 				
 				if(plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1"))
@@ -295,26 +299,30 @@ public class RequestProcessorProxy extends RequestProcessor
 			
 			/** AUTOINCLUDE package JS */
 			
-			String jspath = mapping.getType().replace('.', '/') + ".js";
+			String type = mapping.getType().replace('.', '/');
+			String jspath = type + ".js";
 			
 			String jsscript = getResource(jspath);
 			
-			if(jsscript != null)
+			if(jsscript.length() > 0)
 			{
-				out.write("<script>\n");
-				out.write(jsscript);
-				out.write("\n</script>");
+				//out.write("<script>\n");
+				//out.write(jsscript);
+				//out.write("\n</script>");
+
+				out.write("<SCRIPT src='strutter.do?js_" + type + "' type='text/javascript'></SCRIPT>\n");
+
 			}
 
 			try 
 			{
-				String encoding = request.getHeader("Accept-Encoding");
+				String encoding = requestwrapper.getHeader("Accept-Encoding");
 				
-				ServletOutputStream writer = response.getOutputStream();
+				ServletOutputStream writer = _response.getOutputStream();
 	
 				if((encoding != null && encoding.indexOf("gzip") != -1) && ActionHelper.isMainThread() && plugin.getCompression().equals("1")) {
 					GZIPOutputStream gzipstream = new GZIPOutputStream(writer);
-					response.addHeader("Content-Encoding", "gzip");
+					_response.addHeader("Content-Encoding", "gzip");
 					    
 					gzipstream.write(out.toString().getBytes(plugin.getEncoding()));
 					gzipstream.close();
@@ -324,11 +332,11 @@ public class RequestProcessorProxy extends RequestProcessor
 					writer.flush();
 				}
 				
-				response.flushBuffer();
+				_response.flushBuffer();
 			} 
 			catch(Exception e) 
 			{
-				PrintWriter writer2 = response.getWriter();
+				PrintWriter writer2 = _response.getWriter();
 				writer2.write(doc);
 				//writer2.flush();
 			}
@@ -356,11 +364,11 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	private String getResource(String name) 	
 	{
+		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
+
 		BufferedInputStream streamreader = new BufferedInputStream(
 			getClass().getClassLoader().getResourceAsStream(name)
 		);
-
-		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
 
 		try {
 			int data;
@@ -382,8 +390,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		return streamreader;
 	}
 
-
-	String htmlProcessing(ServletRequest request, ServletResponse response, Object form, String doc) throws ServletException
+	String htmlProcessing(ServletRequest request, Object form, String doc) throws ServletException
 	{
 		try 
 		{
@@ -417,55 +424,41 @@ public class RequestProcessorProxy extends RequestProcessor
 		}
 	}
 
-	final static String IF_MODIFIED_SINCE_HEADER = "If-Modified-Since";
+	static String ETAG_VALUE;
 	final static String IF_NONE_MATCH_HEADER = "If-None-Match";
-	
-	final static String CACHE_CONTROL_HEADER = "Cache-Control";
-	final static String CACHE_CONTROL_VALUE = "public, max-age=315360000, post-check=315360000, pre-check=315360000";
-	final static String LAST_MODIFIED_HEADER = "Last-Modified";
-	final static String LAST_MODIFIED_VALUE = "Sun, 06 Nov 2005 12:00:00 GMT";
 	final static String ETAG_HEADER = "ETag";
-	final static String ETAG_VALUE = "2740050219";
-	final static String EXPIRES_HEADER = "Expires"; 
 
+	static HashMap<String, String> ETAG_VALUES = new HashMap<String, String>();
 	
 	boolean internalProcessing(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		if(!ActionHelper.getActionname().equals("/strutter"))
-			return false;
 
-		String internal = ((HttpServletRequest)request).getQueryString();
+		String internal = request.getQueryString();
 		
-
 		if(internal != null)
 		{
-			if(internal.startsWith("script"))
+			if(internal.equals("js"))
 			{
-				HttpSession session = ((HttpServletRequest)request).getSession();
-				
-				//if (null != request.getHeader(IF_MODIFIED_SINCE_HEADER) || null != request.getHeader(IF_NONE_MATCH_HEADER)) 
-					//{
-					//	response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					//	return true;
-				//} 
-				   
-				//response.setHeader(CACHE_CONTROL_HEADER, CACHE_CONTROL_VALUE);
-				//response.setHeader(LAST_MODIFIED_HEADER, LAST_MODIFIED_VALUE);
-				//response.setHeader(ETAG_HEADER, ETAG_VALUE);
-				//Calendar cal = Calendar.getInstance();
-				//cal.roll(Calendar.YEAR, 10);
-				//response.setDateHeader(EXPIRES_HEADER, cal.getTimeInMillis()); 
-			       
-
 				if(script == null)
 				{
+					HttpSession session = request.getSession();
 					script = getResource("script/process.js");
 					script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
 
+					if(actionfieldname != null)
+						script = script.replaceAll("##actionname##", actionfieldname);
+
+					ETAG_VALUE = String.valueOf(script.hashCode());				
 				}
-				if(actionfieldname != null)
-					script = script.replaceAll("##actionname##", actionfieldname);
+
+				if (ETAG_VALUE.equals(request.getHeader(IF_NONE_MATCH_HEADER))) 
+				{
+					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					return true;
+				} 
+
+				response.setHeader(ETAG_HEADER, ETAG_VALUE);
 
 				ServletOutputStream out = response.getOutputStream();
 		        
@@ -475,9 +468,39 @@ public class RequestProcessorProxy extends RequestProcessor
 				gzipstream.write(script.getBytes());
 				gzipstream.close();
 				
-				//PrintWriter out = response.getWriter();
-				//out.println(script);
-				//out.flush();
+//				PrintWriter out = response.getWriter();
+//				out.println(script);
+//				out.flush();
+			}
+			else if(internal.startsWith("js_"))
+			{
+				String file = internal.substring(3);
+				System.out.println(file);
+	
+				String etag = ETAG_VALUES.get(file); 
+					
+				if (etag != null && etag.equals(request.getHeader(IF_NONE_MATCH_HEADER))) 
+				{
+					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+					return true;					
+				}
+				
+				String jspath = file + ".js";
+				
+				String jsscript = getResource(jspath);
+
+				etag = String.valueOf(jsscript.hashCode());
+				ETAG_VALUES.put(file, etag);
+				
+				response.setHeader(ETAG_HEADER, etag);
+
+				ServletOutputStream out = response.getOutputStream();
+		        
+		        GZIPOutputStream gzipstream = new GZIPOutputStream(out);
+				response.addHeader("Content-Encoding", "gzip");
+				    
+				gzipstream.write(jsscript.getBytes());
+				gzipstream.close();
 			}
 			else if(internal.startsWith("killer"))
 			{
