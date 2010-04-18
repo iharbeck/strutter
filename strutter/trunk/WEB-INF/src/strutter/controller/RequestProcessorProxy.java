@@ -105,7 +105,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 		localisation = new RMatcher();
 		
-		actionfieldname = plugin.getAliasaction();
+		actionfieldname = plugin.getParameter();
 	}
 
 	public void destroy() {
