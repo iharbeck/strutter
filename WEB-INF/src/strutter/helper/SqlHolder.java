@@ -56,10 +56,11 @@ public class SqlHolder
 		
 		String line = null;
 	    while((line = is.readLine()) != null) {
-	    	if(line.trim().equals("") || line.trim().startsWith("#") || line.trim().startsWith("--"))
+	    	String cline = line.trim();
+	    	if(cline.equals("") || cline.startsWith("#") || cline.startsWith("--"))
 	    		continue;
 	    	
-	    	if(line.matches("\\w*:\\s?"))
+	    	if(cline.matches("\\w*:"))
 	    	{
 	    		String id = line.replaceAll("[\\s:]", "");
 	    		buf = new StringBuffer();
