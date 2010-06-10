@@ -69,15 +69,15 @@ public class CInputTag extends InputTag
 	   			//String value = BeanUtils.getProperty(form, name);
 	   			String value = TagHelper.getFormValue(form, name, !name.equals(actionname));
 	   			
-	   			if(value != null)
+	   			if(value != null && value.length() > 0)
 	   			{
 	    			if("TEXT".equals(type) || 
 	    		       "HIDDEN".equals(type) ||
 	    		       "SUBMIT".equals(type) ||
 	    		       "CANCEL".equals(type) ||
-	    		       "PASSWORD".equals(type)) {
+	    		       "PASSWORD".equals(type)) 
+	    			{
 	    		    	this.setAttribute("value", value, '"');
-	    		    	
 	    		    } 
 	    			else if("RADIO".equals(type) || 
 			    		    "CHECKBOX".equals(type)) {
@@ -102,6 +102,9 @@ public class CInputTag extends InputTag
     		    	else
     		    	    disabled = "";
 
+	   			} else {
+	   				if(this.getAttribute("value").length() == 0)
+	   					this.removeAttribute("value");
 	   			}
 	   			return;
 	   		}
