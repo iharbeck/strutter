@@ -116,6 +116,10 @@ public class RequestProcessorProxy extends RequestProcessor
 	public void process(HttpServletRequest _request, HttpServletResponse _response)
 			throws IOException, ServletException
 	{
+		ActionHelper.ActionHelperData data = null;
+		
+		ActionMappingExtended mappingext = null;
+		
 		try 
 		{
 			RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) _request);
@@ -129,18 +133,21 @@ public class RequestProcessorProxy extends RequestProcessor
 			//		actionfieldname = mapping.getParameter();
 			//}
 
-			ActionHelper.init(getServletContext(), requestwrapper, _response);
+			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
 			// AJAX and so on
-			if(ActionHelper.getActionname().equals("/strutter"))
+			if(data.getActionname().equals("/strutter"))
 			{
 				if(internalProcessing(requestwrapper, _response))
 					return;
 			}
 
+			ActionConfig mapping = data.getMapping();
 
-			ActionConfig mapping = ActionHelper.getMapping();
-
+			if(mapping instanceof ActionMappingExtended)
+				mappingext = (ActionMappingExtended)mapping;
+			
+			
 			// do the character encoding staff
 			requestwrapper.setCharacterEncoding(plugin.getEncoding());  // CharsetFilter
 			_response.setCharacterEncoding(plugin.getEncoding());
@@ -153,7 +160,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			
 	
-			if(ActionHelper.isWSAction())
+			if(mappingext != null && mappingext.isWsaction())
 			{
 				try {
 					Object direct = Class.forName( mapping.getType() ).newInstance(); 
@@ -173,7 +180,7 @@ public class RequestProcessorProxy extends RequestProcessor
 //				return;
 			
 
-			ActionHelper.getSession().setAttribute("thread", Thread.currentThread());
+			data.getSession().setAttribute("thread", Thread.currentThread());
 
 
 //			ActionForward helperforward = ActionHelper.startInterceptors();
@@ -211,10 +218,11 @@ public class RequestProcessorProxy extends RequestProcessor
 			} catch (Exception e1) {
 			}
 			
+			boolean isMainThread = data.getThreadcount() == 1;
 			
 			StringWriter out = new StringWriter(RequestProcessorProxy.BUFFERSIZE);
 			
-			if(ActionHelper.isMainThread() && ActionHelper.isHeading())
+			if(isMainThread && mappingext != null && mappingext.isHeading())
 			{
 				if(plugin.getDoctype().equals("1"))
 				   out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
@@ -226,7 +234,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				   out.write("<SCRIPT src='strutter.do?js' type='text/javascript'></SCRIPT>\n");
 			}
 			
-			if(ActionHelper.isRemoteAction())
+			if(mappingext != null && mappingext.isRemoteaction())
 			{
 				if(plugin.getDoctype().equals("1"))
 					out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
@@ -270,7 +278,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			out.write(doc);
 				
 			
-			if(ActionHelper.isMainThread() && ActionHelper.isHeading())
+			if(isMainThread && mappingext != null && mappingext.isHeading())
 			{	
 				if(plugin.getTemplate().equals("1"))
 					out.write(template);
@@ -278,10 +286,10 @@ public class RequestProcessorProxy extends RequestProcessor
 				if(plugin.getSessioncheck().equals("1"))
 				{
 					// Duplicate Window Check
-				    if(ActionHelper.getSession().getAttribute("struttersession") == null)
+				    if(data.getSession().getAttribute("struttersession") == null)
 					{
-				    	ActionHelper.getSession().setAttribute("struttersession", ActionHelper.getSession().getId());
-						out.write("<script>setWindowName('" + ActionHelper.getSession().getId() + "');</script>\n");
+				    	data.getSession().setAttribute("struttersession", data.getSession().getId());
+						out.write("<script>setWindowName('" + data.getSession().getId() + "');</script>\n");
 				    }
 				}
 				if(plugin.getCookiecheck().equals("1")) {
@@ -320,7 +328,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				
 				ServletOutputStream writer = _response.getOutputStream();
 	
-				if((encoding != null && encoding.indexOf("gzip") != -1) && ActionHelper.isMainThread() && plugin.getCompression().equals("1")) {
+				if((encoding != null && encoding.indexOf("gzip") != -1) && isMainThread && plugin.getCompression().equals("1")) {
 					GZIPOutputStream gzipstream = new GZIPOutputStream(writer);
 					_response.addHeader("Content-Encoding", "gzip");
 					    
@@ -348,10 +356,12 @@ public class RequestProcessorProxy extends RequestProcessor
 		{
             // Cleanup Threadlocale
             ActionHelper.remove();
-            ActionHelper.setHeading(true);
+            
+            if(mappingext != null) 
+            	mappingext.setHeading(true);
 
             try {
-            	ActionHelper.getSession().setAttribute("thread", null);
+            	data.getSession().setAttribute("thread", null);
             } catch(Exception e) {}
             
             System.out.println("done" + System.currentTimeMillis());

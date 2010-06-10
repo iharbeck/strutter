@@ -52,7 +52,7 @@ public class ActionHelper
 	// storing all actions here
 	private static HashMap actions = new HashMap();
 
-	private static class ActionHelperData  {
+	public static class ActionHelperData  {
 		private HttpServletRequest  request;
 		private HttpServletResponse response;
 		private HttpSession         session;
@@ -63,6 +63,67 @@ public class ActionHelper
 		private String				actionname;
 		private boolean             initialized = false;
 		private int                 threadcount = 0;
+		
+		public HttpServletRequest getRequest() {
+			return request;
+		}
+		public void setRequest(HttpServletRequest request) {
+			this.request = request;
+		}
+		public HttpServletResponse getResponse() {
+			return response;
+		}
+		public void setResponse(HttpServletResponse response) {
+			this.response = response;
+		}
+		public HttpSession getSession() {
+			return session;
+		}
+		public void setSession(HttpSession session) {
+			this.session = session;
+		}
+		public ActionMessages getErrormsgs() {
+			return errormsgs;
+		}
+		public void setErrormsgs(ActionMessages errormsgs) {
+			this.errormsgs = errormsgs;
+		}
+		public ActionMessages getInfomsgs() {
+			return infomsgs;
+		}
+		public void setInfomsgs(ActionMessages infomsgs) {
+			this.infomsgs = infomsgs;
+		}
+		public Locale getLocale() {
+			return locale;
+		}
+		public void setLocale(Locale locale) {
+			this.locale = locale;
+		}
+		public ActionMapping getMapping() {
+			return mapping;
+		}
+		public void setMapping(ActionMapping mapping) {
+			this.mapping = mapping;
+		}
+		public String getActionname() {
+			return actionname;
+		}
+		public void setActionname(String actionname) {
+			this.actionname = actionname;
+		}
+		public boolean isInitialized() {
+			return initialized;
+		}
+		public void setInitialized(boolean initialized) {
+			this.initialized = initialized;
+		}
+		public int getThreadcount() {
+			return threadcount;
+		}
+		public void setThreadcount(int threadcount) {
+			this.threadcount = threadcount;
+		}
 	}
 	
 	private static class ThreadLocalActionHelper extends InheritableThreadLocal {
@@ -238,7 +299,7 @@ public class ActionHelper
 		storeFile(formfile, folder, formfile.getFileName());
 	}
 	
-	public static ActionHelper init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
+	public static ActionHelperData init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		ActionHelperData me = (ActionHelperData)helper.get();
 		me.threadcount++;
@@ -264,7 +325,7 @@ public class ActionHelper
 		me.mapping     = getActionMapping(me.actionname);
 		me.initialized = true;
 		
-		return instance;
+		return me;
 	}
 	
 	public static boolean isMainThread() {
