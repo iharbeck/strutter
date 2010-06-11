@@ -122,9 +122,17 @@ public class RequestProcessorProxy extends RequestProcessor
 		
 		try 
 		{
-			RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) _request);
 			
 			System.out.println(_request.getRequestURL());
+
+			// AJAX and so on
+			if(_request.getServletPath().equals("/strutter.do"))  // data.getActionname()
+			{
+				if(internalProcessing(_request, _response))
+					return;
+			}
+
+			RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) _request);
 			
 			// add hidden action field as named in configuration
 			//if(actionfieldname == null)
@@ -135,12 +143,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
-			// AJAX and so on
-			if(data.getActionname().equals("/strutter"))
-			{
-				if(internalProcessing(requestwrapper, _response))
-					return;
-			}
+			
 
 			ActionConfig mapping = data.getMapping();
 
