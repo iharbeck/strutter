@@ -160,7 +160,7 @@ public class ActionHelper
 		return ActionHelper.authority.getUsername();
 	}
 	public static  boolean hasRole(String role) {
-		return ActionHelper.authority.hasRole(role);
+		return ActionHelper.authority.isAuthorized() && ActionHelper.authority.hasRole(role);
 		
 	}
 	public static boolean isAuthorized() {
