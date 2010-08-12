@@ -456,7 +456,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				{
 					HttpSession session = request.getSession();
 					script = getResource("script/process.js");
-					script = YUIFilter.compressJavaScriptString(script);
+					//script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
 
 					if(actionfieldname != null)

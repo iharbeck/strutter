@@ -155,7 +155,7 @@ function $N(name) {
 
 // Document of Frame
 function $D(name) {
-    return window.frames[name].document
+    return window.frames[name].document;
 }
 
 //Document of Frame
@@ -290,12 +290,12 @@ function evalScript(scripts)
 		return false;
 	}
 	catch(e)
-	{	alert(e)
+	{	alert(e);
 	}
 }
 
 function noCache(uri) 
 {
-	return uri.concat(/\?/.test(uri)?"&":"?","noCache=",(new Date).getTime(),".",Math.random()*1234567)
+	return uri.concat(/\?/.test(uri)?"&":"?","noCache=",(new Date).getTime(),".",Math.random()*1234567);
 }
 
