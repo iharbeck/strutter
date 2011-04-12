@@ -356,6 +356,10 @@ public class ActionPlugin implements PlugIn
 		if(!isEmpty(action.getRoles()))
 			actionmapping.setRoles(action.getRoles());
 
+		for(String key : action.getProperties().keySet()) {
+			actionmapping.setProperty(key, action.getProperties().get(key));
+		}
+		
 		moduleConfig.addActionConfig(actionmapping);
 
 		System.out.println(fqn + " -> " + path +  (actionmapping.getName() == null ? " [NO FORM]" : ""));

@@ -17,6 +17,7 @@
 package strutter.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import strutter.interceptor.ActionInterceptorInterface;
 
@@ -201,6 +202,20 @@ public class ActionConfig
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
+	
+	HashMap<String, String> properties = new HashMap<String, String>();
+	
+	public void setProperty(String key, String value)
+	{
+		this.properties.put(key, value);
+	}
+	
+	public HashMap<String, String> getProperties() {
+		return properties;
+	}
+	public void setProperties(HashMap<String, String> properties) {
+		this.properties = properties;
+	}
 
 
 	public void addInterceptor(ActionInterceptorInterface interceptor) {
@@ -226,6 +241,7 @@ public class ActionConfig
 	{
 		this.packageby = packageby;
 	}
+	
 }
 
 class Forward
