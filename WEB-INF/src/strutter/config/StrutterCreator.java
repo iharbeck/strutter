@@ -25,7 +25,7 @@ public class StrutterCreator extends AbstractCreator implements Creator
         {
             try
             {
-                clazz = (Class)getInstance().getClass();
+                clazz = (Class<?>)getInstance().getClass();
             }
             catch (InstantiationException ex)
             {

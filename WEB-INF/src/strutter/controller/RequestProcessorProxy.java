@@ -275,8 +275,11 @@ public class RequestProcessorProxy extends RequestProcessor
 				}
 			}
 				
-			// localisierung #R{nachname}
-			doc = localisation.matchall(doc);
+			if(mappingext != null && "0".equals(mappingext.getProperty("DISABLE_INLINELOCALISATION")))
+			{
+				// localisierung #R{nachname}
+				doc = localisation.matchall(doc);
+			}
 			
 			out.write(doc);
 				
