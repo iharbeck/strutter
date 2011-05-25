@@ -137,9 +137,10 @@ public class SqlHolder
 			
 		    buf.append(content.substring(start, m.start()));
 		    String val = (String)map.get(alias);
-		    if(val == null) 
-		    	val = "\n--:" + alias + "\n";
-		    buf.append(val);
+//		    if(val == null) 
+//		    	val = "\n--:" + alias + "\n";
+		    if(val != null) 
+		    	buf.append(val);
 
 		    start = m.end();
 		}
