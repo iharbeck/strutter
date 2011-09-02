@@ -45,11 +45,13 @@ public class CTextareaTag extends  TextareaTag
 
 		this.setEmptyXmlTag(false);
 
-	   	if(this.getAttribute("name") != null && this.getAttribute("nofill") == null)
+		String attname = this.getAttribute("name");
+		
+	   	if(attname != null && this.getAttribute("nofill") == null)
 	   	{
 	   		try {
 		    		//String val = BeanUtils.getProperty(form, this.getAttribute("name"));
-		    		String val = TagHelper.getFormValue(form, this.getAttribute("name"));
+		    		String val = TagHelper.getFormValue(form, attname);
 		    		if(val != null)
 		    		{
 			    		this.setChildren(new NodeList());
@@ -63,10 +65,13 @@ public class CTextareaTag extends  TextareaTag
 
 	 public String toHtml()
 	 {
+		String html = super.toHtml();
+		
     	try {
-    		return TagHelper.handleError(this, request, super.toHtml());
+    		return TagHelper.handleError(this, request, html);
     	} catch(Exception e) {
-    		return super.toHtml();
     	}
+
+    	return html;
      }
 }

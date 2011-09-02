@@ -55,19 +55,20 @@ public class CInputTag extends InputTag
     public void doSemanticAction () throws ParserException
     {
    		String type = getAttribute("type");
-		String name = getAttribute("name");
 		
 		if(type == null)
 			return;
 
 		type = type.toUpperCase();
 
+		String attname = getAttribute("name");
+
     	try 
 	   	{
-	   		if(name != null && this.getAttribute("nofill") == null)
+	   		if(attname != null && this.getAttribute("nofill") == null)
 	   		{
 	   			//String value = BeanUtils.getProperty(form, name);
-	   			String value = TagHelper.getFormValue(form, name, !name.equals(actionname));
+	   			String value = TagHelper.getFormValue(form, attname, actionname);
 	   			
 	   			if(value != null && value.length() > 0)
 	   			{
@@ -98,7 +99,7 @@ public class CInputTag extends InputTag
 	    			disabled = getAttribute("disabled");
     		    	
     		    	if(disabled != null && getAttribute("CHECKED") != null)
-    		    		disabled = "<input type='hidden' name='" + name + "' value='" + this.getAttribute("value") + "'>";
+    		    		disabled = "<input type='hidden' name='" + attname + "' value='" + this.getAttribute("value") + "'>";
     		    	else
     		    	    disabled = "";
 
@@ -140,12 +141,11 @@ public class CInputTag extends InputTag
     
     public String toHtml() 
 	{
-    	String tag;
+    	String tag = super.toHtml();
     	
 	   	try {
-	   		tag = TagHelper.handleError(this, request, super.toHtml());
+	   		tag = TagHelper.handleError(this, request, tag);
 	   	} catch(Exception e) {
-	   		tag = super.toHtml();
 	   	}
 	   	
 	   	return checkboxfix + disabled + tag;

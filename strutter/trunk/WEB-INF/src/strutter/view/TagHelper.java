@@ -21,40 +21,40 @@ public class TagHelper {
 	public final static String handleError (Tag tag, ServletRequest request, String superhtml) throws Exception
 	{
 		String att = tag.getAttribute("error");
+
+    	if(att == null)
+    		throw new Exception();
+
     	tag.removeAttribute("error");
 
-    	if(att != null)
-	   	{
-    		String val = null;
-    		try {
-	    		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
+    	String val = null;
+		try {
+    		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
 
-	    		//System.out.println(getAttribute("name"));
-	   			Iterator msgs = am.get(tag.getAttribute("name"));
+    		//System.out.println(getAttribute("name"));
+   			Iterator msgs = am.get(tag.getAttribute("name"));
 
-	  			Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
-	  			MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
+  			Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
+  			MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
 
-  				if(msgs.hasNext())
-  				{
-  					ActionMessage msg = (ActionMessage)msgs.next();
-  					val = resources.getMessage(loc, msg.getKey(), msg.getValues());
-  				}
-    		} catch(Exception e) {
+			if(msgs.hasNext())
+			{
+				ActionMessage msg = (ActionMessage)msgs.next();
+				val = resources.getMessage(loc, msg.getKey(), msg.getValues());
+			}
+		} catch(Exception e) {
 
-    		}
+		}
 
-    		if(val != null) {
-	    	    att = att.toLowerCase();
-			    if(att.equals("behind"))
-				   return superhtml + " <span class=\"error_label\"> " + val + " </span>";
-			    else if(att.equals("before"))
-				   return "<span class=\"error_label\"> " + val + " </span> " + superhtml;
-			    else if(att.equals("class"))
-			       tag.setAttribute("class", "error_control", '"');
-    		}
-	   	}
-    	throw new Exception();
+		if(val != null) {
+    	    att = att.toLowerCase();
+		    if(att.equals("behind"))
+			   return superhtml + " <span class=\"error_label\"> " + val + " </span>";
+		    else if(att.equals("before"))
+			   return "<span class=\"error_label\"> " + val + " </span> " + superhtml;
+		    else if(att.equals("class"))
+		       tag.setAttribute("class", "error_control", '"');
+		}
 	}
 
 
@@ -99,7 +99,7 @@ public class TagHelper {
 		return getFormValue(form, name, true);
 	}
 
-	public final static String getFormValue(Object form, String name, boolean warn) 
+	public final static String getFormValue(Object form, String name, String actionname) 
 	{ 
 		try {
 			String ret = BeanUtils.getProperty(form, name);
@@ -107,7 +107,7 @@ public class TagHelper {
 				return "";
 			return ret;
 		} catch (NoSuchMethodException e) {
-			if(warn)
+			if(!name.equals(actionname))
 				System.out.println("Strutter: missing attribute [" + name + "]");
 			return null;
 		} catch (Exception e) {
