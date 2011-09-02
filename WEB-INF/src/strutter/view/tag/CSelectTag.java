@@ -70,13 +70,15 @@ public class CSelectTag extends SelectTag
     {
 	   	try 
 	   	{
-	   	   if(this.getAttribute("name") != null && this.getAttribute("nofill") == null)
+	   	   String attname = this.getAttribute("name");	
+	   	   
+	   	   if(attname != null && this.getAttribute("nofill") == null)
 	   	   {
 	   		 List sellist;
 	   		 
 	   		 // aktuelle Auswahl ermitteln
 	   		 //String[] sel = BeanUtils.getArrayProperty(form, this.getAttribute("name"));
-	   		 String[] sel = TagHelper.getFormValues(form, this.getAttribute("name"));
+	   		 String[] sel = TagHelper.getFormValues(form, attname);
 	   		 
 	   		 if(sel == null)
 	   			 sellist = new ArrayList();
@@ -227,11 +229,11 @@ public class CSelectTag extends SelectTag
     
     public String toHtml() 
 	{
-    	String tag;
-	   	try {
-	   		tag = TagHelper.handleError(this, request, super.toHtml());
+    	String tag = super.toHtml();
+
+    	try {
+	   		tag = TagHelper.handleError(this, request, tag);
 	   	} catch(Exception e) {
-	   		tag = super.toHtml();
 	   	}
 	   	
 	   	return disabled + tag;
