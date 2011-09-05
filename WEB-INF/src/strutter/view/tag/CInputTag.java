@@ -88,11 +88,9 @@ public class CInputTag extends InputTag
 	    			else if("RADIO".equals(type) || 
 			    		    "CHECKBOX".equals(type)) {
 	    		    	
-	    		    	List<String> sellist;
-	    		   		 
 	    		   		//String[] sel = BeanUtils.getArrayProperty(form, this.getAttribute("name"));
 	    		   		String[] sel = TagHelper.getFormValues(form, this.getAttribute("name"));
-	    		   		sellist = Arrays.asList(sel);
+	    		   		List<String> sellist = Arrays.asList(sel);
 	    		   		 
 	    		    	setSelected(this.getAttribute("value"), sellist);
 
