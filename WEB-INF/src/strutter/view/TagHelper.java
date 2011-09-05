@@ -20,6 +20,11 @@ public class TagHelper {
 
 	public final static String handleError (Tag tag, ServletRequest request, String superhtml) throws Exception
 	{
+		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
+
+		if(am.size() == 0)
+			throw new Exception();
+		
 		String att = tag.getAttribute("error");
 
     	if(att == null)
@@ -27,23 +32,15 @@ public class TagHelper {
 
     	tag.removeAttribute("error");
 
-    	String val = null;
-    	
-		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
-
 		//System.out.println(getAttribute("name"));
-		Iterator msgs = am.get(tag.getAttribute("name"));
+    	ActionMessage msg = (ActionMessage) am.get(tag.getAttribute("name")).next();
 
 		Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
 		MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
+		String val = resources.getMessage(loc, msg.getKey(), msg.getValues());
 
-		if(msgs.hasNext())
+		if(val != null) 
 		{
-			ActionMessage msg = (ActionMessage)msgs.next();
-			val = resources.getMessage(loc, msg.getKey(), msg.getValues());
-		}
-
-		if(val != null) {
     	    att = att.toLowerCase();
 		    if(att.equals("behind"))
 			   return superhtml + " <span class=\"error_label\"> " + val + " </span>";
