@@ -1,12 +1,7 @@
 package strutter.view.tag;
 
-import javax.servlet.ServletRequest;
-
-import org.htmlparser.Node;
-import org.htmlparser.filters.TagNameFilter;
 import org.htmlparser.tags.FormTag;
 import org.htmlparser.tags.InputTag;
-import org.htmlparser.util.NodeList;
 import org.htmlparser.util.ParserException;
 
 /**

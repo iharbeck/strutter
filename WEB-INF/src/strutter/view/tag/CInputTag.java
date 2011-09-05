@@ -24,13 +24,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.Globals;
-import org.apache.struts.action.ActionMessages;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.util.MessageResources;
 import org.htmlparser.tags.InputTag;
 import org.htmlparser.util.ParserException;
 
-import strutter.Utils;
 import strutter.view.TagHelper;
 
 public class CInputTag extends InputTag
@@ -136,14 +134,15 @@ public class CInputTag extends InputTag
 		}
     }
     
-    final void setSelected(String value, List selected)
+    void setSelected(String value, List selected)
     {
-		 if(value != null) {
-			 if( selected.contains(value) )
-				 this.setAttribute("CHECKED", "", '"');
-			 else
-				 this.removeAttribute("CHECKED");
-        }
+		 if(value == null) 
+			 return;
+		 
+		 if( selected.contains(value) )
+			 this.setAttribute("CHECKED", "", '"');
+		 else
+			 this.removeAttribute("CHECKED");
     }
     
     public String toHtml() 
@@ -156,7 +155,15 @@ public class CInputTag extends InputTag
 	   	} catch(Exception e) {
 	   	}
 	   	
-	   	return checkboxfix + disabled + tag;
+	   	
+	   	//int length = checkboxfix.length() + disabled.length() + tag.length();
+	   	
+	   	StringBuilder buf = new StringBuilder(tag);
+	   	
+	   	buf.insert(0, disabled);
+	   	buf.insert(0, checkboxfix);
+	   	
+	   	return buf.toString();
     }
-
 }
+
