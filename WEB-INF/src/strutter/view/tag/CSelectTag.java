@@ -232,7 +232,8 @@ public class CSelectTag extends SelectTag
     	String tag = super.toHtml();
 
     	try {
-	   		tag = TagHelper.handleError(this, request, tag);
+    		if(this.getAttribute("error") != null)
+    			tag = TagHelper.handleError(this, request, tag);
 	   	} catch(Exception e) {
 	   	}
 	   	

@@ -68,7 +68,8 @@ public class CTextareaTag extends  TextareaTag
 		String html = super.toHtml();
 		
     	try {
-    		return TagHelper.handleError(this, request, html);
+    		if(this.getAttribute("error") != null)
+    			return TagHelper.handleError(this, request, html);
     	} catch(Exception e) {
     	}
 
