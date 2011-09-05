@@ -6,6 +6,8 @@ import java.util.Locale;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import jodd.bean.BeanUtil;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.Globals;
@@ -99,16 +101,17 @@ public class TagHelper {
 	{ 
 		try 
 		{
-			String ret =  BeanUtils.getProperty(form, name);
+			String ret = (String)BeanUtil.getProperty(form, name);
+			//String ret = BeanUtils.getProperty(form, name);
 			if(ret == null)
 				return "";
 			return ret;
 		} 
-		catch (NoSuchMethodException e) {
+		/*catch (NoSuchMethodException e) {
 			if(!name.equals(actionname))
 				System.out.println("Strutter: missing attribute [" + name + "]");
 			return null;
-		} 
+		} */
 		catch (Exception e) {
 			System.out.println(e);
 			return null;
