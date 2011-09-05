@@ -28,22 +28,19 @@ public class TagHelper {
     	tag.removeAttribute("error");
 
     	String val = null;
-		try {
-    		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
+    	
+		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
 
-    		//System.out.println(getAttribute("name"));
-   			Iterator msgs = am.get(tag.getAttribute("name"));
+		//System.out.println(getAttribute("name"));
+		Iterator msgs = am.get(tag.getAttribute("name"));
 
-  			Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
-  			MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
+		Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
+		MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
 
-			if(msgs.hasNext())
-			{
-				ActionMessage msg = (ActionMessage)msgs.next();
-				val = resources.getMessage(loc, msg.getKey(), msg.getValues());
-			}
-		} catch(Exception e) {
-
+		if(msgs.hasNext())
+		{
+			ActionMessage msg = (ActionMessage)msgs.next();
+			val = resources.getMessage(loc, msg.getKey(), msg.getValues());
 		}
 
 		if(val != null) {
@@ -55,6 +52,8 @@ public class TagHelper {
 		    else if(att.equals("class"))
 		       tag.setAttribute("class", "error_control", '"');
 		}
+		
+		return superhtml;
 	}
 
 
@@ -96,7 +95,7 @@ public class TagHelper {
 
 	
 	public final static String getFormValue(Object form, String name) {
-		return getFormValue(form, name, true);
+		return getFormValue(form, name, "");
 	}
 
 	public final static String getFormValue(Object form, String name, String actionname) 
