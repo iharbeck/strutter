@@ -51,65 +51,66 @@ public class CDivTag extends Div
 	}
 
 	public void doSemanticAction () throws ParserException
-	 {
-		Div div = new Div();
+	{
+		String type = this.getAttribute("type");
+
+	   	if(type == null)
+	   		return;
+
+	   	Div div = new Div();
 		div.setTagName("/" + this.getTagName());					 
 		this.setEndTag(div);
 		 
 		this.setEmptyXmlTag(false);
 		
-		String type = this.getAttribute("type");
-
-	   	if(type != null)
-	   	{
-	   		String val = "";
-	   		
-	   		try {
-			    
-		   		if(type.startsWith("text"))
-			   		//val = BeanUtils.getProperty(form, this.getAttribute("id"));
-		   		    val = TagHelper.getFormValue(form, this.getAttribute("id"));
-		   		else if(type.startsWith("error") || type.startsWith("errors")) 
-		   			val = TagHelper.handleList(this, request, Utils.getErrors((HttpServletRequest)request));
-		   		else if(type.startsWith("message") || type.startsWith("messages")) 
-		   			val = TagHelper.handleList(this, request, Utils.getMessages((HttpServletRequest)request));
-		   		else if(type.startsWith("resource")) 
-		   		{
+	   	
+   		String val = "";
+   		
+   		try {
+		    
+	   		if(type.startsWith("text"))
+		   		//val = BeanUtils.getProperty(form, this.getAttribute("id"));
+	   		    val = TagHelper.getFormValue(form, this.getAttribute("id"));
+	   		else if(type.startsWith("error") || type.startsWith("errors")) 
+	   			val = TagHelper.handleList(this, request, Utils.getErrors((HttpServletRequest)request));
+	   		else if(type.startsWith("message") || type.startsWith("messages")) 
+	   			val = TagHelper.handleList(this, request, Utils.getMessages((HttpServletRequest)request));
+	   		else if(type.startsWith("resource")) 
+	   		{
 //		   			Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
 //		   			
 //		   			MessageResources resources = 
 //		   				(MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
 //
 //		   			val = resources.getMessage(loc, this.getAttribute("id"));
-		   			
-		   			val = ActionHelper.getResource(this.getAttribute("id"));
-		   		}
-		   		
-		   		this.removeAttribute("type");
-		   		
-		   		if(type.endsWith("_min"))
-		   			this.removeAttribute("id");
-		   		
-		   		if(val == null || val.equals("")) {
-		   			this.setAttribute("class", "nomessages", '"');
-		   			remove = true;
-		   			return;
-		   		}
-		   		
-			/*	String oldclass = this.getAttribute("class");
-		   		if(oldclass == null)
-		   			this.setAttribute("class", "modify", '"');
-		   		else
-		   			this.setAttribute("class", oldclass + " " + "modify", '"');
-		   		
-		   		this.setAttribute("locale", ActionHelper.getLocale().getLanguage(), '"');
-		   	*/	
-		   		this.setChildren(new NodeList());
-	    		this.getChildren().add(new TextNode(val)); 
+	   			
+	   			val = ActionHelper.getResource(this.getAttribute("id"));
 	   		}
-	   		catch(Exception e) {
-	   			System.out.println(e);
+	   		
+	   		this.removeAttribute("type");
+	   		
+	   		if(type.endsWith("_min"))
+	   			this.removeAttribute("id");
+	   		
+	   		if(val == null || val.equals("")) {
+	   			this.setAttribute("class", "nomessages", '"');
+	   			remove = true;
+	   			return;
 	   		}
-	   	}
+	   		
+		/*	String oldclass = this.getAttribute("class");
+	   		if(oldclass == null)
+	   			this.setAttribute("class", "modify", '"');
+	   		else
+	   			this.setAttribute("class", oldclass + " " + "modify", '"');
+	   		
+	   		this.setAttribute("locale", ActionHelper.getLocale().getLanguage(), '"');
+	   	*/	
+	   		this.setChildren(new NodeList());
+    		this.getChildren().add(new TextNode(val)); 
+   		}
+   		catch(Exception e) {
+   			System.out.println(e);
+   		}
 	 }
 }
