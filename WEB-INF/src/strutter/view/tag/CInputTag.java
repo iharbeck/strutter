@@ -102,10 +102,10 @@ public class CInputTag extends InputTag
 	    			
 	    			disabled = getAttribute("disabled");
     		    	
-    		    	if(disabled != null && getAttribute("CHECKED") != null)
-    		    		disabled = "<input type='hidden' name='" + attname + "' value='" + this.getAttribute("value") + "'>";
+    		    	if(disabled == null || getAttribute("CHECKED") == null)
+    		    		disabled = "";
     		    	else
-    		    	    disabled = "";
+    		    		disabled = "<input type='hidden' name='" + attname + "' value='" + this.getAttribute("value") + "'>";
 
 	   			} else {
 	   				if(this.getAttribute("value").length() == 0)
