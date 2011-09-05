@@ -434,6 +434,19 @@ public class RequestProcessorProxy extends RequestProcessor
 			NodeList nl = hparser.parse(null);
 			System.out.println("E" + System.currentTimeMillis());
 			
+			/*
+			StringBuffer ret = new StringBuffer (500000);
+			
+			Node[] nodeData = nl.toNodeArray();
+			
+			int size = nodeData.length;
+			for (int i = 0; i < size; i++)
+				ret.append (nodeData[i].toHtml(true));
+			
+			System.out.println("F" + System.currentTimeMillis() + "-");
+			return (ret.toString());
+			 */
+			
 			return nl.toHtml();  // --as close to original as possible
 		} catch (Exception e) {
 			return doc;
