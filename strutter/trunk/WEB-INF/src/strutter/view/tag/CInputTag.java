@@ -65,6 +65,8 @@ public class CInputTag extends InputTag
 
     	try 
 	   	{
+    		boolean processed = false;
+    		
 	   		if(attname != null && this.getAttribute("nofill") == null)
 	   		{
 	   			//String value = BeanUtils.getProperty(form, name);
@@ -79,11 +81,12 @@ public class CInputTag extends InputTag
 	    		       "PASSWORD".equals(type)) 
 	    			{
 	    		    	this.setAttribute("value", value, '"');
+	    		    	processed = true;
 	    		    } 
 	    			else if("RADIO".equals(type) || 
 			    		    "CHECKBOX".equals(type)) {
 	    		    	
-	    		    	List sellist;
+	    		    	List<String> sellist;
 	    		   		 
 	    		   		//String[] sel = BeanUtils.getArrayProperty(form, this.getAttribute("name"));
 	    		   		String[] sel = TagHelper.getFormValues(form, this.getAttribute("name"));
@@ -94,6 +97,7 @@ public class CInputTag extends InputTag
 	    		    	if("CHECKBOX".equals(type))
 	    		    		checkboxfix = ""; //"<input type='hidden' name='" + name + "' value='0'>";
 
+	    		    	processed = true;
 	    		    }
 	    			
 	    			disabled = getAttribute("disabled");
@@ -110,6 +114,9 @@ public class CInputTag extends InputTag
 	   			return;
 	   		}
    		
+	   		if(processed)
+	   			return;
+	   		
 	   		if("BUTTON".equals(type) || "SUBMIT".equals(type) || "CANCEL".equals(type) || "RESET".equals(type)) 
 	   		{
 				String text = this.getAttribute("value");
