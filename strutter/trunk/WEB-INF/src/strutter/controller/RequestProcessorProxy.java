@@ -40,7 +40,6 @@ import org.htmlparser.util.NodeList;
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
 import strutter.config.ActionPlugin;
-import strutter.filter.YUIFilter;
 import strutter.helper.ActionHelper;
 import strutter.helper.PopulateHelper;
 import strutter.helper.WSActionHelper;

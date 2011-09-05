@@ -18,7 +18,7 @@ import strutter.Utils;
 
 public class TagHelper {
 
-	public final static String handleError (Tag tag, ServletRequest request, String superhtml) throws Exception
+	public static String handleError (Tag tag, ServletRequest request, String superhtml) throws Exception
 	{
 		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
 
@@ -54,7 +54,7 @@ public class TagHelper {
 	}
 
 
-	public final static String handleList(Tag tag, ServletRequest request, ActionMessages am)
+	public static String handleList(Tag tag, ServletRequest request, ActionMessages am)
 	{
 		if(am == null)
 			return null;
@@ -91,35 +91,38 @@ public class TagHelper {
 	}
 
 	
-	public final static String getFormValue(Object form, String name) {
+	public static String getFormValue(Object form, String name) {
 		return getFormValue(form, name, "");
 	}
 
-	public final static String getFormValue(Object form, String name, String actionname) 
+	public static String getFormValue(Object form, String name, String actionname) 
 	{ 
-		try {
-			String ret = BeanUtils.getProperty(form, name);
+		try 
+		{
+			String ret =  BeanUtils.getProperty(form, name);
 			if(ret == null)
 				return "";
 			return ret;
-		} catch (NoSuchMethodException e) {
+		} 
+		catch (NoSuchMethodException e) {
 			if(!name.equals(actionname))
 				System.out.println("Strutter: missing attribute [" + name + "]");
 			return null;
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
 	}
 	
-	public final static void setFormValue(Object form, String name, String value) {
+	public static void setFormValue(Object form, String name, String value) {
 		try {
 			BeanUtils.setProperty(form, name, value);
 		} catch (Exception e) {
 		}
 	}
 
-	public final static String[] getFormValues(Object form, String name) {
+	public static String[] getFormValues(Object form, String name) {
 		try {
 			return BeanUtils.getArrayProperty(form, name);
 		} catch (NoSuchMethodException e) {
@@ -131,11 +134,11 @@ public class TagHelper {
 		}
 	}
 	
-	public final static Object getFormObject(Object form, String name) {
+	public static Object getFormObject(Object form, String name) {
 		return getFormObject(form, name, true);
 	}
 
-	public final static Object getFormObject(Object form, String name, boolean warn) {
+	public static Object getFormObject(Object form, String name, boolean warn) {
 		try {
 			return PropertyUtils.getProperty(form, name);
 		} catch (NoSuchMethodException e) {

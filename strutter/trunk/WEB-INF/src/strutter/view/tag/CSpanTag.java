@@ -16,13 +16,9 @@
 
 package strutter.view.tag;
 
-import java.util.Locale;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.struts.Globals;
-import org.apache.struts.util.MessageResources;
 import org.htmlparser.nodes.TextNode;
 import org.htmlparser.tags.Span;
 import org.htmlparser.util.NodeList;
