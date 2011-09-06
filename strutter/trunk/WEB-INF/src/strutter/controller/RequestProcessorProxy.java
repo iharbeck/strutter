@@ -281,7 +281,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			
 			out.write(doc);
-				
+			out.flush();	
 			
 			if(isMainThread && mappingext != null && mappingext.isHeading())
 			{	
@@ -416,15 +416,15 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(form == null)
 				form = new Object();
 			
-			factory.registerTag (new CSelectTag   (form, request));
-			factory.registerTag (new CInputTag    (form, request));
-			factory.registerTag (new CButtonTag   (form, request));
-			factory.registerTag (new CDivTag      (form, request));
-			factory.registerTag (new CSpanTag     (form, request));
-			factory.registerTag (new CTextareaTag (form, request));
-			factory.registerTag (new OptionTag());
-			factory.registerTag (new CFormTag(actionfieldname));		// Hiddenfield Handler
-			factory.registerTag (new CMetaTag(request));				// Dekorator Metainformation
+			factory.registerTag(new CSelectTag   (form, request));
+			factory.registerTag(new CInputTag    (form, request));
+			factory.registerTag(new CButtonTag   (form, request));
+			factory.registerTag(new CDivTag      (form, request));
+			factory.registerTag(new CSpanTag     (form, request));
+			factory.registerTag(new CTextareaTag (form, request));
+			factory.registerTag(new OptionTag());
+			factory.registerTag(new CFormTag(actionfieldname));		// Hiddenfield Handler
+			factory.registerTag(new CMetaTag(request));				// Dekorator Metainformation
 
 			hparser.setNodeFactory (factory);
 			hparser.setInputHTML(doc);
