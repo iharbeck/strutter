@@ -23,6 +23,7 @@ import java.util.Locale;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.util.MessageResources;
@@ -39,8 +40,7 @@ public class CInputTag extends InputTag
 	 ServletRequest request;
 	 String actionname;
 	 
-	 String disabled = "";
-	 String checkboxfix = "";
+	 String extend = null;
 	 
 	 public CInputTag(Object form, ServletRequest request) {
 		 this.form = form;
@@ -59,8 +59,6 @@ public class CInputTag extends InputTag
 		if(type == null)
 			return;
 
-		type = type.toUpperCase();
-
 		String attname = getAttribute("name");
 
     	try 
@@ -72,19 +70,19 @@ public class CInputTag extends InputTag
 	   			//String value = BeanUtils.getProperty(form, name);
 	   			String value = TagHelper.getFormValue(form, attname, actionname);
 	   			
-	   			if(value != null && value.length() > 0)
+	   			if(value.length() > 0)
 	   			{
-	    			if("TEXT".equals(type) || 
-	    		       "HIDDEN".equals(type) ||
-	    		       "SUBMIT".equals(type) ||
-	    		       "CANCEL".equals(type) ||
-	    		       "PASSWORD".equals(type)) 
+	    			if("text".equals(type) || 
+	    		       "hidden".equals(type) ||
+	    		       "submit".equals(type) ||
+	    		       "cancel".equals(type) ||
+	    		       "password".equals(type)) 
 	    			{
 	    		    	this.setAttribute("value", value, '"');
 	    		    	processed = true;
 	    		    } 
-	    			else if("RADIO".equals(type) || 
-			    		    "CHECKBOX".equals(type)) {
+	    			else if("radio".equals(type) || 
+			    		    "checkbox".equals(type)) {
 	    		    	
 	    		   		//String[] sel = BeanUtils.getArrayProperty(form, this.getAttribute("name"));
 	    		   		String[] sel = TagHelper.getFormValues(form, this.getAttribute("name"));
@@ -92,18 +90,20 @@ public class CInputTag extends InputTag
 	    		   		 
 	    		    	setSelected(this.getAttribute("value"), sellist);
 
-	    		    	if("CHECKBOX".equals(type))
-	    		    		checkboxfix = ""; //"<input type='hidden' name='" + name + "' value='0'>";
-
+	    		    	//if("checkbox".equals(type)) {
+	    		    	//	extend += ""; //"<input type='hidden' name='" + name + "' value='0'>";
+	    				//}
+	    		    	
 	    		    	processed = true;
 	    		    }
-	    			
-	    			disabled = getAttribute("disabled");
-    		    	
-    		    	if(disabled == null || getAttribute("CHECKED") == null)
-    		    		disabled = "";
-    		    	else
-    		    		disabled = "<input type='hidden' name='" + attname + "' value='" + this.getAttribute("value") + "'>";
+
+	    			if(getAttribute("disabled") == null || getAttribute("CHECKED") == null)
+	    			{
+	    			}
+	    			else
+	    			{
+	    				extend = "<input type='hidden' name='" + attname + "' value='" + this.getAttribute("value") + "'>";
+	    			}
 
 	   			} else {
 	   				if(this.getAttribute("value").length() == 0)
@@ -115,7 +115,7 @@ public class CInputTag extends InputTag
 	   		if(processed)
 	   			return;
 	   		
-	   		if("BUTTON".equals(type) || "SUBMIT".equals(type) || "CANCEL".equals(type) || "RESET".equals(type)) 
+	   		if("button".equals(type) || "submit".equals(type) || "cancel".equals(type) || "reset".equals(type)) 
 	   		{
 				String text = this.getAttribute("value");
 				
@@ -140,9 +140,9 @@ public class CInputTag extends InputTag
 			 return;
 		 
 		 if( selected.contains(value) )
-			 this.setAttribute("CHECKED", "", '"');
+			 this.setAttribute("checked", "", '"');
 		 else
-			 this.removeAttribute("CHECKED");
+			 this.removeAttribute("checked");
     }
     
     public String toHtml() 
@@ -157,13 +157,11 @@ public class CInputTag extends InputTag
 	   	
 	   	
 	   	//int length = checkboxfix.length() + disabled.length() + tag.length();
+
+	   	if(extend == null)
+	   		return tag;
 	   	
-	   	StringBuilder buf = new StringBuilder(tag);
-	   	
-	   	buf.insert(0, disabled);
-	   	buf.insert(0, checkboxfix);
-	   	
-	   	return buf.toString();
+	   	return extend + tag;
     }
 }
 
