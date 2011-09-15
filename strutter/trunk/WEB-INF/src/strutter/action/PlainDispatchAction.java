@@ -64,19 +64,19 @@ public class PlainDispatchAction extends BaseAction
     	  boolean parameter = true;
 
     	  Method method = null;
-    	  
-    	  try {
-    		  method = getMethod(name, types);
-    	  } catch (Exception e) {}
 
+		  try {
+			  method = getMethod( name, null);
+			  parameter = false;
+		  } catch (Exception e) {
+			  log.error("missing action: [" + name + "]");
+			  throw new Exception("missing action: [" + name + "]");
+		  }
+		  
     	  if(method == null) {
-    		  try {
-    			  method = getMethod( name, null);
-    		  } catch (Exception e) {
-    			  log.error("missing action: [" + name + "]");
-    			  throw new Exception("missing action: [" + name + "]");
-    		  }
-    		  parameter = false;
+        	  try {
+        		  method = getMethod(name, types);
+        	  } catch (Exception e) {}
     	  }
           
 		  methodwrapper = new ActionMethodWrapper(method, parameter);
