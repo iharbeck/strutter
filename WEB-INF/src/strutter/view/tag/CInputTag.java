@@ -56,9 +56,6 @@ public class CInputTag extends InputTag
     {
    		String type = getAttribute("type");
 		
-		if(type == null)
-			return;
-
 		String attname = getAttribute("name");
 
     	try 
@@ -72,7 +69,8 @@ public class CInputTag extends InputTag
 	   			
 	   			if(value.length() > 0)
 	   			{
-	    			if("text".equals(type) || 
+	    			if(type == null ||
+	    			   "text".equals(type) || 
 	    		       "hidden".equals(type) ||
 	    		       "submit".equals(type) ||
 	    		       "cancel".equals(type) ||
