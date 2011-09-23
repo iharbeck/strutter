@@ -1,6 +1,7 @@
 package strutter.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -52,6 +53,13 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 		return null;
 	}
 
+	
+	@Override
+	public void flushBuffer() throws IOException {
+		// TODO Auto-generated method stub
+		//super.flushBuffer();
+	}
+	
 	public void close() {
 		try {
 			if (writer != null)
