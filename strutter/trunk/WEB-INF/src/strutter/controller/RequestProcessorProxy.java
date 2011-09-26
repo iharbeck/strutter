@@ -112,8 +112,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		proxy.destroy();
 	}
 
-	public void process(HttpServletRequest _request, HttpServletResponse _response)
-			throws IOException, ServletException
+	public void process(HttpServletRequest _request, HttpServletResponse _response) throws IOException, ServletException
 	{
 		ActionHelper.ActionHelperData data = null;
 		
@@ -140,8 +139,8 @@ public class RequestProcessorProxy extends RequestProcessor
 			//		actionfieldname = mapping.getParameter();
 			//}
 
-			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
+			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
 
 			ActionConfig mapping = data.getMapping();
