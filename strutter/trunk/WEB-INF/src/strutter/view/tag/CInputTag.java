@@ -58,6 +58,9 @@ public class CInputTag extends InputTag
 		
 		String attname = getAttribute("name");
 
+		if(type != null)
+			type = type.toLowerCase();
+		
     	try 
 	   	{
     		boolean processed = false;
