@@ -118,6 +118,9 @@ public class RequestProcessorProxy extends RequestProcessor
 		
 		ActionMappingExtended mappingext = null;
 		
+		
+		boolean isMainThread = false;
+		
 		try 
 		{
 			
@@ -219,7 +222,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			} catch (Exception e1) {
 			}
 			
-			boolean isMainThread = data.getThreadcount() == 1;
+			isMainThread = data.getThreadcount() == 1;
 			
 			StringWriter out = new StringWriter(RequestProcessorProxy.BUFFERSIZE);
 			
@@ -359,7 +362,8 @@ public class RequestProcessorProxy extends RequestProcessor
 		finally
 		{
             // Cleanup Threadlocale
-            //ActionHelper.remove();
+            if(isMainThread)
+            	ActionHelper.remove();
             
             if(mappingext != null) 
             	mappingext.setHeading(true);
