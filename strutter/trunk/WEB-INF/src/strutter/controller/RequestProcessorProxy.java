@@ -362,8 +362,8 @@ public class RequestProcessorProxy extends RequestProcessor
 		finally
 		{
             // Cleanup Threadlocale
-            if(isMainThread)
-            	ActionHelper.remove();
+            //if(isMainThread)
+            ActionHelper.remove();
             
             if(mappingext != null) 
             	mappingext.setHeading(true);
