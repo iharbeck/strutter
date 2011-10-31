@@ -163,7 +163,8 @@ public class RequestProcessorProxy extends RequestProcessor
 	
 			if(mappingext != null && mappingext.isWsaction())
 			{
-				try {
+				try 
+				{
 					Object direct = Class.forName( mapping.getType() ).newInstance(); 
 					PopulateHelper.populate(direct, requestwrapper);
 				
@@ -431,19 +432,6 @@ public class RequestProcessorProxy extends RequestProcessor
 			System.out.println("P" + System.currentTimeMillis());
 			NodeList nl = hparser.parse(null);
 			System.out.println("E" + System.currentTimeMillis());
-			
-			/*
-			StringBuffer ret = new StringBuffer (500000);
-			
-			Node[] nodeData = nl.toNodeArray();
-			
-			int size = nodeData.length;
-			for (int i = 0; i < size; i++)
-				ret.append (nodeData[i].toHtml(true));
-			
-			System.out.println("F" + System.currentTimeMillis() + "-");
-			return (ret.toString());
-			 */
 			
 			return nl.toHtml();  // --as close to original as possible
 		} catch (Exception e) {
