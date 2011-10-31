@@ -112,37 +112,34 @@ public class RequestProcessorProxy extends RequestProcessor
 		proxy.destroy();
 	}
 
+	// add hidden action field as named in configuration
+	//if(actionfieldname == null)
+	//{
+	//	if (mapping != null && mapping.getParameter() != null)
+	//		actionfieldname = mapping.getParameter();
+	//}
+
 	public void process(HttpServletRequest _request, HttpServletResponse _response) throws IOException, ServletException
 	{
-		ActionHelper.ActionHelperData data = null;
+		System.out.println(_request.getRequestURL());
+
+		// AJAX and so on
+		if(_request.getServletPath().equals("/strutter.do"))  // data.getActionname()
+		{
+			if(internalProcessing(_request, _response))
+				return;
+		}
+
+		RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) _request);
 		
 		ActionMappingExtended mappingext = null;
-		
-		
-		boolean isMainThread = false;
-		
+			
+		ActionHelper.ActionHelperData data = null;
+
 		try 
 		{
-			
-			System.out.println(_request.getRequestURL());
+			boolean isMainThread = false;
 
-			// AJAX and so on
-			if(_request.getServletPath().equals("/strutter.do"))  // data.getActionname()
-			{
-				if(internalProcessing(_request, _response))
-					return;
-			}
-
-			RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest) _request);
-			
-			// add hidden action field as named in configuration
-			//if(actionfieldname == null)
-			//{
-			//	if (mapping != null && mapping.getParameter() != null)
-			//		actionfieldname = mapping.getParameter();
-			//}
-
-			
 			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
 
