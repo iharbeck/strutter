@@ -17,13 +17,14 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 		super(response);
 	}
 
-	public PrintWriter getWriter() throws java.io.IOException {
+	public PrintWriter getWriter() throws java.io.IOException 
+	{
 		if (writer != null)
 			throw new IllegalStateException("repeated getWriter() call");
 		if (stream != null)
 			throw new IllegalStateException("getOutputStream() was called first");
 
-		writer = new StringWriter(2048);
+		writer = new StringWriter(16 * 1024);
 		return new PrintWriter(writer);
 	}
 
