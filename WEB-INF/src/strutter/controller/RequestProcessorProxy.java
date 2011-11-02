@@ -1,9 +1,11 @@
 package strutter.controller;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,10 +69,14 @@ public class RequestProcessorProxy extends RequestProcessor
 	
 	static String actionfieldname;
 	
+	ClassLoader classloader = null;
+	
 	public void init(ActionServlet servlet, ModuleConfig moduleConfig)
 			throws ServletException
 	{
 		super.init(servlet, moduleConfig);
+
+		classloader = getClass().getClassLoader();
 
 		try {
 			proxy = (RequestProcessor)Class.forName(proxyname).newInstance();
@@ -121,7 +127,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	public void process(HttpServletRequest _request, HttpServletResponse _response) throws IOException, ServletException
 	{
-		System.out.println(_request.getRequestURL());
+		System.out.println(""+System.currentTimeMillis() + _request.getRequestURL() + "?" + _request.getQueryString());
 
 		// AJAX and so on
 		if(_request.getServletPath().equals("/strutter.do"))  // data.getActionname()
@@ -220,7 +226,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			} catch (Exception e1) {
 			}
 			
-			isMainThread = data.getThreadcount() == 1;
+			isMainThread = (data.getThreadcount() == 1);
 			
 			StringWriter out = new StringWriter(RequestProcessorProxy.BUFFERSIZE);
 			
@@ -229,8 +235,8 @@ public class RequestProcessorProxy extends RequestProcessor
 				if(plugin.getDoctype().equals("1"))
 				   out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
 				
-				//out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
-				//out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
+				// out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
+				// out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 				
 				if(plugin.getScript().equals("1") || plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1") || plugin.getTemplate().equals("1") )
 				   out.write("<SCRIPT src='strutter.do?js' type='text/javascript'></SCRIPT>\n");
@@ -315,9 +321,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			String type = mapping.getType().replace('.', '/');
 			String jspath = type + ".js";
 			
-			String jsscript = getResource(jspath);
+			URL jsscript = classloader.getResource(jspath);
 			
-			if(jsscript.length() > 0)
+			if(jsscript != null)
 			{
 				//out.write("<script>\n");
 				//out.write(jsscript);
@@ -381,9 +387,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	{
 		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
 
-		BufferedInputStream streamreader = new BufferedInputStream(
-			getClass().getClassLoader().getResourceAsStream(name)
-		);
+		BufferedInputStream streamreader = new BufferedInputStream(classloader.getResourceAsStream(name));
 
 		try {
 			int data;
@@ -398,9 +402,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	private BufferedInputStream getResourceAsStream(String name)
 	{
-		BufferedInputStream streamreader = new BufferedInputStream(
-				   getClass().getClassLoader().getResourceAsStream(name)
-				);
+		BufferedInputStream streamreader = new BufferedInputStream(classloader.getResourceAsStream(name));
 
 		return streamreader;
 	}
@@ -445,6 +447,17 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	static HashMap<String, String> ETAG_VALUES = new HashMap<String, String>();
 	
+	void streamzip(HttpServletResponse response, String data) throws IOException, ServletException
+	{
+		ServletOutputStream out = response.getOutputStream();
+        
+        GZIPOutputStream gzipstream = new GZIPOutputStream(out);
+		response.addHeader("Content-Encoding", "gzip");
+		    
+		gzipstream.write(data.getBytes());
+		gzipstream.close();
+	}
+	
 	boolean internalProcessing(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 
@@ -475,13 +488,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 				response.setHeader(ETAG_HEADER, ETAG_VALUE);
 
-				ServletOutputStream out = response.getOutputStream();
-		        
-		        GZIPOutputStream gzipstream = new GZIPOutputStream(out);
-				response.addHeader("Content-Encoding", "gzip");
-				    
-				gzipstream.write(script.getBytes());
-				gzipstream.close();
+				streamzip(response, script);
 				
 //				PrintWriter out = response.getWriter();
 //				out.println(script);
@@ -503,18 +510,14 @@ public class RequestProcessorProxy extends RequestProcessor
 				
 				String jsscript = getResource(jspath);
 
-				etag = String.valueOf(jsscript.hashCode());
+				etag = "" + new File(classloader.getResource(jspath).getFile()).lastModified();
+				//etag = String.valueOf(jsscript.hashCode());
+
 				ETAG_VALUES.put(file, etag);
 				
 				response.setHeader(ETAG_HEADER, etag);
 
-				ServletOutputStream out = response.getOutputStream();
-		        
-		        GZIPOutputStream gzipstream = new GZIPOutputStream(out);
-				response.addHeader("Content-Encoding", "gzip");
-				    
-				gzipstream.write(jsscript.getBytes());
-				gzipstream.close();
+				streamzip(response, jsscript);
 			}
 			else if(internal.startsWith("killer"))
 			{
