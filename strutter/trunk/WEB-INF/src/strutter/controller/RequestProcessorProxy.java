@@ -92,7 +92,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
         ChainBase chain = new ChainBase();
 
-        chain.addCommand(new BeforeRenderCommand());
+//        chain.addCommand(new BeforeRenderCommand());
         chain.addCommand(command);
 
         catalog.addCommand("process-view", chain);
