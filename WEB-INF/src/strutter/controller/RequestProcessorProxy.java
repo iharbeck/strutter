@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -439,8 +438,6 @@ public class RequestProcessorProxy extends RequestProcessor
 	final static String IF_NONE_MATCH_HEADER = "If-None-Match";
 	final static String ETAG_HEADER = "ETag";
 
-	static HashMap<String, String> ETAG_VALUES = new HashMap<String, String>();
-	
 	void streamzip(HttpServletResponse response, String data) throws IOException, ServletException
 	{
 		ServletOutputStream out = response.getOutputStream();
@@ -450,11 +447,19 @@ public class RequestProcessorProxy extends RequestProcessor
 		    
 		gzipstream.write(data.getBytes());
 		gzipstream.close();
+		
+//		PrintWriter out = response.getWriter();
+//		out.println(script);
+//		out.flush();
+	}
+	
+	final String moddate(String path)
+	{
+		return "" + new File(classloader.getResource(path).getFile()).lastModified();
 	}
 	
 	boolean internalProcessing(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-
 		String internal = request.getQueryString();
 		
 		if(internal != null)
@@ -464,6 +469,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				if(script == null)
 				{
 					HttpSession session = request.getSession();
+					
 					script = getResource("script/process.js");
 					//script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
@@ -471,7 +477,7 @@ public class RequestProcessorProxy extends RequestProcessor
 					if(actionfieldname != null)
 						script = script.replaceAll("##actionname##", actionfieldname);
 
-					ETAG_VALUE = String.valueOf(script.hashCode());				
+					ETAG_VALUE = moddate("script/process.js");				
 				}
 
 				if (ETAG_VALUE.equals(request.getHeader(IF_NONE_MATCH_HEADER))) 
@@ -482,33 +488,23 @@ public class RequestProcessorProxy extends RequestProcessor
 
 				response.setHeader(ETAG_HEADER, ETAG_VALUE);
 
-				streamzip(response, script);
-				
-//				PrintWriter out = response.getWriter();
-//				out.println(script);
-//				out.flush();
+				streamzip(response, script);				
 			}
 			else if(internal.startsWith("js_"))
 			{
 				String file = internal.substring(3);
 	
-				String etag = ETAG_VALUES.get(file); 
+				String jspath = file + ".js";
+				String etag = moddate(jspath);
 					
-				if (etag != null && etag.equals(request.getHeader(IF_NONE_MATCH_HEADER))) 
+				if (etag.equals(request.getHeader(IF_NONE_MATCH_HEADER))) 
 				{
 					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
 					return true;					
 				}
 				
-				String jspath = file + ".js";
-				
 				String jsscript = getResource(jspath);
 
-				etag = "" + new File(classloader.getResource(jspath).getFile()).lastModified();
-				//etag = String.valueOf(jsscript.hashCode());
-
-				ETAG_VALUES.put(file, etag);
-				
 				response.setHeader(ETAG_HEADER, etag);
 
 				streamzip(response, jsscript);
