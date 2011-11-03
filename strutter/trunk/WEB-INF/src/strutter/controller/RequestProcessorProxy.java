@@ -42,6 +42,7 @@ import org.htmlparser.util.NodeList;
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
 import strutter.config.ActionPlugin;
+import strutter.filter.YUIFilter;
 import strutter.helper.ActionHelper;
 import strutter.helper.PopulateHelper;
 import strutter.helper.WSActionHelper;
@@ -445,7 +446,9 @@ public class RequestProcessorProxy extends RequestProcessor
         
         GZIPOutputStream gzipstream = new GZIPOutputStream(out);
 		response.addHeader("Content-Encoding", "gzip");
-		    
+		
+		data = YUIFilter.compressJavaScriptString(data);
+		
 		gzipstream.write(data.getBytes());
 		gzipstream.close();
 		
@@ -469,7 +472,6 @@ public class RequestProcessorProxy extends RequestProcessor
 					
 					script = getResource("script/process.js");
 
-					//script = YUIFilter.compressJavaScriptString(script);
 					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval()*1000)-(10*1000)));
 
 					if(actionfieldname != null)
