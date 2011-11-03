@@ -145,6 +145,8 @@ public class RequestProcessorProxy extends RequestProcessor
 		try 
 		{
 			boolean isMainThread = false;
+			boolean isHeading    = false;
+			boolean isRemoting   = false;
 
 			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
@@ -227,28 +229,25 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 			
 			isMainThread = (data.getThreadcount() == 1);
+			isHeading = (mappingext != null && mappingext.isHeading());
+			isRemoting = (mappingext != null && mappingext.isRemoteaction());
 			
 			StringWriter out = new StringWriter(RequestProcessorProxy.BUFFERSIZE);
 			
-			if(isMainThread && mappingext != null && mappingext.isHeading())
+			if(isMainThread && isHeading)
 			{
 				if(plugin.getDoctype().equals("1"))
 				   out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
 				
 				// out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
-				// out.println("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
+				// out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 				
 				if(plugin.getScript().equals("1") || plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1") || plugin.getTemplate().equals("1") )
 				   out.write("<SCRIPT src='strutter.do?js' type='text/javascript'></SCRIPT>\n");
 			}
 			
-			if(mappingext != null && mappingext.isRemoteaction())
+			if(isRemoting)
 			{
-				if(plugin.getDoctype().equals("1"))
-					out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
-
-				//out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");				
-				
 				out.write("<script type='text/javascript' src='dwr/engine.js'> </script>\n");
 				out.write("<script type='text/javascript' src='dwr/util.js'> </script>\n");
 				
@@ -289,7 +288,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			out.write(doc);
 			out.flush();	
 			
-			if(isMainThread && mappingext != null && mappingext.isHeading())
+			if(isMainThread && isHeading)
 			{	
 				if(plugin.getTemplate().equals("1"))
 					out.write(template);
@@ -325,12 +324,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			
 			if(jsscript != null)
 			{
-				//out.write("<script>\n");
-				//out.write(jsscript);
-				//out.write("\n</script>");
-
 				out.write("<SCRIPT src='strutter.do?js_" + type + "' type='text/javascript'></SCRIPT>\n");
-
 			}
 
 			try 
