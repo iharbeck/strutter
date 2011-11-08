@@ -66,10 +66,10 @@ public class CSelectTag extends SelectTag
 	 
     public void doSemanticAction () throws ParserException
     {
-	   	try 
+    	String attname = this.getAttribute("name");	
+
+    	try 
 	   	{
-	   	   String attname = this.getAttribute("name");	
-	   	   
 	   	   if(attname != null && this.getAttribute("nofill") == null)
 	   	   {
 	   		 List sellist;
@@ -135,7 +135,7 @@ public class CSelectTag extends SelectTag
 			 }
 	   	   }
         } catch(Exception e) {
-        	System.out.println(this.getAttribute("name"));
+        	System.out.println(attname);
 			//if anything throws an exception, stop processing and return control to the caller.
        		e.printStackTrace();
 	    }
