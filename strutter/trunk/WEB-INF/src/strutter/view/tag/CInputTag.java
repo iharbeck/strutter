@@ -61,6 +61,8 @@ public class CInputTag extends InputTag
 		if(type != null)
 			type = type.toLowerCase();
 		
+		String valuetext = this.getAttribute("value");
+		
     	try 
 	   	{
     		boolean processed = false;
@@ -86,10 +88,10 @@ public class CInputTag extends InputTag
 			    		    "checkbox".equals(type)) {
 	    		    	
 	    		   		//String[] sel = BeanUtils.getArrayProperty(form, this.getAttribute("name"));
-	    		   		String[] sel = TagHelper.getFormValues(form, this.getAttribute("name"));
+	    		   		String[] sel = TagHelper.getFormValues(form, attname);
 	    		   		List<String> sellist = Arrays.asList(sel);
 	    		   		 
-	    		    	setSelected(this.getAttribute("value"), sellist);
+	    		    	setSelected(valuetext, sellist);
 
 	    		    	//if("checkbox".equals(type)) {
 	    		    	//	extend += ""; //"<input type='hidden' name='" + name + "' value='0'>";
@@ -103,11 +105,11 @@ public class CInputTag extends InputTag
 	    			}
 	    			else
 	    			{
-	    				extend = "<input type='hidden' name='" + attname + "' value='" + this.getAttribute("value") + "'>";
+	    				extend = "<input type='hidden' name='" + attname + "' value='" + valuetext + "'>";
 	    			}
 
 	   			} else {
-	   				if(this.getAttribute("value").length() == 0)
+	   				if(valuetext.length() == 0)
 	   					this.removeAttribute("value");
 	   			}
 	   			return;
@@ -115,22 +117,25 @@ public class CInputTag extends InputTag
    		
 	   		if(processed)
 	   			return;
-	   		
-	   		if("button".equals(type) || "submit".equals(type) || "cancel".equals(type) || "reset".equals(type)) 
-	   		{
-				String text = this.getAttribute("value");
-				
-				if(text == null || !text.startsWith("$"))
-					return;
-				
-				Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
-	   			
-	   			MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
 
-	   			text = resources.getMessage(loc, text.substring(1));
-	   			
-	   			setAttribute("value", text);
-		    }
+	   		// BUTTON HANDLING
+	   		if(valuetext == null || !valuetext.startsWith("$"))
+	   		{
+	   			return;
+	   		}
+	   		else
+	   		{
+		   		if("button".equals(type) || "submit".equals(type) || "cancel".equals(type) || "reset".equals(type)) 
+		   		{
+					Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
+		   			
+		   			MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
+	
+		   			valuetext = resources.getMessage(loc, valuetext.substring(1));
+		   			
+		   			setAttribute("value", valuetext);
+			    }
+	   		}
     	} catch(Exception e) {
 		}
     }

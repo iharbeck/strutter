@@ -42,7 +42,8 @@ public class CSpanTag extends Span
 		this.request = request;
 	}
 	 
-	public String toHtml() {
+	public String toHtml() 
+	{
 		if(plain)
 			return this.getChildren().toHtml();
 			

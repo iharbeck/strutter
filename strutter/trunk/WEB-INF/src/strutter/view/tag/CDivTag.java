@@ -62,8 +62,8 @@ public class CDivTag extends Div
 	   	
    		String val = "";
    		
-   		try {
-		    
+   		try 
+   		{
 	   		if(type.startsWith("text"))
 		   		//val = BeanUtils.getProperty(form, this.getAttribute("id"));
 	   		    val = TagHelper.getFormValue(form, this.getAttribute("id"));
