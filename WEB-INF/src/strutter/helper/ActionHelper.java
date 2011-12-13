@@ -262,14 +262,6 @@ public class ActionHelper
 		getSession().setAttribute(name, obj);
 	}
 
-
-	//singleton
-	static ActionHelper instance = new ActionHelper();
-
-	public static synchronized ActionHelper getInstance() {
-		return instance;
-	}
-
 	public ActionHelper() {
 	}
 
