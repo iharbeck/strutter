@@ -142,7 +142,8 @@ public class RequestProcessorProxy extends RequestProcessor
 		ActionMappingExtended mappingext = null;
 			
 		ActionHelper.ActionHelperData data = null;
-
+		HttpSession session = null;
+		
 		try 
 		{
 			boolean isMainThread = false;
@@ -151,6 +152,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
 			
+			session = data.getSession();
 
 			ActionConfig mapping = data.getMapping();
 
@@ -191,7 +193,7 @@ public class RequestProcessorProxy extends RequestProcessor
 //				return;
 			
 
-			data.getSession().setAttribute("thread", Thread.currentThread());
+			session.setAttribute("thread", Thread.currentThread());
 
 
 //			ActionForward helperforward = ActionHelper.startInterceptors();
@@ -297,10 +299,10 @@ public class RequestProcessorProxy extends RequestProcessor
 				if(plugin.getSessioncheck().equals("1"))
 				{
 					// Duplicate Window Check
-				    if(data.getSession().getAttribute("struttersession") == null)
+				    if(session.getAttribute("struttersession") == null)
 					{
-				    	data.getSession().setAttribute("struttersession", data.getSession().getId());
-						out.write("<script>setWindowName('" + data.getSession().getId() + "');</script>\n");
+				    	session.setAttribute("struttersession", session.getId());
+						out.write("<script>setWindowName('" + session.getId() + "');</script>\n");
 				    }
 				}
 				if(plugin.getCookiecheck().equals("1")) {
@@ -367,7 +369,7 @@ public class RequestProcessorProxy extends RequestProcessor
             	mappingext.setHeading(true);
 
             try {
-            	data.getSession().setAttribute("thread", null);
+            	session.setAttribute("thread", null);
             } catch(Exception e) {}
             
             System.out.println("done" + System.currentTimeMillis());
