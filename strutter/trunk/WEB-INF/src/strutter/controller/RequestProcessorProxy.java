@@ -44,6 +44,7 @@ import strutter.config.ActionMappingExtended;
 import strutter.config.ActionPlugin;
 import strutter.filter.YUIFilter;
 import strutter.helper.ActionHelper;
+import strutter.helper.ActionHelperData;
 import strutter.helper.PopulateHelper;
 import strutter.helper.WSActionHelper;
 import strutter.interceptor.WebInterceptorInterface;
@@ -141,7 +142,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		
 		ActionMappingExtended mappingext = null;
 			
-		ActionHelper.ActionHelperData data = null;
+		ActionHelperData data = null;
 		HttpSession session = null;
 		
 		try 
