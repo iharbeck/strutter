@@ -52,80 +52,6 @@ public class ActionHelper
 	// storing all actions here
 	private static HashMap actions = new HashMap();
 
-	public static class ActionHelperData  {
-		private HttpServletRequest  request;
-		private HttpServletResponse response;
-		private HttpSession         session;
-		private ActionMessages 	    errormsgs;
-		private ActionMessages 	    infomsgs;
-		private Locale 			    locale = null;
-		private ActionMapping       mapping;
-		private String				actionname;
-		private boolean             initialized = false;
-		private int                 threadcount = 0;
-		
-		public HttpServletRequest getRequest() {
-			return request;
-		}
-		public void setRequest(HttpServletRequest request) {
-			this.request = request;
-		}
-		public HttpServletResponse getResponse() {
-			return response;
-		}
-		public void setResponse(HttpServletResponse response) {
-			this.response = response;
-		}
-		public HttpSession getSession() {
-			return session;
-		}
-		public void setSession(HttpSession session) {
-			this.session = session;
-		}
-		public ActionMessages getErrormsgs() {
-			return errormsgs;
-		}
-		public void setErrormsgs(ActionMessages errormsgs) {
-			this.errormsgs = errormsgs;
-		}
-		public ActionMessages getInfomsgs() {
-			return infomsgs;
-		}
-		public void setInfomsgs(ActionMessages infomsgs) {
-			this.infomsgs = infomsgs;
-		}
-		public Locale getLocale() {
-			return locale;
-		}
-		public void setLocale(Locale locale) {
-			this.locale = locale;
-		}
-		public ActionMapping getMapping() {
-			return mapping;
-		}
-		public void setMapping(ActionMapping mapping) {
-			this.mapping = mapping;
-		}
-		public String getActionname() {
-			return actionname;
-		}
-		public void setActionname(String actionname) {
-			this.actionname = actionname;
-		}
-		public boolean isInitialized() {
-			return initialized;
-		}
-		public void setInitialized(boolean initialized) {
-			this.initialized = initialized;
-		}
-		public int getThreadcount() {
-			return threadcount;
-		}
-		public void setThreadcount(int threadcount) {
-			this.threadcount = threadcount;
-		}
-	}
-	
 	private static class ThreadLocalActionHelper extends InheritableThreadLocal {
 		public Object initialValue() {
 	      return new ActionHelperData();
@@ -138,7 +64,7 @@ public class ActionHelper
 		
 		ActionHelperData data = (ActionHelperData)helper.get();
 		
-		if(!data.initialized)
+		if(!data.isInitialized())
 		{
 			WebContext ctx = WebContextFactory.get();
 			
@@ -171,7 +97,7 @@ public class ActionHelper
 	
 	public static final void remove() {
 		try {
-			ActionHelper.me().threadcount--;
+			ActionHelper.me().minusThreadcount();
 			//System.out.println("down:" + ActionHelper.me().threadcount + " " + ActionHelper.me().request.getRequestURI());
 			helper.set(null);
 			helper.remove();
@@ -181,25 +107,25 @@ public class ActionHelper
 
 	public final boolean hasObject(String name)
 	{
-		Object form = Utils.getActionForm(me().request);
+		Object form = Utils.getActionForm(me().getRequest());
 		return (TagHelper.getFormObject(form, name) != null);
 	}
 
 	public final static Object getObject(String name)
 	{
-		Object form = Utils.getActionForm(me().request);
+		Object form = Utils.getActionForm(me().getRequest());
 		return TagHelper.getFormObject(form, name);
 	}
 
 	public final static String getString(String name)
 	{
-		Object form = Utils.getActionForm(me().request);
+		Object form = Utils.getActionForm(me().getRequest());
 		return TagHelper.getFormValue(form, name);
 	}
 
 	public final static Object getForm() throws Exception
 	{
-		Object form = Utils.getActionForm(me().request);
+		Object form = Utils.getActionForm(me().getRequest());
 
 		if(form == null)
 			throw new Exception("FormularClass not defined use FormlessInterface");
@@ -209,7 +135,7 @@ public class ActionHelper
 
 	public final static Object getForm(Class clazz)
 	{
-		return Utils.getActionForm(me().request, clazz);
+		return Utils.getActionForm(me().getRequest(), clazz);
 	}
 	
 	public final static String getFormAttribute(String name) throws Exception
@@ -294,28 +220,28 @@ public class ActionHelper
 	public static ActionHelperData init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		ActionHelperData me = (ActionHelperData)helper.get();
-		me.threadcount++;
+		me.plusThreadcount();
 		//System.out.println("up:" + me.threadcount + " " + request.getRequestURI());
 
 		ActionHelper.servletcontext = servletcontext;
 		
-		me.request     = request;
-		me.response    = response;
-		me.session     = request.getSession();
+		me.setRequest(request);
+		me.setResponse(response);
+		me.setSession(request.getSession());
 		
-		me.locale      = (Locale) request.getSession().getAttribute(Globals.LOCALE_KEY);
+		me.setLocale((Locale)request.getSession().getAttribute(Globals.LOCALE_KEY));
 		
-		if(me.locale == null)
-			me.locale  = request.getLocale();
+		if(me.getLocale() == null)
+			me.setLocale(request.getLocale());
 		
-		me.errormsgs   = getMsg(request, Globals.ERROR_KEY);
-		me.infomsgs    = getMsg(request, Globals.MESSAGE_KEY);
+		me.setErrormsgs(getMsg(request, Globals.ERROR_KEY));
+		me.setInfomsgs(getMsg(request, Globals.MESSAGE_KEY));
 
 		//me.actionname  = Utils.getActionMappingName(request. getServletPath());
-		me.actionname  = Utils.getActionMappingName(request); //, response);
+		me.setActionname(Utils.getActionMappingName(request)); //, response);
 
-		me.mapping     = getActionMapping(me.actionname);
-		me.initialized = true;
+		me.setMapping(getActionMapping(me.getActionname()));
+		me.setInitialized(true);
 		
 		return me;
 	}
@@ -323,7 +249,7 @@ public class ActionHelper
 	public static boolean isMainThread() {
 		ActionHelperData me = ActionHelper.me();
 		//System.out.println("is:" + me.threadcount);
-		return me.threadcount == 1; 
+		return me.getThreadcount() == 1; 
 	}
 
 	protected static ActionMessages getMsg(HttpServletRequest request, String alias)
@@ -336,40 +262,40 @@ public class ActionHelper
     }
 
 	public static ActionMessages getErrormsgs() {
-		return me().errormsgs;
+		return me().getErrormsgs();
 	}
 
 	public static ActionMessages getInfomsgs() {
-		return me().infomsgs;
+		return me().getInfomsgs();
 	}
 
 	public static Locale getLocale() {
-		return me().locale;
+		return me().getLocale();
 	}
 
 	public static String getActionname() {
-		return me().actionname;
+		return me().getActionname();
 	}
 
 	public static HttpServletRequest getRequest() {
-		return me().request;
+		return me().getRequest();
 	}
 
 	public static HttpServletResponse getResponse() {
-		return me().response;
+		return me().getResponse();
 	}
 
 	public static HttpSession getSession() {
 		
-		return me().session;
+		return me().getSession();
 	}
 
 	public static ActionMapping getMapping() {
-		return me().mapping;
+		return me().getMapping();
 	}
 	
 	public static boolean isInitialized() {
-		return me().initialized;
+		return me().isInitialized();
 	}
 
 	
@@ -413,7 +339,7 @@ public class ActionHelper
 	}
 
 	public static ActionMapping getActionMapping() {
-		return getActionMapping(me().actionname);
+		return getActionMapping(me().getActionname());
 	}
 	
     public static ActionMapping getActionMapping(String actionname) {
@@ -429,11 +355,11 @@ public class ActionHelper
 	public static ActionForward startInterceptors() throws IOException, ServletException
 	{
 		//ActionMapping is extended to provide interceptor interface
-		if(me().mapping instanceof ActionMappingExtended)
+		if(me().getMapping() instanceof ActionMappingExtended)
 		{
-			for(int i=0; i < ((ActionMappingExtended)me().mapping).getInterceptors().size(); i++)
+			for(int i=0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
 			{
-			    ActionInterceptorInterface interceptor =	(ActionInterceptorInterface) ((ActionMappingExtended)me().mapping).getInterceptors().get(i);
+			    ActionInterceptorInterface interceptor =	(ActionInterceptorInterface) ((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
 			    ActionForward forward = interceptor.beforeMethod();
 
 			    if(forward != null) {
@@ -452,11 +378,11 @@ public class ActionHelper
 			addErrors();
 			addMessages();
 
-			if(me().mapping instanceof ActionMappingExtended)
+			if(me().getMapping() instanceof ActionMappingExtended)
 			{
-				for(int i=0; i < ((ActionMappingExtended)me().mapping).getInterceptors().size(); i++)
+				for(int i=0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
 				{
-				    ActionInterceptorInterface interceptor =	(ActionInterceptorInterface) ((ActionMappingExtended)me().mapping).getInterceptors().get(i);
+				    ActionInterceptorInterface interceptor =	(ActionInterceptorInterface) ((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
 				    ActionForward forward = interceptor.afterMethod();
 
 				    if(forward != null) {
@@ -472,8 +398,8 @@ public class ActionHelper
 
 	protected static void addErrors()
 	{
-		HttpServletRequest request = me().request;
-		ActionMessages errors = me().errormsgs;
+		HttpServletRequest request = me().getRequest();
+		ActionMessages errors = me().getErrormsgs();
 
 		if (errors == null)
 			return;
@@ -505,14 +431,14 @@ public class ActionHelper
 
 	public static String getResource(String key)
 	{
-		MessageResources resources = (MessageResources) me().request.getAttribute(Globals.MESSAGES_KEY);
+		MessageResources resources = (MessageResources) me().getRequest().getAttribute(Globals.MESSAGES_KEY);
 
 		return resources.getMessage(getLocale(), key);
 	}
 	
 	public static void reloadResources()
 	{
-		MessageResources resources = (UniversalMessageResources) me().request.getAttribute(Globals.MESSAGES_KEY);
+		MessageResources resources = (UniversalMessageResources) me().getRequest().getAttribute(Globals.MESSAGES_KEY);
 		
 		if(resources instanceof UniversalMessageResources)
 			((UniversalMessageResources)resources).reload();
@@ -630,7 +556,7 @@ public class ActionHelper
 
 	public static void setLocale(String language) {
 		Utils.setLocale(getSession(), language);
-		me().locale = new Locale(language);
+		me().setLocale(new Locale(language));
 	}
 
 	/**
