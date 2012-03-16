@@ -301,7 +301,7 @@ public class ActionHelper
 		
 		me.request     = request;
 		me.response    = response;
-		me.session     = request.getSession(true);
+		me.session     = request.getSession();
 		
 		me.locale      = (Locale) request.getSession().getAttribute(Globals.LOCALE_KEY);
 		
