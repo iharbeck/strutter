@@ -58,7 +58,7 @@ public class ActionHelper
 	    }
 	}
 	
-	private static final ThreadLocalActionHelper helper = new ThreadLocalActionHelper();
+	private static volatile ThreadLocalActionHelper helper = new ThreadLocalActionHelper();
 
 	private static final ActionHelperData me() {
 		
@@ -98,7 +98,9 @@ public class ActionHelper
 	public static final void remove() {
 		try {
 			ActionHelper.me().minusThreadcount();
-			//System.out.println("down:" + ActionHelper.me().threadcount + " " + ActionHelper.me().request.getRequestURI());
+			//System.out.println("down:" + ActionHelper.me().getThreadcount() + " " + ActionHelper.me().getRequest().getRequestURI());
+			//System.out.println(helper.get());
+			//System.out.println(((ActionHelperData)helper.get()).getSession());
 			helper.set(null);
 			helper.remove();
 		} catch(Exception e) {
