@@ -29,7 +29,7 @@
       <td>
         <select style="" name="customer.anrede" error="behind">  <!--  tog -->
           <option id="anreden"/>
-          <option value="" >ddd</option>
+          <option style="color:darkred; font-weight:bold; border-bottom:1px solid silver" value="" >ddd</option>
           <option value="1">xErster</option>              <!-- id="anreden" -->
           <option value="2">xZweiter</option>
           <option value="3">xDritter</option>
