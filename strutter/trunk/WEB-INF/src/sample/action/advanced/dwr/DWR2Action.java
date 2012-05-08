@@ -62,7 +62,7 @@ public class DWR2Action extends FormlessDispatchAction implements ConfigInterfac
 	
 		list.add(str);
 		
-		Document.setTitle(str);
+		Document.setTitle(str + ActionHelper.getSession() + ActionHelper.getUsername());
 
 		Util.setValue("target", "You send: " + str + " : " + list.size());
 		Util.removeAllOptions("combo");
