@@ -22,6 +22,7 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 
 	public ActionForward doView() throws Exception
 	{
+		System.out.println("VIEW " + ActionHelper.getSession());
 		return ActionHelper.findForward("view");
 	}
 	
@@ -30,6 +31,8 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 	public void worker(String str) {
 		
 		Document.setTitle(str);
+		
+		System.out.println(" DWR " + ActionHelper.getSession());
 
 		Util.setValue("target", "You send: " + str);
 		Util.removeAllOptions("combo");

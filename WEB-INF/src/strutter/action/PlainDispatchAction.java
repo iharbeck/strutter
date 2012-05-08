@@ -135,9 +135,8 @@ public class PlainDispatchAction extends BaseAction
 			Utils.setActionForm(request, (Action)action);
 			return action.dispatchMethod(actionmapping, null, request, response, name);
 		}
-
+		
 		return dispatchMethod(actionmapping, actionform, request, response, name);
-
 	}
 
 	public void reset() 
