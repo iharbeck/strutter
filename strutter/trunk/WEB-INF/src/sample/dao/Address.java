@@ -16,43 +16,62 @@
 
 package sample.dao;
 
-public class Address 
+public class Address
 {
 	String anrede;
-	
+
 	String firstname;
 	String lastname;
 	String street;
 	String city;
-	
-	public String getAnrede() {
+
+	public String getAnrede()
+	{
 		return anrede;
 	}
-	public void setAnrede(String anrede) {
+
+	public void setAnrede(String anrede)
+	{
 		this.anrede = anrede;
 	}
-	public String getCity() {
+
+	public String getCity()
+	{
 		return city;
 	}
-	public void setCity(String city) {
+
+	public void setCity(String city)
+	{
 		this.city = city;
 	}
-	public String getFirstname() {
+
+	public String getFirstname()
+	{
 		return firstname;
 	}
-	public void setFirstname(String firstname) {
+
+	public void setFirstname(String firstname)
+	{
 		this.firstname = firstname;
 	}
-	public String getLastname() {
+
+	public String getLastname()
+	{
 		return lastname;
 	}
-	public void setLastname(String lastname) {
+
+	public void setLastname(String lastname)
+	{
 		this.lastname = lastname;
 	}
-	public String getStreet() {
+
+	public String getStreet()
+	{
 		return street;
 	}
-	public void setStreet(String street) {
+
+	public void setStreet(String street)
+	{
 		this.street = street;
 	}
 }

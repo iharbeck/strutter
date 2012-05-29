@@ -29,14 +29,14 @@ public class ProcessAction extends FormlessDispatchAction implements ConfigInter
 {
 	private static Log log = LogFactory.getLog(ProcessAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addForward("process_view.jsp");
 	}
 
 	private String lastname;
 	private String firstname;
-
 
 	public ActionForward doView() throws Exception
 	{
@@ -50,7 +50,7 @@ public class ProcessAction extends FormlessDispatchAction implements ConfigInter
 		log.debug("runner");
 
 		Object obj = new Object();
-		synchronized (obj)
+		synchronized(obj)
 		{
 			log.debug("start");
 			obj.wait(30000);
@@ -60,21 +60,24 @@ public class ProcessAction extends FormlessDispatchAction implements ConfigInter
 		return ActionHelper.findForward("view");
 	}
 
-	public String getLastname() {
+	public String getLastname()
+	{
 		return lastname;
 	}
 
-	public void setLastname(String lastname) {
+	public void setLastname(String lastname)
+	{
 		this.lastname = lastname;
 	}
 
-	public String getFirstname() {
+	public String getFirstname()
+	{
 		return firstname;
 	}
 
-	public void setFirstname(String firstname) {
+	public void setFirstname(String firstname)
+	{
 		this.firstname = firstname;
 	}
-
 
 }

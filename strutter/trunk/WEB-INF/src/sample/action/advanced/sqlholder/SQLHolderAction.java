@@ -32,19 +32,20 @@ public class SQLHolderAction extends FormlessDispatchAction implements ConfigZer
 {
 	private static Log log = LogFactory.getLog(SQLHolderAction.class);
 
-	public ActionForward doView() throws Exception {
+	public ActionForward doView() throws Exception
+	{
 
-		log.debug("SQLHolder"); 
-		
+		log.debug("SQLHolder");
+
 		HashMap m = new HashMap();
 		m.put("damdam", "lslslsl");
-		
-		System.out.println( SqlHolder.getSql("main", m) );
-		
+
+		System.out.println(SqlHolder.getSql("main", m));
+
 		Type type = getClass().getDeclaredMethods()[0].getGenericReturnType();
 
 		log.debug(type.toString());
-		
-		return ActionHelper.findForward("view"); 
+
+		return ActionHelper.findForward("view");
 	}
 }

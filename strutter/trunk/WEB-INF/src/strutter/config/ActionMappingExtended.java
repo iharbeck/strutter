@@ -28,51 +28,62 @@ import org.apache.struts.action.ActionMapping;
 public class ActionMappingExtended extends ActionMapping
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	boolean wsaction = false;
 	boolean remoteaction = false;
 	boolean heading = true;
-	
+
 	String unspecified = "view";
-	
+
 	ArrayList interceptors = new ArrayList();
-	
-	public void addInterceptors(ArrayList interceptors) {
+
+	public void addInterceptors(ArrayList interceptors)
+	{
 		this.interceptors.addAll(interceptors);
 	}
 
-	public ArrayList getInterceptors() {
+	public ArrayList getInterceptors()
+	{
 		return interceptors;
 	}
 
-	public boolean isWsaction() {
+	public boolean isWsaction()
+	{
 		return wsaction;
 	}
 
-	public void setWsaction(boolean wsaction) {
+	public void setWsaction(boolean wsaction)
+	{
 		this.wsaction = wsaction;
 	}
 
-	public boolean isRemoteaction() {
+	public boolean isRemoteaction()
+	{
 		return remoteaction;
 	}
 
-	public void setRemoteaction(boolean remoteaction) {
+	public void setRemoteaction(boolean remoteaction)
+	{
 		this.remoteaction = remoteaction;
 	}
-	public String getUnspecified() {
+
+	public String getUnspecified()
+	{
 		return unspecified;
 	}
 
-	public void setUnspecified(String unspecified) {
+	public void setUnspecified(String unspecified)
+	{
 		this.unspecified = unspecified;
 	}
 
-	public boolean isHeading() {
+	public boolean isHeading()
+	{
 		return heading;
 	}
 
-	public void setHeading(boolean heading) {
+	public void setHeading(boolean heading)
+	{
 		this.heading = heading;
 	}
 }

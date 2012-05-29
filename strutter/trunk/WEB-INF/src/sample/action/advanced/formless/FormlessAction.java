@@ -31,7 +31,8 @@ public class FormlessAction extends FormlessDispatchAction implements ConfigInte
 {
 	private static Log log = LogFactory.getLog(FormlessAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addForward("formless_view.jsp");
 	}
@@ -39,17 +40,17 @@ public class FormlessAction extends FormlessDispatchAction implements ConfigInte
 	FormFile filer;
 
 	Address customer = new Address();
-	String  memo;
+	String memo;
 
 	public ActionForward doView() throws Exception
 	{
 		log.debug("view simpler");
-		
+
 		return ActionHelper.findForward("view");
 	}
 
 	public ActionForward doUpdate()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("update");
 
@@ -60,31 +61,38 @@ public class FormlessAction extends FormlessDispatchAction implements ConfigInte
 	{
 	}
 
-	public String[] getAnreden() {
+	public String[] getAnreden()
+	{
 		return new String[] { "Herr", "Frau", "Dr." };
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 
-	public Address getCustomer() {
+	public Address getCustomer()
+	{
 		return customer;
 	}
 
-	public void setCustomer(Address customer) {
+	public void setCustomer(Address customer)
+	{
 		this.customer = customer;
 	}
 
-	public FormFile getFiler() {
+	public FormFile getFiler()
+	{
 		return filer;
 	}
 
-	public void setFiler(FormFile filer) {
+	public void setFiler(FormFile filer)
+	{
 		this.filer = filer;
 	}
 }

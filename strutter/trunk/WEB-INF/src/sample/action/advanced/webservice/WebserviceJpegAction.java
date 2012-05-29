@@ -30,22 +30,22 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
-public class WebserviceJpegAction implements ConfigWSInterface 
+public class WebserviceJpegAction implements ConfigWSInterface
 {
-	public void doGet() throws Exception 
+	public void doGet() throws Exception
 	{
 		WSActionHelper.setContentType(WSActionHelper.TYPE_JPEG);
-		
+
 		File f = new File(getClass().getResource("ingo.jpg").getFile());
-		
-        JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(new FileInputStream(f));
-        BufferedImage image = decoder.decodeAsBufferedImage() ;
-        
-        image.getGraphics().draw3DRect(3, 3, 110, 110, true);
-        
-        // Send back image
-        ServletOutputStream sos = ActionHelper.getResponse().getOutputStream();
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(sos);
-        encoder.encode(image);
+
+		JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(new FileInputStream(f));
+		BufferedImage image = decoder.decodeAsBufferedImage();
+
+		image.getGraphics().draw3DRect(3, 3, 110, 110, true);
+
+		// Send back image
+		ServletOutputStream sos = ActionHelper.getResponse().getOutputStream();
+		JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(sos);
+		encoder.encode(image);
 	}
 }

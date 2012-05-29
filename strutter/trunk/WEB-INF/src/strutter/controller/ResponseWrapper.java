@@ -13,15 +13,16 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 {
 	private StringWriter writer = null;
 
-	public ResponseWrapper(HttpServletResponse response) {
+	public ResponseWrapper(HttpServletResponse response)
+	{
 		super(response);
 	}
 
-	public PrintWriter getWriter() throws java.io.IOException 
+	public PrintWriter getWriter() throws java.io.IOException
 	{
-		if (writer != null)
+		if(writer != null)
 			throw new IllegalStateException("repeated getWriter() call");
-		if (stream != null)
+		if(stream != null)
 			throw new IllegalStateException("getOutputStream() was called first");
 
 		writer = new StringWriter(16 * 1024);
@@ -30,44 +31,54 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 
 	private ByteArrayOutputStream stream;
 
-	public ServletOutputStream getOutputStream() throws java.io.IOException {
-		if (writer != null) {
+	public ServletOutputStream getOutputStream() throws java.io.IOException
+	{
+		if(writer != null)
+		{
 			throw new IllegalStateException("getWriter() was called first");
 		}
-		if (stream != null) {
+		if(stream != null)
+		{
 			throw new IllegalStateException("repeated getOutputStream() call");
 		}
 		stream = new ByteArrayOutputStream(16 * 1024);
 
-		return new ServletOutputStream() {
-			public void write(int i) throws java.io.IOException {
+		return new ServletOutputStream()
+		{
+			public void write(int i) throws java.io.IOException
+			{
 				stream.write(i);
 			}
 		};
 	}
 
-	public String toString(String encoding) throws Exception {
-		if (writer != null)
+	public String toString(String encoding) throws Exception
+	{
+		if(writer != null)
 			return writer.toString();
-		if (stream != null)
+		if(stream != null)
 			return stream.toString(encoding);
 		return null;
 	}
 
-	
 	@Override
-	public void flushBuffer() throws IOException {
+	public void flushBuffer() throws IOException
+	{
 		// TODO Auto-generated method stub
-		//super.flushBuffer();
+		// super.flushBuffer();
 	}
-	
-	public void close() {
-		try {
-			if (writer != null)
+
+	public void close()
+	{
+		try
+		{
+			if(writer != null)
 				writer.close();
-			if (stream != null)
+			if(stream != null)
 				stream.close();
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 		}
 	}
 }

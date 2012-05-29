@@ -13,21 +13,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import strutter.helper.ActionHelper;
 
-public class StrutterFilter implements Filter {
+public class StrutterFilter implements Filter
+{
 
 	FilterConfig config;
-	
-	public void destroy() {
-		
-	}
-	
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException 
+
+	public void destroy()
 	{
-		ActionHelper.init( config.getServletContext(), (HttpServletRequest)request, (HttpServletResponse)response);
+
 	}
-	
-	public void init(FilterConfig config) throws ServletException {
+
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	        throws IOException, ServletException
+	{
+		ActionHelper.init(config.getServletContext(), (HttpServletRequest)request, (HttpServletResponse)response);
+	}
+
+	public void init(FilterConfig config) throws ServletException
+	{
 		this.config = config;
 	}
 }

@@ -29,7 +29,8 @@ public class SecuredAction extends FormlessDispatchAction implements ConfigInter
 {
 	private static Log log = LogFactory.getLog(SecuredAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addForward("secured_view.jsp");
 		struts.setRoles("PING,PONG,ADMIN");
@@ -44,11 +45,13 @@ public class SecuredAction extends FormlessDispatchAction implements ConfigInter
 		return ActionHelper.findForward("view");
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 }

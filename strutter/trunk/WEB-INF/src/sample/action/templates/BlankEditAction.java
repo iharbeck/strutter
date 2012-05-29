@@ -29,7 +29,8 @@ public class BlankEditAction extends FormlessAction implements ConfigInterface
 {
 	private static Log log = LogFactory.getLog(BlankEditAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addForward("blank_view.jsp");
 	}

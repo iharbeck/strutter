@@ -20,15 +20,16 @@ import org.apache.struts.action.ActionForward;
 
 import strutter.interceptor.ActionInterceptorInterface;
 
-
 public class LoggingInterceptor implements ActionInterceptorInterface
 {
-	public ActionForward beforeMethod() {
+	public ActionForward beforeMethod()
+	{
 		System.out.println("logging before!");
 		return null;
 	}
 
-	public ActionForward afterMethod() {
+	public ActionForward afterMethod()
+	{
 		System.out.println("logging after!");
 		return null;
 	}

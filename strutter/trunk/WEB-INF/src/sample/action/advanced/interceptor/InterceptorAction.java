@@ -30,7 +30,8 @@ public class InterceptorAction extends FormlessDispatchAction implements ConfigI
 {
 	private static Log log = LogFactory.getLog(InterceptorAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addInterceptor(new LoggingInterceptor());
 	}
@@ -39,7 +40,7 @@ public class InterceptorAction extends FormlessDispatchAction implements ConfigI
 	String memo;
 
 	public ActionForward doView()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("view");
 
@@ -50,23 +51,28 @@ public class InterceptorAction extends FormlessDispatchAction implements ConfigI
 	{
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 
-	public Address getCustomer() {
+	public Address getCustomer()
+	{
 		return customer;
 	}
 
-	public void setCustomer(Address customer) {
+	public void setCustomer(Address customer)
+	{
 		this.customer = customer;
 	}
 
-	public String[] getAnreden() {
+	public String[] getAnreden()
+	{
 		return new String[] { "Herr", "Frau", "Dr." };
 	}
 }

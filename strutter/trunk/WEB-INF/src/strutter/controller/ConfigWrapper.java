@@ -7,19 +7,23 @@ public class ConfigWrapper
 	Class actionclass;
 	ActionConfig config;
 
-	public Class getActionclass() {
+	public Class getActionclass()
+	{
 		return actionclass;
 	}
 
-	public void setActionclass(Class actionclass) {
+	public void setActionclass(Class actionclass)
+	{
 		this.actionclass = actionclass;
 	}
 
-	public ActionConfig getConfig() {
+	public ActionConfig getConfig()
+	{
 		return config;
 	}
 
-	public void setConfig(ActionConfig config) {
+	public void setConfig(ActionConfig config)
+	{
 		this.config = config;
 	}
 }

@@ -47,7 +47,8 @@ public class TokenInterceptor implements WebInterceptorInterface
 		return fw;
 	}
 
-	public ActionForward afterMethod() {
+	public ActionForward afterMethod()
+	{
 		return null;
 	}
 

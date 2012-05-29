@@ -7,18 +7,20 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import strutter.helper.ActionHelper;
 
-public class RequestWrapper extends HttpServletRequestWrapper 
+public class RequestWrapper extends HttpServletRequestWrapper
 {
-	public RequestWrapper(HttpServletRequest request) throws IOException { 
-        super(request); 
-    }
+	public RequestWrapper(HttpServletRequest request) throws IOException
+	{
+		super(request);
+	}
 
-	public boolean isUserInRole(String role) 
+	public boolean isUserInRole(String role)
 	{
 		return ActionHelper.hasRole(role);
 	}
 
-	public String getRemoteUser() {
+	public String getRemoteUser()
+	{
 		return ActionHelper.getUsername();
-	} 
+	}
 }

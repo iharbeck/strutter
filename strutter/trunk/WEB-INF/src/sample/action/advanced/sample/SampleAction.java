@@ -29,16 +29,17 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 {
 	private static Log log = LogFactory.getLog(SampleAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
-		
+
 		struts.addForward("sample_view.jsp");
 		struts.addForward("sample_preview.jsp");
 		struts.setUnspecified("view");
 	}
 
 	public ActionForward doView()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("view");
 
@@ -46,16 +47,15 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 	}
 
 	public ActionForward doPreview()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("preview");
 
 		return ActionHelper.findForward("preview");
 	}
 
-
 	public ActionForward doSimulatemessage()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("simulatemessage");
 
@@ -69,7 +69,7 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 	}
 
 	public ActionForward doSimulateerrors()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("simulateerrors");
 
@@ -78,7 +78,7 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 		ActionHelper.addError("text.param", new Object[] { "one", "two" });
 
 		ActionHelper.addError("customer.firstname", "error.missing");
-		ActionHelper.addError("customer.lastname",  "error.missing");
+		ActionHelper.addError("customer.lastname", "error.missing");
 
 		if(ActionHelper.hasErrors())
 			return ActionHelper.findForward("view");
@@ -86,9 +86,8 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 		return ActionHelper.findForward("view");
 	}
 
-
 	public ActionForward doSearch()
-			throws Exception
+	        throws Exception
 	{
 		log.debug("search");
 
@@ -100,7 +99,7 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 			log.debug("FILENAME: " + filename);
 			form.setFilename(filename);
 
-			//Utils.writeFile( "d:/uploads", form.getFile());
+			// Utils.writeFile( "d:/uploads", form.getFile());
 		}
 		return ActionHelper.findForward("view");
 	}

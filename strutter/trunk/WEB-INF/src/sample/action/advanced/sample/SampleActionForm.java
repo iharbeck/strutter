@@ -25,19 +25,19 @@ import org.apache.struts.util.LabelValueBean;
 
 import sample.dao.Address;
 
-public class SampleActionForm extends ActionForm 
+public class SampleActionForm extends ActionForm
 {
 	private static final long serialVersionUID = 1L;
 
 	Address customer = new Address();
 
-	//String [] anreden = new String[] { "Herr", "Frau", "Dr." };
+	// String [] anreden = new String[] { "Herr", "Frau", "Dr." };
 
 	// Alternative
-	LabelValueBean [] anreden = new LabelValueBean[] {
-			new LabelValueBean("Herr", "11"),
-			new LabelValueBean("Frau", "22"),
-			new LabelValueBean("Dr.", "33" )
+	LabelValueBean[] anreden = new LabelValueBean[] {
+	        new LabelValueBean("Herr", "11"),
+	        new LabelValueBean("Frau", "22"),
+	        new LabelValueBean("Dr.", "33")
 	};
 
 	String rposition;
@@ -52,107 +52,125 @@ public class SampleActionForm extends ActionForm
 	String memo;
 
 	FormFile file = null;
-	String   filename = "";
+	String filename = "";
 
 	public void reset(ActionMapping arg0, HttpServletRequest arg1)
 	{
 		super.reset(arg0, arg1);
-		c1iso="";
-		c2iso="";
-		c3iso="";
-		c4iso="";
+		c1iso = "";
+		c2iso = "";
+		c3iso = "";
+		c4iso = "";
 		tog = new String[10];
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 
-
-	public String getRposition() {
+	public String getRposition()
+	{
 		return rposition;
 	}
 
-	public void setRposition(String rgolgo) {
+	public void setRposition(String rgolgo)
+	{
 		this.rposition = rgolgo;
 	}
 
-
-	public String getC1iso() {
+	public String getC1iso()
+	{
 		return c1iso;
 	}
 
-	public void setC1iso(String c1iso) {
+	public void setC1iso(String c1iso)
+	{
 		this.c1iso = c1iso;
 	}
 
-	public String getC2iso() {
+	public String getC2iso()
+	{
 		return c2iso;
 	}
 
-	public void setC2iso(String c2iso) {
+	public void setC2iso(String c2iso)
+	{
 		this.c2iso = c2iso;
 	}
 
-	public String getC3iso() {
+	public String getC3iso()
+	{
 		return c3iso;
 	}
 
-	public void setC3iso(String c3iso) {
+	public void setC3iso(String c3iso)
+	{
 		this.c3iso = c3iso;
 	}
 
-	public String getC4iso() {
+	public String getC4iso()
+	{
 		return c4iso;
 	}
 
-	public void setC4iso(String c4iso) {
+	public void setC4iso(String c4iso)
+	{
 		this.c4iso = c4iso;
 	}
 
-
-	public LabelValueBean[] getAnreden() {
+	public LabelValueBean[] getAnreden()
+	{
 		return anreden;
 	}
 
-	public void setAnreden(LabelValueBean[] anreden) {
+	public void setAnreden(LabelValueBean[] anreden)
+	{
 		this.anreden = anreden;
 	}
 
-	public Address getCustomer() {
+	public Address getCustomer()
+	{
 		return customer;
 	}
 
-	public void setCustomer(Address customer) {
+	public void setCustomer(Address customer)
+	{
 		this.customer = customer;
 	}
 
-	public FormFile getFile() {
+	public FormFile getFile()
+	{
 		return file;
 	}
 
-	public void setFile(FormFile file) {
+	public void setFile(FormFile file)
+	{
 		this.file = file;
 	}
 
-	public String getFilename() {
+	public String getFilename()
+	{
 		return filename;
 	}
 
-	public void setFilename(String filename) {
+	public void setFilename(String filename)
+	{
 		this.filename = filename;
 	}
 
-	public String[] getTog() {
+	public String[] getTog()
+	{
 		return tog;
 	}
 
-	public void setTog(String[] tog) {
+	public void setTog(String[] tog)
+	{
 		this.tog = tog;
 	}
 }
-

@@ -34,140 +34,149 @@ import strutter.view.TagHelper;
 
 public class CInputTag extends InputTag
 {
-	 private static final long serialVersionUID = 1L;
-	
- 	 Object form;
-	 ServletRequest request;
-	 String actionname;
-	 
-	 String extend = null;
-	 
-	 public CInputTag(Object form, ServletRequest request) {
-		 this.form = form;
-		 this.request = request;
-		 
-		 ActionConfig mapping = (ActionConfig)request.getAttribute(Globals.MAPPING_KEY);
+	private static final long serialVersionUID = 1L;
 
-		 if (mapping != null && mapping.getParameter() != null)
+	Object form;
+	ServletRequest request;
+	String actionname;
+
+	String extend = null;
+
+	public CInputTag(Object form, ServletRequest request)
+	{
+		this.form = form;
+		this.request = request;
+
+		ActionConfig mapping = (ActionConfig)request.getAttribute(Globals.MAPPING_KEY);
+
+		if(mapping != null && mapping.getParameter() != null)
 			this.actionname = mapping.getParameter();
-	 }
-	 
-    public void doSemanticAction () throws ParserException
-    {
-   		String type = getAttribute("type");
-		
+	}
+
+	public void doSemanticAction() throws ParserException
+	{
+		String type = getAttribute("type");
+
 		String attname = getAttribute("name");
 
 		if(type != null)
 			type = type.toLowerCase();
-		
+
 		String valuetext = this.getAttribute("value");
-		
-    	try 
-	   	{
-    		boolean processed = false;
-    		
-	   		if(attname != null && this.getAttribute("nofill") == null)
-	   		{
-	   			//String value = BeanUtils.getProperty(form, name);
-	   			String value = TagHelper.getFormValue(form, attname, actionname);
-	   			
-	   			if(value.length() > 0)
-	   			{
-	    			if(type == null ||
-	    			   "text".equals(type) || 
-	    		       "hidden".equals(type) ||
-	    		       "submit".equals(type) ||
-	    		       "cancel".equals(type) ||
-	    		       "password".equals(type)) 
-	    			{
-	    		    	this.setAttribute("value", value, '"');
-	    		    	processed = true;
-	    		    } 
-	    			else if("radio".equals(type) || 
-			    		    "checkbox".equals(type)) {
-	    		    	
-	    		   		//String[] sel = BeanUtils.getArrayProperty(form, this.getAttribute("name"));
-	    		   		String[] sel = TagHelper.getFormValues(form, attname);
-	    		   		List<String> sellist = Arrays.asList(sel);
-	    		   		 
-	    		    	setSelected(valuetext, sellist);
 
-	    		    	//if("checkbox".equals(type)) {
-	    		    	//	extend += ""; //"<input type='hidden' name='" + name + "' value='0'>";
-	    				//}
-	    		    	
-	    		    	processed = true;
-	    		    }
+		try
+		{
+			boolean processed = false;
 
-	    			if(getAttribute("disabled") == null || getAttribute("CHECKED") == null)
-	    			{
-	    			}
-	    			else
-	    			{
-	    				extend = "<input type='hidden' name='" + attname + "' value='" + valuetext + "'>";
-	    			}
+			if(attname != null && this.getAttribute("nofill") == null)
+			{
+				// String value = BeanUtils.getProperty(form, name);
+				String value = TagHelper.getFormValue(form, attname, actionname);
 
-	   			} else {
-	   				if(valuetext.length() == 0)
-	   					this.removeAttribute("value");
-	   			}
-	   			return;
-	   		}
-   		
-	   		if(processed)
-	   			return;
+				if(value.length() > 0)
+				{
+					if(type == null ||
+					        "text".equals(type) ||
+					        "hidden".equals(type) ||
+					        "submit".equals(type) ||
+					        "cancel".equals(type) ||
+					        "password".equals(type))
+					{
+						this.setAttribute("value", value, '"');
+						processed = true;
+					}
+					else if("radio".equals(type) ||
+					        "checkbox".equals(type))
+					{
 
-	   		// BUTTON HANDLING
-	   		if(valuetext == null || !valuetext.startsWith("$"))
-	   		{
-	   			return;
-	   		}
-	   		else
-	   		{
-		   		if("button".equals(type) || "submit".equals(type) || "cancel".equals(type) || "reset".equals(type)) 
-		   		{
-					Locale loc = (Locale) ((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
-		   			
-		   			MessageResources resources = (MessageResources) request.getAttribute(Globals.MESSAGES_KEY);
-	
-		   			valuetext = resources.getMessage(loc, valuetext.substring(1));
-		   			
-		   			setAttribute("value", valuetext);
-			    }
-	   		}
-    	} catch(Exception e) {
+						// String[] sel = BeanUtils.getArrayProperty(form,
+						// this.getAttribute("name"));
+						String[] sel = TagHelper.getFormValues(form, attname);
+						List<String> sellist = Arrays.asList(sel);
+
+						setSelected(valuetext, sellist);
+
+						// if("checkbox".equals(type)) {
+						// extend += ""; //"<input type='hidden' name='" + name
+						// + "' value='0'>";
+						// }
+
+						processed = true;
+					}
+
+					if(getAttribute("disabled") == null || getAttribute("CHECKED") == null)
+					{
+					}
+					else
+					{
+						extend = "<input type='hidden' name='" + attname + "' value='" + valuetext + "'>";
+					}
+
+				}
+				else
+				{
+					if(valuetext.length() == 0)
+						this.removeAttribute("value");
+				}
+				return;
+			}
+
+			if(processed)
+				return;
+
+			// BUTTON HANDLING
+			if(valuetext == null || !valuetext.startsWith("$"))
+			{
+				return;
+			}
+			else
+			{
+				if("button".equals(type) || "submit".equals(type) || "cancel".equals(type) || "reset".equals(type))
+				{
+					Locale loc = (Locale)((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
+
+					MessageResources resources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
+
+					valuetext = resources.getMessage(loc, valuetext.substring(1));
+
+					setAttribute("value", valuetext);
+				}
+			}
 		}
-    }
-    
-    void setSelected(String value, List selected)
-    {
-		 if(value == null) 
-			 return;
-		 
-		 if( selected.contains(value) )
-			 this.setAttribute("checked", "", '"');
-		 else
-			 this.removeAttribute("checked");
-    }
-    
-    public String toHtml() 
+		catch(Exception e)
+		{
+		}
+	}
+
+	void setSelected(String value, List selected)
 	{
-    	String tag = super.toHtml();
-    	
-	   	try {
-	   		if(this.getAttribute("error") != null)
-	   			tag = TagHelper.handleError(this, request, tag);
-	   	} catch(Exception e) {
-	   	}
-	   	
-	   	
-	   	//int length = checkboxfix.length() + disabled.length() + tag.length();
+		if(value == null)
+			return;
 
-	   	if(extend == null)
-	   		return tag;
-	   	
-	   	return extend + tag;
-    }
+		if(selected.contains(value))
+			this.setAttribute("checked", "", '"');
+		else
+			this.removeAttribute("checked");
+	}
+
+	public String toHtml()
+	{
+		String tag = super.toHtml();
+
+		try
+		{
+			if(this.getAttribute("error") != null)
+				tag = TagHelper.handleError(this, request, tag);
+		}
+		catch(Exception e)
+		{
+		}
+
+		// int length = checkboxfix.length() + disabled.length() + tag.length();
+
+		if(extend == null)
+			return tag;
+
+		return extend + tag;
+	}
 }
-
