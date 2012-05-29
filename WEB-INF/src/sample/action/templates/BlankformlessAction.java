@@ -30,7 +30,8 @@ public class BlankformlessAction extends FormlessDispatchAction implements Confi
 {
 	private static Log log = LogFactory.getLog(BlankformlessAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.addForward("/formless_view.jsp");
 	}
 
@@ -48,23 +49,28 @@ public class BlankformlessAction extends FormlessDispatchAction implements Confi
 	{
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 
-	public Address getCustomer() {
+	public Address getCustomer()
+	{
 		return customer;
 	}
 
-	public void setCustomer(Address customer) {
+	public void setCustomer(Address customer)
+	{
 		this.customer = customer;
 	}
 
-	public String[] getAnreden() {
+	public String[] getAnreden()
+	{
 		return new String[] { "Herr", "Frau", "Dr." };
 	}
 }

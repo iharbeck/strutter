@@ -25,9 +25,10 @@ import strutter.helper.ActionHelper;
 
 public class AjaxmainAction extends FormlessDispatchAction implements ConfigInterface
 {
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
-		
+
 		struts.addForward("ajax_view.jsp");
 	}
 

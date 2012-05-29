@@ -25,9 +25,10 @@ import strutter.helper.ActionHelper;
 
 public class AjaxAction extends FormlessDispatchAction implements ConfigInterface
 {
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
-		
+
 		struts.addForward("ajax_view.jsp");
 		struts.addForward("ajax_template.jsp");
 	}
@@ -37,10 +38,9 @@ public class AjaxAction extends FormlessDispatchAction implements ConfigInterfac
 		return ActionHelper.findForward("view");
 	}
 
-	
 	public ActionForward doTemplate() throws Exception
 	{
-		ActionHelper.setHeading(false);	
+		ActionHelper.setHeading(false);
 		return ActionHelper.findForward("template");
 	}
 

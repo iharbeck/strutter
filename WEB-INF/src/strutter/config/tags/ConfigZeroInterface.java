@@ -1,4 +1,5 @@
 package strutter.config.tags;
 
-public interface ConfigZeroInterface {
+public interface ConfigZeroInterface
+{
 }

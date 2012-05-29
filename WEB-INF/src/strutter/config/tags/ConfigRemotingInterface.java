@@ -1,5 +1,6 @@
 package strutter.config.tags;
 
-public interface ConfigRemotingInterface {
+public interface ConfigRemotingInterface
+{
 
 }

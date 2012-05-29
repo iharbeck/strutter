@@ -25,20 +25,21 @@ import org.htmlparser.util.ParserException;
 
 import strutter.view.TagHelper;
 
-public class CTextareaTag extends  TextareaTag
+public class CTextareaTag extends TextareaTag
 {
-	 private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-	 Object form;
-	 ServletRequest request;
+	Object form;
+	ServletRequest request;
 
-	 public CTextareaTag(Object form, ServletRequest request) {
-		 this.form = form;
-		 this.request = request;
-	 }
+	public CTextareaTag(Object form, ServletRequest request)
+	{
+		this.form = form;
+		this.request = request;
+	}
 
-	 public void doSemanticAction () throws ParserException
-	 {
+	public void doSemanticAction() throws ParserException
+	{
 		TextareaTag texta = new TextareaTag();
 		texta.setTagName("/" + this.getTagName());
 		this.setEndTag(texta);
@@ -46,33 +47,39 @@ public class CTextareaTag extends  TextareaTag
 		this.setEmptyXmlTag(false);
 
 		String attname = this.getAttribute("name");
-		
-	   	if(attname != null && this.getAttribute("nofill") == null)
-	   	{
-	   		try {
-		    		//String val = BeanUtils.getProperty(form, this.getAttribute("name"));
-		    		String val = TagHelper.getFormValue(form, attname);
-		    		if(val != null)
-		    		{
-			    		this.setChildren(new NodeList());
-			    		this.getChildren().add(new TextNode(val));
-		    		}
-	   		}
-	   		catch(Exception e) {
-	   		}
-	   	}
-	 }
 
-	 public String toHtml()
-	 {
+		if(attname != null && this.getAttribute("nofill") == null)
+		{
+			try
+			{
+				// String val = BeanUtils.getProperty(form,
+				// this.getAttribute("name"));
+				String val = TagHelper.getFormValue(form, attname);
+				if(val != null)
+				{
+					this.setChildren(new NodeList());
+					this.getChildren().add(new TextNode(val));
+				}
+			}
+			catch(Exception e)
+			{
+			}
+		}
+	}
+
+	public String toHtml()
+	{
 		String html = super.toHtml();
-		
-    	try {
-    		if(this.getAttribute("error") != null)
-    			return TagHelper.handleError(this, request, html);
-    	} catch(Exception e) {
-    	}
 
-    	return html;
-     }
+		try
+		{
+			if(this.getAttribute("error") != null)
+				return TagHelper.handleError(this, request, html);
+		}
+		catch(Exception e)
+		{
+		}
+
+		return html;
+	}
 }

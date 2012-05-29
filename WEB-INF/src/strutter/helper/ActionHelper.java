@@ -52,65 +52,80 @@ public class ActionHelper
 	// storing all actions here
 	private static HashMap actions = new HashMap();
 
-	private static class ThreadLocalActionHelper extends InheritableThreadLocal {
-		public Object initialValue() {
-	      return new ActionHelperData();
-	    }
+	private static class ThreadLocalActionHelper extends InheritableThreadLocal
+	{
+		public Object initialValue()
+		{
+			return new ActionHelperData();
+		}
 	}
-	
+
 	private static volatile ThreadLocalActionHelper helper = new ThreadLocalActionHelper();
 
-	private static final ActionHelperData me() {
-		
+	private static final ActionHelperData me()
+	{
+
 		ActionHelperData data = (ActionHelperData)helper.get();
-		
+
 		if(!data.isInitialized())
 		{
 			WebContext ctx = WebContextFactory.get();
-			
-			try{
-			    ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
-			}catch (Exception e) {
+
+			try
+			{
+				ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
+			}
+			catch(Exception e)
+			{
 			}
 		}
 		return data;
 	}
 
 	private static ConfigAuthorityInterface authority;
-	
-	public static void setAuthority(ConfigAuthorityInterface authority) {
+
+	public static void setAuthority(ConfigAuthorityInterface authority)
+	{
 		ActionHelper.authority = authority;
 	}
-	
-	public static String getUsername() {
+
+	public static String getUsername()
+	{
 		return ActionHelper.authority.getUsername();
 	}
-	public static  boolean hasRole(String role) {
+
+	public static boolean hasRole(String role)
+	{
 		return ActionHelper.authority.isAuthorized() && ActionHelper.authority.hasRole(role);
-		
+
 	}
-	public static boolean isAuthorized() {
+
+	public static boolean isAuthorized()
+	{
 		return ActionHelper.authority.isAuthorized();
 	}
-	
-	
-	
-	public static final void remove() {
-		try {
+
+	public static final void remove()
+	{
+		try
+		{
 			ActionHelper.me().minusThreadcount();
-			//System.out.println("down:" + ActionHelper.me().getThreadcount() + " " + ActionHelper.me().getRequest().getRequestURI());
-			//System.out.println(helper.get());
-			//System.out.println(((ActionHelperData)helper.get()).getSession());
+			// System.out.println("down:" + ActionHelper.me().getThreadcount() +
+			// " " + ActionHelper.me().getRequest().getRequestURI());
+			// System.out.println(helper.get());
+			// System.out.println(((ActionHelperData)helper.get()).getSession());
 			helper.set(null);
 			helper.remove();
-		} catch(Exception e) {
+		}
+		catch(Exception e)
+		{
 		}
 	}
 
 	public final boolean hasObject(String name)
 	{
 		Object form = Utils.getActionForm(me().getRequest());
-		return (TagHelper.getFormObject(form, name) != null);
+		return(TagHelper.getFormObject(form, name) != null);
 	}
 
 	public final static Object getObject(String name)
@@ -131,7 +146,7 @@ public class ActionHelper
 
 		if(form == null)
 			throw new Exception("FormularClass not defined use FormlessInterface");
-		
+
 		return form;
 	}
 
@@ -139,17 +154,17 @@ public class ActionHelper
 	{
 		return Utils.getActionForm(me().getRequest(), clazz);
 	}
-	
+
 	public final static String getFormAttribute(String name) throws Exception
 	{
 		return TagHelper.getFormValue(getForm(), name);
 	}
-	
+
 	public final static void setFormAttribute(String name, String value) throws Exception
 	{
-	    TagHelper.setFormValue(getForm(), name, value);
+		TagHelper.setFormValue(getForm(), name, value);
 	}
-	
+
 	public final static String getParameter(String name)
 	{
 		return getRequest().getParameter(name);
@@ -159,17 +174,17 @@ public class ActionHelper
 	{
 		return getRequest().getParameterValues(name);
 	}
-	
+
 	public final static Object getRequestAttribute(String name)
 	{
 		return getRequest().getAttribute(name);
 	}
-	
+
 	public final static Enumeration getRequestAttributeNames(String name)
 	{
 		return getRequest().getAttributeNames();
 	}
-	
+
 	public final static void setRequestAttribute(String name, Object obj)
 	{
 		getRequest().setAttribute(name, obj);
@@ -179,172 +194,194 @@ public class ActionHelper
 	{
 		return getSession().getAttribute(name);
 	}
-	
+
 	public final static Enumeration getSessionAttributeNames(String name)
 	{
 		return getSession().getAttributeNames();
 	}
-	
+
 	public final static void setSessionAttribute(String name, Object obj)
 	{
 		getSession().setAttribute(name, obj);
 	}
 
-	public ActionHelper() {
+	public ActionHelper()
+	{
 	}
 
 	static ServletContext servletcontext;
-	
-	public static ServletContext getContext() 
+
+	public static ServletContext getContext()
 	{
 		return servletcontext;
 	}
-	
-	public static String getDocRoot() {
+
+	public static String getDocRoot()
+	{
 		return servletcontext.getRealPath("/");
 	}
-	
-	public static String getContextname() {
+
+	public static String getContextname()
+	{
 		String path = getRequest().getContextPath();
-		return path.substring(0, path.indexOf("/", 1)+1);
+		return path.substring(0, path.indexOf("/", 1) + 1);
 	}
-	
-	public static void storeFile(FormFile file, String targetfolder, String targetfilename) throws Exception {
+
+	public static void storeFile(FormFile file, String targetfolder, String targetfilename) throws Exception
+	{
 		FileOutputStream out = new FileOutputStream(targetfolder + "/" + targetfilename);
 		out.write(file.getFileData());
 		out.close();
 	}
-	
-	public static void storeFile(FormFile formfile, String folder) throws Exception {
+
+	public static void storeFile(FormFile formfile, String folder) throws Exception
+	{
 		storeFile(formfile, folder, formfile.getFileName());
 	}
-	
+
 	public static ActionHelperData init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		ActionHelperData me = (ActionHelperData)helper.get();
 		me.plusThreadcount();
-		//System.out.println("up:" + me.threadcount + " " + request.getRequestURI());
+		// System.out.println("up:" + me.threadcount + " " +
+		// request.getRequestURI());
 
 		ActionHelper.servletcontext = servletcontext;
-		
+
 		me.setRequest(request);
 		me.setResponse(response);
 		me.setSession(request.getSession());
-		
+
 		me.setLocale((Locale)request.getSession().getAttribute(Globals.LOCALE_KEY));
-		
+
 		if(me.getLocale() == null)
 			me.setLocale(request.getLocale());
-		
+
 		me.setErrormsgs(getMsg(request, Globals.ERROR_KEY));
 		me.setInfomsgs(getMsg(request, Globals.MESSAGE_KEY));
 
-		//me.actionname  = Utils.getActionMappingName(request. getServletPath());
-		me.setActionname(Utils.getActionMappingName(request)); //, response);
+		// me.actionname = Utils.getActionMappingName(request.
+		// getServletPath());
+		me.setActionname(Utils.getActionMappingName(request)); // , response);
 
 		me.setMapping(getActionMapping(me.getActionname()));
 		me.setInitialized(true);
-		
+
 		return me;
 	}
-	
-	public static boolean isMainThread() {
+
+	public static boolean isMainThread()
+	{
 		ActionHelperData me = ActionHelper.me();
-		//System.out.println("is:" + me.threadcount);
-		return me.getThreadcount() == 1; 
+		// System.out.println("is:" + me.threadcount);
+		return me.getThreadcount() == 1;
 	}
 
 	protected static ActionMessages getMsg(HttpServletRequest request, String alias)
 	{
-		ActionMessages errors = (ActionMessages) request.getAttribute(alias);
-        if (errors == null) {
-            errors = new ActionMessages();
-        }
-        return errors;
-    }
+		ActionMessages errors = (ActionMessages)request.getAttribute(alias);
+		if(errors == null)
+		{
+			errors = new ActionMessages();
+		}
+		return errors;
+	}
 
-	public static ActionMessages getErrormsgs() {
+	public static ActionMessages getErrormsgs()
+	{
 		return me().getErrormsgs();
 	}
 
-	public static ActionMessages getInfomsgs() {
+	public static ActionMessages getInfomsgs()
+	{
 		return me().getInfomsgs();
 	}
 
-	public static Locale getLocale() {
+	public static Locale getLocale()
+	{
 		return me().getLocale();
 	}
 
-	public static String getActionname() {
+	public static String getActionname()
+	{
 		return me().getActionname();
 	}
 
-	public static HttpServletRequest getRequest() {
+	public static HttpServletRequest getRequest()
+	{
 		return me().getRequest();
 	}
 
-	public static HttpServletResponse getResponse() {
+	public static HttpServletResponse getResponse()
+	{
 		return me().getResponse();
 	}
 
-	public static HttpSession getSession() {
-		
+	public static HttpSession getSession()
+	{
+
 		return me().getSession();
 	}
 
-	public static ActionMapping getMapping() {
+	public static ActionMapping getMapping()
+	{
 		return me().getMapping();
 	}
-	
-	public static boolean isInitialized() {
+
+	public static boolean isInitialized()
+	{
 		return me().isInitialized();
 	}
 
-	
-	public static ActionForward getForward(String forward) throws ServletException {
+	public static ActionForward getForward(String forward) throws ServletException
+	{
 		return findForward(forward);
 	}
 
-	public static ActionForward buildRedirect(String actionmethod) throws ServletException 
+	public static ActionForward buildRedirect(String actionmethod) throws ServletException
 	{
 		return buildRedirect(null, actionmethod);
 	}
-	
-	public static ActionForward buildRedirect(String action, String actionmethod) throws ServletException 
+
+	public static ActionForward buildRedirect(String action, String actionmethod) throws ServletException
 	{
 		ActionMapping mapping;
-		
+
 		if(action == null)
 			mapping = ActionHelper.getActionMapping();
 		else
 			mapping = ActionHelper.getActionMapping(action);
-			
+
 		String path = mapping.getPath() + ".do?" + mapping.getParameter() + "=" + actionmethod;
 		return new ActionForward(path, true);
 	}
-	
-	
-	public static ActionForward findMethodRedirect(String forward) throws ServletException {
+
+	public static ActionForward findMethodRedirect(String forward) throws ServletException
+	{
 		return findForward("#" + forward);
 	}
-	
-	public static ActionForward findAjaxForward(String forward) throws ServletException {
+
+	public static ActionForward findAjaxForward(String forward) throws ServletException
+	{
 		ActionHelper.setHeading(false);
 		return findForward(forward);
 	}
-	
-	public static ActionForward findForward(String forward) throws ServletException {
+
+	public static ActionForward findForward(String forward) throws ServletException
+	{
 		ActionForward f = getMapping().findForward(forward);
 		if(f == null)
 			throw new ServletException("missing forward: " + forward);
 		return f;
 	}
 
-	public static ActionMapping getActionMapping() {
+	public static ActionMapping getActionMapping()
+	{
 		return getActionMapping(me().getActionname());
 	}
-	
-    public static ActionMapping getActionMapping(String actionname) {
+
+	public static ActionMapping getActionMapping(String actionname)
+	{
 
 		ModuleConfig mConfig = (ModuleConfig)servletcontext.getAttribute(Globals.MODULE_KEY);
 
@@ -352,48 +389,51 @@ public class ActionHelper
 			return (ActionMapping)mConfig.findActionConfig(actionname);
 
 		return null;
-    }
+	}
 
 	public static ActionForward startInterceptors() throws IOException, ServletException
 	{
-		//ActionMapping is extended to provide interceptor interface
+		// ActionMapping is extended to provide interceptor interface
 		if(me().getMapping() instanceof ActionMappingExtended)
 		{
-			for(int i=0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
+			for(int i = 0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
 			{
-			    ActionInterceptorInterface interceptor =	(ActionInterceptorInterface) ((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
-			    ActionForward forward = interceptor.beforeMethod();
+				ActionInterceptorInterface interceptor = (ActionInterceptorInterface)((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
+				ActionForward forward = interceptor.beforeMethod();
 
-			    if(forward != null) {
-			    	return forward;
-			    }
+				if(forward != null)
+				{
+					return forward;
+				}
 			}
 		}
 		return null;
 	}
 
-
-
 	public static ActionForward endInterceptors() throws ServletException
 	{
-		try {
+		try
+		{
 			addErrors();
 			addMessages();
 
 			if(me().getMapping() instanceof ActionMappingExtended)
 			{
-				for(int i=0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
+				for(int i = 0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
 				{
-				    ActionInterceptorInterface interceptor =	(ActionInterceptorInterface) ((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
-				    ActionForward forward = interceptor.afterMethod();
+					ActionInterceptorInterface interceptor = (ActionInterceptorInterface)((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
+					ActionForward forward = interceptor.afterMethod();
 
-				    if(forward != null) {
-				    	return forward;
-				    }
+					if(forward != null)
+					{
+						return forward;
+					}
 				}
 			}
 
-		} finally {
+		}
+		finally
+		{
 		}
 		return null;
 	}
@@ -403,26 +443,30 @@ public class ActionHelper
 		HttpServletRequest request = me().getRequest();
 		ActionMessages errors = me().getErrormsgs();
 
-		if (errors == null)
+		if(errors == null)
 			return;
 
 		// get any existing errors from the request, or make a new one
 		ActionMessages requestErrors = (ActionMessages)request.getAttribute(Globals.ERROR_KEY);
-		if (requestErrors == null){
+		if(requestErrors == null)
+		{
 			requestErrors = new ActionMessages();
 		}
 
 		// add incoming errors
-		try {
+		try
+		{
 			if(requestErrors != errors)
 				requestErrors.add(errors);
-		} catch(Exception e) {
+		}
+		catch(Exception e)
+		{
 			System.out.println("CONCURRBUG");
 		}
 
-
 		// if still empty, just wipe it out from the request
-		if (requestErrors.isEmpty()) {
+		if(requestErrors.isEmpty())
+		{
 			request.removeAttribute(Globals.ERROR_KEY);
 			return;
 		}
@@ -433,15 +477,15 @@ public class ActionHelper
 
 	public static String getResource(String key)
 	{
-		MessageResources resources = (MessageResources) me().getRequest().getAttribute(Globals.MESSAGES_KEY);
+		MessageResources resources = (MessageResources)me().getRequest().getAttribute(Globals.MESSAGES_KEY);
 
 		return resources.getMessage(getLocale(), key);
 	}
-	
+
 	public static void reloadResources()
 	{
-		MessageResources resources = (UniversalMessageResources) me().getRequest().getAttribute(Globals.MESSAGES_KEY);
-		
+		MessageResources resources = (UniversalMessageResources)me().getRequest().getAttribute(Globals.MESSAGES_KEY);
+
 		if(resources instanceof UniversalMessageResources)
 			((UniversalMessageResources)resources).reload();
 	}
@@ -449,27 +493,32 @@ public class ActionHelper
 	protected static void addMessages()
 	{
 		HttpServletRequest request = getRequest();
-		ActionMessages messages    = getInfomsgs();
+		ActionMessages messages = getInfomsgs();
 
-		if (messages == null)
+		if(messages == null)
 			return;
 
 		// get any existing messages from the request, or make a new one
-		ActionMessages requestMessages = (ActionMessages) request.getAttribute(Globals.MESSAGE_KEY);
-		if (requestMessages == null){
+		ActionMessages requestMessages = (ActionMessages)request.getAttribute(Globals.MESSAGE_KEY);
+		if(requestMessages == null)
+		{
 			requestMessages = new ActionMessages();
 		}
 
 		// add incoming messages
-		try {
+		try
+		{
 			if(requestMessages != messages)
 				requestMessages.add(messages);
-		} catch(Exception e) {
+		}
+		catch(Exception e)
+		{
 			System.out.println("CONCURRBUG");
 		}
 
 		// if still empty, just wipe it out from the request
-		if (requestMessages.isEmpty()) {
+		if(requestMessages.isEmpty())
+		{
 			request.removeAttribute(Globals.MESSAGE_KEY);
 			return;
 		}
@@ -493,13 +542,13 @@ public class ActionHelper
 	public static void addError(String alias, String text, Object[] objs)
 	{
 		ActionMessage msg = new ActionMessage(text, objs);
-		getErrormsgs().add( alias, msg);
+		getErrormsgs().add(alias, msg);
 	}
 
 	public static void addError(String text, Object[] objs)
 	{
 		ActionMessage msg = new ActionMessage(text, objs);
-		getErrormsgs().add( "", msg);
+		getErrormsgs().add("", msg);
 	}
 
 	public static void addMessage(String alias, String text)
@@ -517,7 +566,7 @@ public class ActionHelper
 	public static void addMessage(String alias, String text, Object[] objs)
 	{
 		ActionMessage msg = new ActionMessage(text, objs);
-		getInfomsgs().add( alias, msg);
+		getInfomsgs().add(alias, msg);
 	}
 
 	public static void addMessage(String text, Object[] objs)
@@ -525,7 +574,6 @@ public class ActionHelper
 		ActionMessage msg = new ActionMessage(text, objs);
 		getInfomsgs().add("", msg);
 	}
-
 
 	public static boolean hasErrors()
 	{
@@ -536,8 +584,6 @@ public class ActionHelper
 	{
 		return !getInfomsgs().isEmpty();
 	}
-
-
 
 	public static boolean isUserInRole(String role)
 	{
@@ -556,47 +602,56 @@ public class ActionHelper
 			addError(alias);
 	}
 
-	public static void setLocale(String language) {
+	public static void setLocale(String language)
+	{
 		Utils.setLocale(getSession(), language);
 		me().setLocale(new Locale(language));
 	}
 
 	/**
 	 * Get session data in getter function, make it sessionenabled
-	 *
+	 * 
 	 * return getGlobal("debnr", "0");
+	 * 
 	 * @param name
 	 * @param def
 	 * @return
 	 */
-	public static String getGlobal(String name, String def) {
+	public static String getGlobal(String name, String def)
+	{
 		String val = (String)getSession().getAttribute(name);
 		return val == null ? def : val;
 	}
 
 	/**
 	 * Set data in session in setter function, make it sessionenabled
-	 *
+	 * 
+	 * setGlobal("debnr", debnrKunde); - optional this.debnrKunde =
 	 * setGlobal("debnr", debnrKunde);
-	 * - optional
-	 * this.debnrKunde = setGlobal("debnr", debnrKunde);
-	 *
+	 * 
 	 * @param name
 	 * @param val
 	 * @return
 	 */
-	public static String setGlobal(String name, String val) {
-		try {
+	public static String setGlobal(String name, String val)
+	{
+		try
+		{
 			getSession().setAttribute(name, val);
-		} catch(Exception e) {}
+		}
+		catch(Exception e)
+		{
+		}
 		return val;
 	}
 
-	public static ConfigWrapper getAction(String actionname) {
-		return (ConfigWrapper) ActionHelper.actions.get(actionname);
+	public static ConfigWrapper getAction(String actionname)
+	{
+		return (ConfigWrapper)ActionHelper.actions.get(actionname);
 	}
 
-	public static void addAction(String actionname, ConfigWrapper action) {
+	public static void addAction(String actionname, ConfigWrapper action)
+	{
 		ActionHelper.actions.put(actionname, action);
 	}
 
@@ -606,21 +661,21 @@ public class ActionHelper
 			return ((ActionMappingExtended)ActionHelper.getMapping()).isWsaction();
 		return false;
 	}
-	
+
 	public static boolean isRemoteAction()
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)
 			return ((ActionMappingExtended)ActionHelper.getMapping()).isRemoteaction();
 		return false;
 	}
-	
+
 	public static boolean isHeading()
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)
 			return ((ActionMappingExtended)ActionHelper.getMapping()).isHeading();
 		return true;
 	}
-	
+
 	public static void setHeading(boolean heading)
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)

@@ -22,7 +22,6 @@ import org.apache.struts.util.RequestUtils;
 
 import strutter.action.FormlessInterface;
 
-
 public class PopulateHelper
 {
 	private static Log log = LogFactory.getLog(PopulateHelper.class);
@@ -33,7 +32,7 @@ public class PopulateHelper
 	}
 
 	public static HashMap populate(Object bean, String prefix, String suffix, HttpServletRequest request)
-    	throws ServletException
+	        throws ServletException
 	{
 		HashMap properties = new HashMap();
 
@@ -44,144 +43,175 @@ public class PopulateHelper
 		String method = request.getMethod();
 		boolean isMultipart = false;
 
-		if (bean instanceof FormlessInterface) {    // Webservice will not implement FormlessInterface
+		if(bean instanceof FormlessInterface)
+		{ // Webservice will not implement FormlessInterface
 			((FormlessInterface)bean).reset();
 		}
 
 		MultipartRequestHandler multipartHandler = null;
-		if ((contentType != null) && (contentType.startsWith("multipart/form-data")) && (method.equalsIgnoreCase("POST")))
+		if((contentType != null) && (contentType.startsWith("multipart/form-data")) && (method.equalsIgnoreCase("POST")))
 		{
-		    // Obtain a MultipartRequestHandler
-		    multipartHandler = getMultipartHandler(request);
+			// Obtain a MultipartRequestHandler
+			multipartHandler = getMultipartHandler(request);
 
-		    if (multipartHandler != null) {
-		        isMultipart = true;
-		        // Set servlet and mapping info
+			if(multipartHandler != null)
+			{
+				isMultipart = true;
+				// Set servlet and mapping info
 
-		        multipartHandler.setMapping((ActionMapping) request.getAttribute(Globals.MAPPING_KEY));
-		        // Initialize multipart request class handler
+				multipartHandler.setMapping((ActionMapping)request.getAttribute(Globals.MAPPING_KEY));
+				// Initialize multipart request class handler
 
-		        multipartHandler.handleRequest(request);
-		        //stop here if the maximum length has been exceeded
-		        Boolean maxLengthExceeded =
-		                (Boolean) request.getAttribute(MultipartRequestHandler.ATTRIBUTE_MAX_LENGTH_EXCEEDED);
+				multipartHandler.handleRequest(request);
+				// stop here if the maximum length has been exceeded
+				Boolean maxLengthExceeded =
+				        (Boolean)request.getAttribute(MultipartRequestHandler.ATTRIBUTE_MAX_LENGTH_EXCEEDED);
 
-		        if ((maxLengthExceeded != null) && (maxLengthExceeded.booleanValue())) {
-		            //((FormlessInterface) bean).setMultipartRequestHandler(multipartHandler);
-		            return properties;
-		        }
-		        //retrieve form values and put into properties
-		        multipartParameters = getAllParametersForMultipartRequest(request, multipartHandler);
-		        names = Collections.enumeration(multipartParameters.keySet());
-		    }
+				if((maxLengthExceeded != null) && (maxLengthExceeded.booleanValue()))
+				{
+					// ((FormlessInterface)
+					// bean).setMultipartRequestHandler(multipartHandler);
+					return properties;
+				}
+				// retrieve form values and put into properties
+				multipartParameters = getAllParametersForMultipartRequest(request, multipartHandler);
+				names = Collections.enumeration(multipartParameters.keySet());
+			}
 		}
 
-		if (!isMultipart) {
-		    names = request.getParameterNames();
+		if(!isMultipart)
+		{
+			names = request.getParameterNames();
 		}
 
-		while (names.hasMoreElements()) {
-		    String name = (String) names.nextElement();
-		    String stripped = name;
-		    if (prefix != null) {
-		        if (!stripped.startsWith(prefix)) {
-		            continue;
-		        }
-		        stripped = stripped.substring(prefix.length());
-		    }
-		    if (suffix != null) {
-		        if (!stripped.endsWith(suffix)) {
-		            continue;
-		        }
-		        stripped = stripped.substring(0, stripped.length() - suffix.length());
-		    }
-		    Object parameterValue = null;
-		    if (isMultipart) {
-		        parameterValue = multipartParameters.get(name);
-		    } else {
-		        parameterValue = request.getParameterValues(name);
-		    }
+		while(names.hasMoreElements())
+		{
+			String name = (String)names.nextElement();
+			String stripped = name;
+			if(prefix != null)
+			{
+				if(!stripped.startsWith(prefix))
+				{
+					continue;
+				}
+				stripped = stripped.substring(prefix.length());
+			}
+			if(suffix != null)
+			{
+				if(!stripped.endsWith(suffix))
+				{
+					continue;
+				}
+				stripped = stripped.substring(0, stripped.length() - suffix.length());
+			}
+			Object parameterValue = null;
+			if(isMultipart)
+			{
+				parameterValue = multipartParameters.get(name);
+			}
+			else
+			{
+				parameterValue = request.getParameterValues(name);
+			}
 
-		    // Populate parameters, except "standard" struts attributes
-		    // such as 'org.apache.struts.action.CANCEL'
-		    if (!(stripped.startsWith("org.apache.struts."))) {
-		        properties.put(stripped, parameterValue);
-		    }
+			// Populate parameters, except "standard" struts attributes
+			// such as 'org.apache.struts.action.CANCEL'
+			if(!(stripped.startsWith("org.apache.struts.")))
+			{
+				properties.put(stripped, parameterValue);
+			}
 		}
 
 		// Set the corresponding properties of our bean
-		try {
-		    BeanUtils.populate(bean, properties);
-		} catch(Exception e) {
-		    throw new ServletException("BeanUtils.populate", e);
+		try
+		{
+			BeanUtils.populate(bean, properties);
 		}
-		
+		catch(Exception e)
+		{
+			throw new ServletException("BeanUtils.populate", e);
+		}
+
 		return properties;
 	}
 
 	private static Map getAllParametersForMultipartRequest(
 	        HttpServletRequest request,
-	        MultipartRequestHandler multipartHandler) {
+	        MultipartRequestHandler multipartHandler)
+	{
 
-	    Map parameters = new HashMap();
-	    Hashtable elements = multipartHandler.getAllElements();
-	    Enumeration e = elements.keys();
-	    while (e.hasMoreElements()) {
-	        String key = (String) e.nextElement();
-	        parameters.put(key, elements.get(key));
-	    }
+		Map parameters = new HashMap();
+		Hashtable elements = multipartHandler.getAllElements();
+		Enumeration e = elements.keys();
+		while(e.hasMoreElements())
+		{
+			String key = (String)e.nextElement();
+			parameters.put(key, elements.get(key));
+		}
 
-	    if (request instanceof MultipartRequestWrapper) {
-	        request = (HttpServletRequest) ((MultipartRequestWrapper) request).getRequest();
-	        e = request.getParameterNames();
-	        while (e.hasMoreElements()) {
-	            String key = (String) e.nextElement();
-	            parameters.put(key, request.getParameterValues(key));
-	        }
-	    } else {
-	        log.debug("Gathering multipart parameters for unwrapped request");
-	    }
+		if(request instanceof MultipartRequestWrapper)
+		{
+			request = (HttpServletRequest)((MultipartRequestWrapper)request).getRequest();
+			e = request.getParameterNames();
+			while(e.hasMoreElements())
+			{
+				String key = (String)e.nextElement();
+				parameters.put(key, request.getParameterValues(key));
+			}
+		}
+		else
+		{
+			log.debug("Gathering multipart parameters for unwrapped request");
+		}
 
-	    return parameters;
+		return parameters;
 	}
 
-
 	private static MultipartRequestHandler getMultipartHandler(HttpServletRequest request)
-	throws ServletException
+	        throws ServletException
 	{
 		MultipartRequestHandler multipartHandler = null;
-		String multipartClass = (String) request.getAttribute(Globals.MULTIPART_KEY);
+		String multipartClass = (String)request.getAttribute(Globals.MULTIPART_KEY);
 		request.removeAttribute(Globals.MULTIPART_KEY);
 
 		// Try to initialize the mapping specific request handler
-		if (multipartClass != null) {
-			try {
-				multipartHandler = (MultipartRequestHandler) applicationInstance(multipartClass);
-			} catch(ClassNotFoundException cnfe) {
+		if(multipartClass != null)
+		{
+			try
+			{
+				multipartHandler = (MultipartRequestHandler)applicationInstance(multipartClass);
+			}
+			catch(ClassNotFoundException cnfe)
+			{
 				log.error(
-		        "MultipartRequestHandler class \""
-		        + multipartClass
-		        + "\" in mapping class not found, "
-		        + "defaulting to global multipart class");
-			} catch(InstantiationException ie) {
+				        "MultipartRequestHandler class \""
+				                + multipartClass
+				                + "\" in mapping class not found, "
+				                + "defaulting to global multipart class");
+			}
+			catch(InstantiationException ie)
+			{
 				log.error(
-		        "InstantiationException when instantiating "
-		        + "MultipartRequestHandler \""
-		        + multipartClass
-		        + "\", "
-		        + "defaulting to global multipart class, exception: "
-		        + ie.getMessage());
-			} catch(IllegalAccessException iae) {
+				        "InstantiationException when instantiating "
+				                + "MultipartRequestHandler \""
+				                + multipartClass
+				                + "\", "
+				                + "defaulting to global multipart class, exception: "
+				                + ie.getMessage());
+			}
+			catch(IllegalAccessException iae)
+			{
 				log.error(
-		        "IllegalAccessException when instantiating "
-		        + "MultipartRequestHandler \""
-		        + multipartClass
-		        + "\", "
-		        + "defaulting to global multipart class, exception: "
-		        + iae.getMessage());
+				        "IllegalAccessException when instantiating "
+				                + "MultipartRequestHandler \""
+				                + multipartClass
+				                + "\", "
+				                + "defaulting to global multipart class, exception: "
+				                + iae.getMessage());
 			}
 
-			if (multipartHandler != null) {
+			if(multipartHandler != null)
+			{
 				return multipartHandler;
 			}
 		}
@@ -191,53 +221,63 @@ public class PopulateHelper
 		multipartClass = moduleConfig.getControllerConfig().getMultipartClass();
 
 		// Try to initialize the global request handler
-		if (multipartClass != null) {
-		    try {
-		        multipartHandler = (MultipartRequestHandler) applicationInstance(multipartClass);
+		if(multipartClass != null)
+		{
+			try
+			{
+				multipartHandler = (MultipartRequestHandler)applicationInstance(multipartClass);
 
-		    } catch(ClassNotFoundException cnfe) {
-		        throw new ServletException(
-		                "Cannot find multipart class \""
-		                + multipartClass
-		                + "\""
-		                + ", exception: "
-		                + cnfe.getMessage());
+			}
+			catch(ClassNotFoundException cnfe)
+			{
+				throw new ServletException(
+				        "Cannot find multipart class \""
+				                + multipartClass
+				                + "\""
+				                + ", exception: "
+				                + cnfe.getMessage());
 
-		    } catch(InstantiationException ie) {
-		        throw new ServletException(
-		                "InstantiationException when instantiating "
-		                + "multipart class \""
-		                + multipartClass
-		                + "\", exception: "
-		                + ie.getMessage());
+			}
+			catch(InstantiationException ie)
+			{
+				throw new ServletException(
+				        "InstantiationException when instantiating "
+				                + "multipart class \""
+				                + multipartClass
+				                + "\", exception: "
+				                + ie.getMessage());
 
-		    } catch(IllegalAccessException iae) {
-		        throw new ServletException(
-		                "IllegalAccessException when instantiating "
-		                + "multipart class \""
-		                + multipartClass
-		                + "\", exception: "
-		                + iae.getMessage());
-		    }
+			}
+			catch(IllegalAccessException iae)
+			{
+				throw new ServletException(
+				        "IllegalAccessException when instantiating "
+				                + "multipart class \""
+				                + multipartClass
+				                + "\", exception: "
+				                + iae.getMessage());
+			}
 
-		    if (multipartHandler != null) {
-		        return multipartHandler;
-		    }
+			if(multipartHandler != null)
+			{
+				return multipartHandler;
+			}
 		}
 
 		return multipartHandler;
 	}
 
 	public final static Object applicationInstance(String className)
-		throws ClassNotFoundException, IllegalAccessException, InstantiationException
+	        throws ClassNotFoundException, IllegalAccessException, InstantiationException
 	{
 		// Look up the class loader to be used
-	    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-	    if (classLoader == null) {
-	        classLoader = RequestUtils.class.getClassLoader();
-	    }
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		if(classLoader == null)
+		{
+			classLoader = RequestUtils.class.getClassLoader();
+		}
 
-	    // Attempt to load the specified class
-	    return (classLoader.loadClass(className)).newInstance();
+		// Attempt to load the specified class
+		return (classLoader.loadClass(className)).newInstance();
 	}
 }

@@ -31,133 +31,131 @@ import strutter.helper.ActionHelper;
 
 public class SortAction extends FormlessDispatchAction implements ConfigInterface
 {
-    private static Log log = LogFactory.getLog(SortAction.class);
+	private static Log log = LogFactory.getLog(SortAction.class);
 
-    public void config(ActionConfig struts)
-    {
-	struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
-	struts.addForward("sort_view.jsp");
-    }
-
-    public void reset()
-    {
-    }
-    
-    private String column;
-    private boolean multi;
-    
-
-    private ArrayList<String> columns = new ArrayList<String>();
-
-    public ActionForward doView() throws Exception
-    {
-	log.debug("view simpler");
-
-	return ActionHelper.findForward("view");
-    }
-    
-    public ActionForward doSort() throws Exception
-    {
-	int pos = findColumn(column);
-
-	if(multi == false && (columns.size() > 1 || pos < 0) )
+	public void config(ActionConfig struts)
 	{
-	    columns.clear();
-	    pos = -1;
-	}
-	
-	if(pos < 0)
-	{
-	    columns.add(column);
-	}
-	else
-	{
-	    String old = columns.get(pos);
-	    
-	    if(old.endsWith(" desc"))
-		columns.set(pos, column);
-	    else
-		columns.set(pos, column + " desc");
+		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
+		struts.addForward("sort_view.jsp");
 	}
 
-	for(String v : columns)
+	public void reset()
 	{
-	    System.out.println(v);
 	}
-	
-	return ActionHelper.findForward("view");
-    }
 
-    private int findColumn(String val)
-    {
-	for(int i=0; i < columns.size(); i++)
+	private String column;
+	private boolean multi;
+
+	private ArrayList<String> columns = new ArrayList<String>();
+
+	public ActionForward doView() throws Exception
 	{
-	    if(columns.get(i).startsWith(val))
-		return i;
+		log.debug("view simpler");
+
+		return ActionHelper.findForward("view");
 	}
-	
-	return -1;
-    }
-    
-    public String findPosition(String val)
-    {
-	for(int i=0; i < columns.size() && columns.size() > 1; i++)
+
+	public ActionForward doSort() throws Exception
 	{
-	    if(columns.get(i).startsWith(val))
-		return "" + (i+1);
+		int pos = findColumn(column);
+
+		if(multi == false && (columns.size() > 1 || pos < 0))
+		{
+			columns.clear();
+			pos = -1;
+		}
+
+		if(pos < 0)
+		{
+			columns.add(column);
+		}
+		else
+		{
+			String old = columns.get(pos);
+
+			if(old.endsWith(" desc"))
+				columns.set(pos, column);
+			else
+				columns.set(pos, column + " desc");
+		}
+
+		for(String v : columns)
+		{
+			System.out.println(v);
+		}
+
+		return ActionHelper.findForward("view");
 	}
-	
-	return "";
-    }
-    
-    public String lookupColumnOrder(String column)
-    {
-	int pos = findColumn(column);
-	
-	if(pos < 0)
-	    return "";
-	
-	String old = columns.get(pos);
-	    
-	if(old.endsWith(" desc"))
-	    return "desc";
-	else
-	    return "asc";
-    }
 
-    public String buildOrderString()
-    {
-	StringBuilder buf = new StringBuilder();
-
-	buf.append("ORDER BY ");
-	
-	for(int i=0; i < columns.size(); i++)
+	private int findColumn(String val)
 	{
-	    buf.append(columns.get(i))
-	       .append(", ");
+		for(int i = 0; i < columns.size(); i++)
+		{
+			if(columns.get(i).startsWith(val))
+				return i;
+		}
+
+		return -1;
 	}
-	
-	return buf.substring(0, buf.length()-2);
-    }
-    
-    
-    public String getColumn()
-    {
-        return column;
-    }
 
-    public void setColumn(String column)
-    {
-        this.column = column;
-    }
+	public String findPosition(String val)
+	{
+		for(int i = 0; i < columns.size() && columns.size() > 1; i++)
+		{
+			if(columns.get(i).startsWith(val))
+				return "" + (i + 1);
+		}
 
-    public boolean isMulti()
-    {
-        return multi;
-    }
+		return "";
+	}
 
-    public void setMulti(boolean multi)
-    {
-        this.multi = multi;
-    }
+	public String lookupColumnOrder(String column)
+	{
+		int pos = findColumn(column);
+
+		if(pos < 0)
+			return "";
+
+		String old = columns.get(pos);
+
+		if(old.endsWith(" desc"))
+			return "desc";
+		else
+			return "asc";
+	}
+
+	public String buildOrderString()
+	{
+		StringBuilder buf = new StringBuilder();
+
+		buf.append("ORDER BY ");
+
+		for(int i = 0; i < columns.size(); i++)
+		{
+			buf.append(columns.get(i))
+			        .append(", ");
+		}
+
+		return buf.substring(0, buf.length() - 2);
+	}
+
+	public String getColumn()
+	{
+		return column;
+	}
+
+	public void setColumn(String column)
+	{
+		this.column = column;
+	}
+
+	public boolean isMulti()
+	{
+		return multi;
+	}
+
+	public void setMulti(boolean multi)
+	{
+		this.multi = multi;
+	}
 }

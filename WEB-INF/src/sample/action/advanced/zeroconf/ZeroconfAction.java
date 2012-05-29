@@ -30,7 +30,7 @@ public class ZeroconfAction extends FormlessDispatchAction implements ConfigZero
 	private static Log log = LogFactory.getLog(ZeroconfAction.class);
 
 	Address customer = new Address();
-	String  memo;
+	String memo;
 
 	public ActionForward doView() throws Exception
 	{
@@ -43,23 +43,28 @@ public class ZeroconfAction extends FormlessDispatchAction implements ConfigZero
 	{
 	}
 
-	public String[] getAnreden() {
+	public String[] getAnreden()
+	{
 		return new String[] { "Herr", "Frau", "Dr." };
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 
-	public Address getCustomer() {
+	public Address getCustomer()
+	{
 		return customer;
 	}
 
-	public void setCustomer(Address customer) {
+	public void setCustomer(Address customer)
+	{
 		this.customer = customer;
 	}
 }

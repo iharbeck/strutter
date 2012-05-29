@@ -22,15 +22,16 @@ import org.apache.commons.logging.LogFactory;
 import strutter.config.tags.ConfigWSInterface;
 import strutter.helper.WSActionHelper;
 
-public class WebserviceAction implements ConfigWSInterface 
+public class WebserviceAction implements ConfigWSInterface
 {
 	private static Log log = LogFactory.getLog(WebserviceAction.class);
 
-	public void doGet() throws Exception {
+	public void doGet() throws Exception
+	{
 
-		log.debug("ws call get"); 
-		
+		log.debug("ws call get");
+
 		WSActionHelper.writeBody("Hello World!!!");
-		
+
 	}
 }

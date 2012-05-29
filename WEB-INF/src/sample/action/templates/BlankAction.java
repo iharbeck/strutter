@@ -29,7 +29,8 @@ public class BlankAction extends PlainDispatchAction implements ConfigInterface
 {
 	private static Log log = LogFactory.getLog(BlankAction.class);
 
-	public void config(ActionConfig struts) {
+	public void config(ActionConfig struts)
+	{
 		struts.setPackageby(ActionConfig.PACKAGEBY_FEATURE);
 		struts.addForward("blank_view.jsp");
 	}

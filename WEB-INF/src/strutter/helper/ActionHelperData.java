@@ -9,88 +9,131 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessages;
 
-public class ActionHelperData 
+public class ActionHelperData
 {
-	private HttpServletRequest  request = null;
+	private HttpServletRequest request = null;
 	private HttpServletResponse response = null;
-	private HttpSession         session = null;
-	private ActionMessages 	    errormsgs = null;
-	private ActionMessages 	    infomsgs  = null;
-	private Locale 			    locale = null;
-	private ActionMapping       mapping = null;
-	private String				actionname = null;
-	private boolean             initialized = false;
-	private int                 threadcount = 0;
-	
+	private HttpSession session = null;
+	private ActionMessages errormsgs = null;
+	private ActionMessages infomsgs = null;
+	private Locale locale = null;
+	private ActionMapping mapping = null;
+	private String actionname = null;
+	private boolean initialized = false;
+	private int threadcount = 0;
+
 	public ActionHelperData()
 	{
-		
+
 	}
-	
-	public HttpServletRequest getRequest() {
+
+	public HttpServletRequest getRequest()
+	{
 		return request;
 	}
-	public void setRequest(HttpServletRequest request) {
+
+	public void setRequest(HttpServletRequest request)
+	{
 		this.request = request;
 	}
-	public HttpServletResponse getResponse() {
+
+	public HttpServletResponse getResponse()
+	{
 		return response;
 	}
-	public void setResponse(HttpServletResponse response) {
+
+	public void setResponse(HttpServletResponse response)
+	{
 		this.response = response;
 	}
-	public HttpSession getSession() {
+
+	public HttpSession getSession()
+	{
 		return session;
 	}
-	public void setSession(HttpSession session) {
+
+	public void setSession(HttpSession session)
+	{
 		this.session = session;
 	}
-	public ActionMessages getErrormsgs() {
+
+	public ActionMessages getErrormsgs()
+	{
 		return errormsgs;
 	}
-	public void setErrormsgs(ActionMessages errormsgs) {
+
+	public void setErrormsgs(ActionMessages errormsgs)
+	{
 		this.errormsgs = errormsgs;
 	}
-	public ActionMessages getInfomsgs() {
+
+	public ActionMessages getInfomsgs()
+	{
 		return infomsgs;
 	}
-	public void setInfomsgs(ActionMessages infomsgs) {
+
+	public void setInfomsgs(ActionMessages infomsgs)
+	{
 		this.infomsgs = infomsgs;
 	}
-	public Locale getLocale() {
+
+	public Locale getLocale()
+	{
 		return locale;
 	}
-	public void setLocale(Locale locale) {
+
+	public void setLocale(Locale locale)
+	{
 		this.locale = locale;
 	}
-	public ActionMapping getMapping() {
+
+	public ActionMapping getMapping()
+	{
 		return mapping;
 	}
-	public void setMapping(ActionMapping mapping) {
+
+	public void setMapping(ActionMapping mapping)
+	{
 		this.mapping = mapping;
 	}
-	public String getActionname() {
+
+	public String getActionname()
+	{
 		return actionname;
 	}
-	public void setActionname(String actionname) {
+
+	public void setActionname(String actionname)
+	{
 		this.actionname = actionname;
 	}
-	public boolean isInitialized() {
+
+	public boolean isInitialized()
+	{
 		return initialized;
 	}
-	public void setInitialized(boolean initialized) {
+
+	public void setInitialized(boolean initialized)
+	{
 		this.initialized = initialized;
 	}
-	public int getThreadcount() {
+
+	public int getThreadcount()
+	{
 		return threadcount;
 	}
-	public void setThreadcount(int threadcount) {
+
+	public void setThreadcount(int threadcount)
+	{
 		this.threadcount = threadcount;
 	}
-	public void plusThreadcount() {
+
+	public void plusThreadcount()
+	{
 		this.threadcount++;
 	}
-	public void minusThreadcount() {
+
+	public void minusThreadcount()
+	{
 		this.threadcount--;
 	}
 }

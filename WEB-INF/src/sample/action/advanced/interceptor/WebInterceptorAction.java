@@ -33,7 +33,7 @@ import strutter.config.tags.ConfigInterface;
 import strutter.helper.ActionHelper;
 import strutter.interceptor.TokenInterceptor;
 
-public class WebInterceptorAction extends PlainDispatchAction implements ConfigInterface, FormlessInterface 
+public class WebInterceptorAction extends PlainDispatchAction implements ConfigInterface, FormlessInterface
 {
 	private static Log log = LogFactory.getLog(WebInterceptorAction.class);
 
@@ -46,15 +46,14 @@ public class WebInterceptorAction extends PlainDispatchAction implements ConfigI
 		struts.addForward("webinterceptor_view.jsp");
 	}
 
-
-	String [] anreden = new String[] { "Herr", "Frau", "Dr." };
+	String[] anreden = new String[] { "Herr", "Frau", "Dr." };
 
 	Address customer = new Address();
 	String memo;
 
 	public ActionForward doView(ActionMapping mapping, ActionForm actionform,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception
+	        HttpServletRequest request, HttpServletResponse response)
+	        throws Exception
 	{
 		log.debug("view");
 
@@ -62,8 +61,8 @@ public class WebInterceptorAction extends PlainDispatchAction implements ConfigI
 	}
 
 	public ActionForward doUpdate(ActionMapping mapping, ActionForm actionform,
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception
+	        HttpServletRequest request, HttpServletResponse response)
+	        throws Exception
 	{
 		log.debug("update");
 
@@ -76,27 +75,33 @@ public class WebInterceptorAction extends PlainDispatchAction implements ConfigI
 	{
 	}
 
-	public String getMemo() {
+	public String getMemo()
+	{
 		return memo;
 	}
 
-	public void setMemo(String memo) {
+	public void setMemo(String memo)
+	{
 		this.memo = memo;
 	}
 
-	public Address getCustomer() {
+	public Address getCustomer()
+	{
 		return customer;
 	}
 
-	public void setCustomer(Address customer) {
+	public void setCustomer(Address customer)
+	{
 		this.customer = customer;
 	}
 
-	public String[] getAnreden() {
+	public String[] getAnreden()
+	{
 		return anreden;
 	}
 
-	public void setAnreden(String[] anreden) {
+	public void setAnreden(String[] anreden)
+	{
 		this.anreden = anreden;
 	}
 }
