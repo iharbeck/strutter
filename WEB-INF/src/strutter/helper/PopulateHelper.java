@@ -9,6 +9,8 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import jodd.bean.BeanUtil;
+
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -125,6 +127,7 @@ public class PopulateHelper
 		// Set the corresponding properties of our bean
 		try
 		{
+			//BeanUtil.populateBean(bean, properties);
 			BeanUtils.populate(bean, properties);
 		}
 		catch(Exception e)
