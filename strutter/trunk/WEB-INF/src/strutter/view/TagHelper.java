@@ -104,16 +104,18 @@ public class TagHelper
 	{
 		try
 		{
-			// String ret = (String)BeanUtil.getProperty(form, name);
+			//String ret = (String)BeanUtil.getProperty(form, name);
 			String ret = BeanUtils.getProperty(form, name);
 			if(ret == null)
 				return "";
 			return ret;
 		}
+		//catch(Exception e)
 		catch(NoSuchMethodException e)
 		{
 			if(!name.equals(actionname))
 				System.out.println("Strutter: missing attribute [" + name + "]");
+			System.out.println(e);
 			return null;
 		}
 		catch(Exception e)
