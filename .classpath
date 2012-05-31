@@ -23,5 +23,6 @@
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/el-api.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/annotations-api.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jodd-3.3.3.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/struts-extras-1.3.10.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
