@@ -260,8 +260,8 @@ function hasCookies() {
 
 function strutterloaded() {
 	// NEW EVENTS
-    if(onReusingSession && reusingSession()) { onReusingSession(); } 
-	if(onNoCookies && !hasCookies()) { onNoCookies(); } 
+    if(window.onReusingSession && reusingSession()) { onReusingSession(); } 
+	if(window.onNoCookies && !hasCookies()) { onNoCookies(); } 
 }
 
 function ajaxinclude(target, url) 
