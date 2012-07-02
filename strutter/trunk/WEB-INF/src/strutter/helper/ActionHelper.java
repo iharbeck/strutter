@@ -62,23 +62,29 @@ public class ActionHelper
 
 	private static volatile ThreadLocalActionHelper helper = new ThreadLocalActionHelper();
 
+	public static void init()
+	{
+		WebContext ctx = WebContextFactory.get();
+
+		try
+		{
+			ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
+		}
+		catch(Exception e)
+		{
+		}
+	}
+	
+	private static void clear()
+	{
+		helper.set(null);
+		helper.remove();
+	}
+	
 	private static final ActionHelperData me()
 	{
-
 		ActionHelperData data = (ActionHelperData)helper.get();
 
-		if(!data.isInitialized())
-		{
-			WebContext ctx = WebContextFactory.get();
-
-			try
-			{
-				ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
-			}
-			catch(Exception e)
-			{
-			}
-		}
 		return data;
 	}
 
@@ -114,8 +120,7 @@ public class ActionHelper
 			// " " + ActionHelper.me().getRequest().getRequestURI());
 			// System.out.println(helper.get());
 			// System.out.println(((ActionHelperData)helper.get()).getSession());
-			helper.set(null);
-			helper.remove();
+			clear();
 		}
 		catch(Exception e)
 		{
