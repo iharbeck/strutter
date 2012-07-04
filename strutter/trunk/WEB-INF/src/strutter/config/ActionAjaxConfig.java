@@ -1,5 +1,6 @@
 package strutter.config;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,6 +15,7 @@ import org.directwebremoting.ui.browser.Document;
 import org.directwebremoting.ui.browser.Window;
 import org.directwebremoting.ui.dwr.Util;
 
+import strutter.config.annotation.Remoting;
 import strutter.helper.ActionHelper;
 
 public class ActionAjaxConfig extends FluentConfigurator
@@ -21,7 +23,6 @@ public class ActionAjaxConfig extends FluentConfigurator
 
 	public void configure()
 	{
-
 		withCreatorType("strutter", StrutterCreator.class.getName());
 
 		ArrayList list = ActionPlugin.getActionclasses();
@@ -30,10 +31,25 @@ public class ActionAjaxConfig extends FluentConfigurator
 		{
 			String classname = (String)list.get(i); // "sample.DWRAction";
 
-			withCreator("strutter", "DWRAction")
+			FluentConfigurator c = withCreator("strutter", "DWRAction");
+			
 			        // .addParam("scope", "request")
-			        .addParam("actionclass", classname)
-			        .addParam("javascript", classname.substring(classname.lastIndexOf(".") + 1));
+			        c.addParam("actionclass", classname);
+			        c.addParam("javascript", classname.substring(classname.lastIndexOf(".") + 1));
+			
+			        try {
+    			        for (Method m : Class.forName(classname).getMethods()) {
+    			            if (m.isAnnotationPresent(Remoting.class)) {
+    			               String methodname = m.getName();
+    			               c.include(methodname);
+    			               
+    			               System.out.println("Remoting: " + classname  + "." + methodname);
+    			            }
+    			        }
+			        } catch (Exception e) {
+					}
+			        
+			//        c.include(methodName);
 
 			// withCreator("new", "DWRAction")
 			// .addParam("scope", "request")
@@ -86,22 +102,16 @@ public class ActionAjaxConfig extends FluentConfigurator
 		// .addLine("Check.setLotteryResults(List nos);");
 
 		/*
-		 * <script src='/[YOUR-WEBAPP]/dwr/interface/[YOUR-SCRIPT].js'></script>
-		 * <script src='/[YOUR-WEBAPP]/dwr/engine.js'></script>
+		 * <script src='/[YOUR-WEBAPP]/dwr/interface/[YOUR-SCRIPT].js'></script> <script src='/[YOUR-WEBAPP]/dwr/engine.js'></script>
 		 * 
 		 * dwr.engine.setActiveReverseAjax(true);
 		 * 
-		 * withCreator("new", "vorkleberaction") .addParam("scope",
-		 * "application") .addParam("class", "storck.action.VorkleberAction") ;
+		 * withCreator("new", "vorkleberaction") .addParam("scope", "application") .addParam("class", "storck.action.VorkleberAction") ;
 		 * 
 		 * 
-		 * <allow> <create creator="new" javascript="vorkleberaction"
-		 * scope="application"> <param name="class"
-		 * value="storck.action.VorkleberAction"/> </create>
+		 * <allow> <create creator="new" javascript="vorkleberaction" scope="application"> <param name="class" value="storck.action.VorkleberAction"/> </create>
 		 * 
-		 * <convert converter="bean"
-		 * match="org.apache.struts.util.LabelValueBean" /> <!-- <convert
-		 * converter="bean" match="ingo.Pos"/> --> </allow>
+		 * <convert converter="bean" match="org.apache.struts.util.LabelValueBean" /> <!-- <convert converter="bean" match="ingo.Pos"/> --> </allow>
 		 */
 
 	}

@@ -64,6 +64,8 @@ public class ActionHelper
 
 	public static void init()
 	{
+		clear();
+		
 		WebContext ctx = WebContextFactory.get();
 
 		try
