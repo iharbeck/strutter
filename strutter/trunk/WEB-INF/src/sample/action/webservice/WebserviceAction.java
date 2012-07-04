@@ -28,10 +28,8 @@ public class WebserviceAction implements ConfigWSInterface
 
 	public void doGet() throws Exception
 	{
-
 		log.debug("ws call get");
 
 		WSActionHelper.writeBody("Hello World!!!");
-
 	}
 }

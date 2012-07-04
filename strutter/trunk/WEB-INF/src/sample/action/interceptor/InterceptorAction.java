@@ -39,8 +39,7 @@ public class InterceptorAction extends FormlessDispatchAction implements ConfigI
 	Address customer = new Address();
 	String memo;
 
-	public ActionForward doView()
-	        throws Exception
+	public ActionForward doView() throws Exception
 	{
 		log.debug("view");
 

@@ -79,5 +79,4 @@ public class ProcessAction extends FormlessDispatchAction implements ConfigInter
 	{
 		this.firstname = firstname;
 	}
-
 }
