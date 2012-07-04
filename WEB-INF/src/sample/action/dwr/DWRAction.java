@@ -34,7 +34,7 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 	public void worker(String str)
 	{
 		ActionHelper.init();
-		
+
 		Document.setTitle(str);
 
 		System.out.println(" DWR " + ActionHelper.getSession());

@@ -43,5 +43,4 @@ public class AjaxAction extends FormlessDispatchAction implements ConfigInterfac
 		ActionHelper.setHeading(false);
 		return ActionHelper.findForward("template");
 	}
-
 }

@@ -38,24 +38,21 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 		struts.setUnspecified("view");
 	}
 
-	public ActionForward doView()
-	        throws Exception
+	public ActionForward doView() throws Exception
 	{
 		log.debug("view");
 
 		return ActionHelper.findForward("view");
 	}
 
-	public ActionForward doPreview()
-	        throws Exception
+	public ActionForward doPreview() throws Exception
 	{
 		log.debug("preview");
 
 		return ActionHelper.findForward("preview");
 	}
 
-	public ActionForward doSimulatemessage()
-	        throws Exception
+	public ActionForward doSimulatemessage() throws Exception
 	{
 		log.debug("simulatemessage");
 
@@ -68,8 +65,7 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 		return ActionHelper.findForward("view");
 	}
 
-	public ActionForward doSimulateerrors()
-	        throws Exception
+	public ActionForward doSimulateerrors() throws Exception
 	{
 		log.debug("simulateerrors");
 
@@ -86,8 +82,7 @@ public class SampleAction extends PlainDispatchAction implements ConfigInterface
 		return ActionHelper.findForward("view");
 	}
 
-	public ActionForward doSearch()
-	        throws Exception
+	public ActionForward doSearch() throws Exception
 	{
 		log.debug("search");
 

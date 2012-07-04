@@ -63,7 +63,6 @@ public class DWR2Action extends FormlessDispatchAction implements ConfigInterfac
 
 	public void worker(String str)
 	{
-
 		list.add(str);
 
 		Document.setTitle(str + ActionHelper.getSession() + ActionHelper.getUsername());
