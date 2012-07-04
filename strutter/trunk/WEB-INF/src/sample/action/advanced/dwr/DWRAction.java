@@ -9,6 +9,7 @@ import org.directwebremoting.ui.dwr.Util;
 
 import strutter.action.FormlessDispatchAction;
 import strutter.config.ActionConfig;
+import strutter.config.annotation.Remoting;
 import strutter.config.tags.ConfigInterface;
 import strutter.config.tags.ConfigRemotingInterface;
 import strutter.helper.ActionHelper;
@@ -29,6 +30,7 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 
 	String[] values = new String[] { "erster", "zweiter", "dritter" };
 
+	@Remoting
 	public void worker(String str)
 	{
 		ActionHelper.init();
@@ -42,6 +44,7 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 		Util.addOptions("combo", values);
 	}
 
+	@Remoting
 	public void upload(FileTransfer data)
 	{
 		String info = "Received: " + data.getFilename() + "<br>Size: " + data.getSize();
@@ -52,11 +55,13 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 		Util.addRows("tab", new String[][] { { "<div style='border:1px solid gray'>1</div>", "2" }, { "3", "4" } }, "{escapeHtml:false}");
 	}
 
+	@Remoting
 	public FileTransfer download(String data)
 	{
 		return new FileTransfer("test.html", "text/html", "<h1>DOWN</h1>".getBytes());
 	}
 
+	@Remoting
 	public void echo()
 	{
 		// ECHO to specific Page!
