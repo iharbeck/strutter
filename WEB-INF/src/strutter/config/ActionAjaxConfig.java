@@ -43,7 +43,7 @@ public class ActionAjaxConfig extends FluentConfigurator
     			               String methodname = m.getName();
     			               c.include(methodname);
     			               
-    			               System.out.println("Remoting: " + classname  + "." + methodname);
+    			               System.out.println("Remoting: " + classname + "." + methodname);
     			            }
     			        }
 			        } catch (Exception e) {
