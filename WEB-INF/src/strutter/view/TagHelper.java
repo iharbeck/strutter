@@ -167,13 +167,13 @@ public class TagHelper
 		}
 		catch(NoSuchMethodException e)
 		{
-			if(warn)
-				System.out.println("Strutter: missing attribute [" + name + "]");
+			//if(warn)
+			//	System.out.println("Strutter: missing attribute [" + name + "]");
 			return null;
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			//System.out.println(e);
 			return null;
 		}
 	}
