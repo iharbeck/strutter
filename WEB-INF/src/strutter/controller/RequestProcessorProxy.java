@@ -653,7 +653,7 @@ class RMatcher
 
 	static
 	{
-		pattern = Pattern.compile("#R\\{(.*?)\\}", Pattern.MULTILINE);
+		pattern = Pattern.compile("\\$R\\{(.*?)\\}", Pattern.MULTILINE);
 	}
 
 	public final String matchall(String val)
