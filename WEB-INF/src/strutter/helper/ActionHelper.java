@@ -64,10 +64,13 @@ public class ActionHelper
 
 	public static void init()
 	{
-		clear();
-		
 		WebContext ctx = WebContextFactory.get();
 
+		if(ctx == null)
+			return;
+
+		clear();
+    
 		try
 		{
 			ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
