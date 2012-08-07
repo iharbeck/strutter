@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import jodd.format.Printf;
+import jodd.format.PrintfFormat;
+
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
 import org.apache.commons.chain.Command;
@@ -131,7 +134,9 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	public void process(HttpServletRequest _request, HttpServletResponse _response) throws IOException, ServletException
 	{
-		System.out.println("" + System.currentTimeMillis() + _request.getRequestURL() + "?" + _request.getQueryString());
+		long start = System.currentTimeMillis();
+
+		//DEBUG System.out.println("" + System.currentTimeMillis() + _request.getRequestURL() + "?" + _request.getQueryString());
 
 		// AJAX and so on
 		if(_request.getServletPath().equals("/strutter.do")) // data.getActionname()
@@ -381,7 +386,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			{
 			}
 
-			System.out.println("done" + System.currentTimeMillis());
+			//DEBUG System.out.println("done" + System.currentTimeMillis());
+
+			System.out.println((System.currentTimeMillis() - start) + "ms " + _request.getRequestURL());
 		}
 	}
 
@@ -437,16 +444,16 @@ public class RequestProcessorProxy extends RequestProcessor
 			factory.registerTag(new CTextareaTag(form, request));
 			factory.registerTag(new OptionTag());
 			factory.registerTag(new CFormTag(actionfieldname)); // Hiddenfield
-																// Handler
+			                                                    // Handler
 			factory.registerTag(new CMetaTag(request)); // Dekorator
-														// Metainformation
+			                                            // Metainformation
 
 			hparser.setNodeFactory(factory);
 			hparser.setInputHTML(doc);
 
-			System.out.println("P" + System.currentTimeMillis());
+			//DEBUG System.out.println("P" + System.currentTimeMillis());
 			NodeList nl = hparser.parse(null);
-			System.out.println("E" + System.currentTimeMillis());
+			//DEBUG System.out.println("E" + System.currentTimeMillis());
 
 			return nl.toHtml(); // --as close to original as possible
 		}

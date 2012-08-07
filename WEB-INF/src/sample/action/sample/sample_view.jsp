@@ -67,8 +67,8 @@
 			</fieldset>
 		</td></tr>
 		<tr><td>LONG: <span type="resource" id="button.label" /></td></tr>
-		<tr><td>SHORT: #R{button.label}</td></tr>
-		<tr><td>WRONG: #R{unknown}</td></tr>
+		<tr><td>SHORT: $R{button.label}</td></tr>
+		<tr><td>WRONG: §R{unknown}</td></tr>
 		</table>
 
 
@@ -78,7 +78,7 @@
   </tr>
   
   <tr>
-      <td>#R{label.name}</td>
+      <td>$R{label.name}</td>
       <td><INPUT type="text" name="customer.firstname" error="behind"/> </td>
   </tr>
   
@@ -118,7 +118,7 @@
 <input type="button" class="delete" value="löschen">
 
 <input type="button" value="$button.label"> <!-- deprecated -->
-<input type="button" value="#R{button.label}">
+<input type="button" value="$R{button.label}">
 
 </form>
 </DIV>
