@@ -90,6 +90,9 @@ public class ActionHelper
 	{
 		ActionHelperData data = (ActionHelperData)helper.get();
 
+		if(!data.isInitialized())
+			System.out.println("DWR init missing");
+			
 		return data;
 	}
 
@@ -132,27 +135,27 @@ public class ActionHelper
 		}
 	}
 
-	public final boolean hasObject(String name)
-	{
-		Object form = Utils.getActionForm(me().getRequest());
-		return(TagHelper.getFormObject(form, name) != null);
-	}
+//	public final boolean hasObject(String name)
+//	{
+//		Object form = Utils.getActionForm(me().getRequest());
+//		return(TagHelper.getFormObject(form, name) != null);
+//	}
 
 	public final static Object getObject(String name)
 	{
-		Object form = Utils.getActionForm(me().getRequest());
+		Object form = Utils.getActionFormFromSession(me().getRequest());
 		return TagHelper.getFormObject(form, name);
 	}
 
 	public final static String getString(String name)
 	{
-		Object form = Utils.getActionForm(me().getRequest());
+		Object form = Utils.getActionFormFromSession(me().getRequest());
 		return TagHelper.getFormValue(form, name);
 	}
 
 	public final static Object getForm() throws Exception
 	{
-		Object form = Utils.getActionForm(me().getRequest());
+		Object form = Utils.getActionFormFromSession(me().getRequest());
 
 		if(form == null)
 			throw new Exception("FormularClass not defined use FormlessInterface");
@@ -251,12 +254,14 @@ public class ActionHelper
 
 	public static ActionHelperData init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
+		if(ActionHelper.servletcontext == null)
+			ActionHelper.servletcontext = servletcontext;
+
 		ActionHelperData me = (ActionHelperData)helper.get();
+		
 		me.plusThreadcount();
 		// System.out.println("up:" + me.threadcount + " " +
 		// request.getRequestURI());
-
-		ActionHelper.servletcontext = servletcontext;
 
 		me.setRequest(request);
 		me.setResponse(response);
@@ -427,7 +432,7 @@ public class ActionHelper
 			addErrors();
 			addMessages();
 
-			if(me().getMapping() instanceof ActionMappingExtended)
+/*			if(me().getMapping() instanceof ActionMappingExtended)
 			{
 				for(int i = 0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
 				{
@@ -440,7 +445,7 @@ public class ActionHelper
 					}
 				}
 			}
-
+*/
 		}
 		finally
 		{
@@ -450,11 +455,13 @@ public class ActionHelper
 
 	protected static void addErrors()
 	{
-		HttpServletRequest request = me().getRequest();
-		ActionMessages errors = me().getErrormsgs();
+		ActionHelperData data = me();
+		ActionMessages errors = data.getErrormsgs();
 
-		if(errors == null)
+		if(errors == null || errors.size() == 0)
 			return;
+
+		HttpServletRequest request = data.getRequest();
 
 		// get any existing errors from the request, or make a new one
 		ActionMessages requestErrors = (ActionMessages)request.getAttribute(Globals.ERROR_KEY);
@@ -502,11 +509,14 @@ public class ActionHelper
 
 	protected static void addMessages()
 	{
-		HttpServletRequest request = getRequest();
-		ActionMessages messages = getInfomsgs();
+		ActionHelperData data = me();
+		
+		ActionMessages messages = data.getInfomsgs();
 
-		if(messages == null)
+		if(messages == null || messages.size() == 0)
 			return;
+
+		HttpServletRequest request = data.getRequest();
 
 		// get any existing messages from the request, or make a new one
 		ActionMessages requestMessages = (ActionMessages)request.getAttribute(Globals.MESSAGE_KEY);
@@ -614,8 +624,11 @@ public class ActionHelper
 
 	public static void setLocale(String language)
 	{
-		Utils.setLocale(getSession(), language);
-		me().setLocale(new Locale(language));
+		Locale locale = new Locale(language);
+		if(language != null)
+			getSession().setAttribute(Globals.LOCALE_KEY, locale);
+		
+		me().setLocale(locale);
 	}
 
 	/**

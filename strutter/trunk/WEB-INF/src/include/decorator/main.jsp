@@ -12,3 +12,5 @@
 </table>
 
 <center><b>FOOT</b></center>
+
+<jsp:include page="/WEB-INF/classes/include/include.jsp"></jsp:include>

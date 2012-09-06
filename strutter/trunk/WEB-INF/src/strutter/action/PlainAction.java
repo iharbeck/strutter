@@ -51,7 +51,7 @@ public abstract class PlainAction extends BaseAction
 		action.servlet = this.servlet;
 
 		if(action instanceof FormlessInterface)
-			PopulateHelper.populate(action, ActionHelper.getMapping().getPrefix(), ActionHelper.getMapping().getSuffix(), ActionHelper.getRequest());
+			PopulateHelper.populate(action, ActionHelper.getRequest());
 
 		// Store Action (Form)
 		Utils.setActionForm(ActionHelper.getRequest(), action);

@@ -85,7 +85,7 @@
   
   <tr>
       <td>Lastname</td>
-      <td><INPUT type="text" name="customer.lastname" readonly="readonly" error="class"/> </td>
+      <td><INPUT type="text" name="customer.lastname" readonly="readonly" error="class"/></td>
   </tr>
   <tr>
       <td>Street</td>

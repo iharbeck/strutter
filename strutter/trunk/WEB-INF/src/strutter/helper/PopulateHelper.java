@@ -28,25 +28,17 @@ public class PopulateHelper
 {
 	private static Log log = LogFactory.getLog(PopulateHelper.class);
 
-	public static void populate(Object bean, HttpServletRequest request) throws ServletException
-	{
-		populate(bean, null, null, request);
-	}
-
-	public static HashMap populate(Object bean, String prefix, String suffix, HttpServletRequest request)
-	        throws ServletException
-	{
-		HashMap properties = new HashMap();
-
-		Enumeration names = null;
-		Map multipartParameters = null;
+	public static Map populate(Object bean, HttpServletRequest request) throws ServletException
+	{ 
+		Map parameters = null;
 
 		String contentType = request.getContentType();
 		String method = request.getMethod();
 		boolean isMultipart = false;
 
+		// Webservice will not implement FormlessInterface
 		if(bean instanceof FormlessInterface)
-		{ // Webservice will not implement FormlessInterface
+		{ 
 			((FormlessInterface)bean).reset();
 		}
 
@@ -73,101 +65,51 @@ public class PopulateHelper
 				{
 					// ((FormlessInterface)
 					// bean).setMultipartRequestHandler(multipartHandler);
-					return properties;
+					return parameters;
 				}
 				// retrieve form values and put into properties
-				multipartParameters = getAllParametersForMultipartRequest(request, multipartHandler);
-				names = Collections.enumeration(multipartParameters.keySet());
+				parameters = getAllParametersForMultipartRequest(request, multipartHandler);
 			}
 		}
 
 		if(!isMultipart)
 		{
-			names = request.getParameterNames();
+			parameters = request.getParameterMap();
 		}
 
-		while(names.hasMoreElements())
-		{
-			String name = (String)names.nextElement();
-			String stripped = name;
-			if(prefix != null)
-			{
-				if(!stripped.startsWith(prefix))
-				{
-					continue;
-				}
-				stripped = stripped.substring(prefix.length());
-			}
-			if(suffix != null)
-			{
-				if(!stripped.endsWith(suffix))
-				{
-					continue;
-				}
-				stripped = stripped.substring(0, stripped.length() - suffix.length());
-			}
-			Object parameterValue = null;
-			if(isMultipart)
-			{
-				parameterValue = multipartParameters.get(name);
-			}
-			else
-			{
-				parameterValue = request.getParameterValues(name);
-			}
-
-			// Populate parameters, except "standard" struts attributes
-			// such as 'org.apache.struts.action.CANCEL'
-			if(!(stripped.startsWith("org.apache.struts.")))
-			{
-				properties.put(stripped, parameterValue);
-			}
-		}
-
-		// Set the corresponding properties of our bean
 		try
 		{
-			//BeanUtil.populateBean(bean, properties);
-			BeanUtils.populate(bean, properties);
+			//BeanUtil.populateBean(bean, parameters);
+			BeanUtils.populate(bean, parameters);
 		}
 		catch(Exception e)
 		{
 			throw new ServletException("BeanUtils.populate", e);
 		}
-
-		return properties;
+		
+		return parameters;
 	}
 
 	private static Map getAllParametersForMultipartRequest(
 	        HttpServletRequest request,
 	        MultipartRequestHandler multipartHandler)
 	{
-
-		Map parameters = new HashMap();
-		Hashtable elements = multipartHandler.getAllElements();
-		Enumeration e = elements.keys();
-		while(e.hasMoreElements())
-		{
-			String key = (String)e.nextElement();
-			parameters.put(key, elements.get(key));
-		}
-
-		if(request instanceof MultipartRequestWrapper)
-		{
-			request = (HttpServletRequest)((MultipartRequestWrapper)request).getRequest();
-			e = request.getParameterNames();
-			while(e.hasMoreElements())
-			{
-				String key = (String)e.nextElement();
-				parameters.put(key, request.getParameterValues(key));
-			}
-		}
-		else
-		{
-			log.debug("Gathering multipart parameters for unwrapped request");
-		}
-
-		return parameters;
+		return multipartHandler.getAllElements();
+		
+//		Map parameters = new HashMap(multipartHandler.getAllElements().size() + request.getParameterMap().size());
+//		
+//
+//		if(request instanceof MultipartRequestWrapper)
+//		{
+//			parameters.putAll(multipartHandler.getAllElements());
+//		}
+//		else
+//		{
+//			parameters.putAll(request.getParameterMap());
+//			//log.debug("Gathering multipart parameters for unwrapped request");
+//		}
+//
+//		return parameters;
 	}
 
 	private static MultipartRequestHandler getMultipartHandler(HttpServletRequest request)

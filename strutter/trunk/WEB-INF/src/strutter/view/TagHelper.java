@@ -115,13 +115,13 @@ public class TagHelper
 		{
 			if(!name.equals(actionname))
 				System.out.println("Strutter: missing attribute [" + name + "]");
-			System.out.println(e);
+			//System.out.println(e);
 			return null;
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
-			return "";
+			//System.out.println(e);
+			return null;
 		}
 	}
 
