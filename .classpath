@@ -15,7 +15,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/struts-core-1.3.10.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/dwr-noncla.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/commons-fileupload-1.2.1.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/yuicompressor-2.4.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/htmllexer.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/servlet-api.jar"/>
 	<classpathentry kind="var" path="TOMCAT_HOME/lib/jasper.jar"/>

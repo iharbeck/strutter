@@ -2,11 +2,11 @@ package strutter.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -20,9 +20,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import jodd.format.Printf;
-import jodd.format.PrintfFormat;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
@@ -45,7 +42,6 @@ import org.htmlparser.util.NodeList;
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
 import strutter.config.ActionPlugin;
-import strutter.filter.YUIFilter;
 import strutter.helper.ActionHelper;
 import strutter.helper.ActionHelperData;
 import strutter.helper.PopulateHelper;
@@ -134,16 +130,16 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	public void process(HttpServletRequest _request, HttpServletResponse _response) throws IOException, ServletException
 	{
-		long start = System.currentTimeMillis();
-
 		//DEBUG System.out.println("" + System.currentTimeMillis() + _request.getRequestURL() + "?" + _request.getQueryString());
 
 		// AJAX and so on
 		if(_request.getServletPath().equals("/strutter.do")) // data.getActionname()
 		{
-			if(internalProcessing(_request, _response))
-				return;
+			internalProcessing(_request, _response);
+			return;
 		}
+
+		long start = System.currentTimeMillis();
 
 		RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest)_request);
 
@@ -232,7 +228,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			try
 			{
-				form = ActionHelper.getForm();
+				form = Utils.getActionFormFromSession(data.getRequest());
 			}
 			catch(Exception e1)
 			{
@@ -277,7 +273,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse)_response);
 
-				RequestDispatcher dispatcher = requestwrapper.getRequestDispatcher("/include/decorator/" + decorator);
+				RequestDispatcher dispatcher = requestwrapper.getRequestDispatcher("/WEB-INF/classes/include/decorator/" + decorator);
 				dispatcher.include((ServletRequest)requestwrapper, (ServletResponse)decoresponsewrapper);
 
 				try
@@ -292,11 +288,11 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			if(mappingext != null && !"0".equals(mappingext.getProperty("INLINELOCALISATION")))
 			{
-				// localisierung #R{nachname}
-				doc = localisation.matchall(doc);
+				// localisierung $R{nachname}
+				localisation.matchall(out, doc);
 			}
 
-			out.write(doc);
+			//out.write(doc);
 			out.flush();
 
 			if(isMainThread && isHeading)
@@ -401,11 +397,15 @@ public class RequestProcessorProxy extends RequestProcessor
 	{
 		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
 
-		BufferedInputStream streamreader = new BufferedInputStream(classloader.getResourceAsStream(name));
+		BufferedInputStream streamreader = null;
 
 		try
 		{
 			int data;
+
+			streamreader = new BufferedInputStream(new FileInputStream(new File(classloader.getResource(name).getFile())));
+			// classloader.getResourceAsStream(name)
+
 			while((data = streamreader.read()) != -1)
 			{
 				stream.append((char)data);
@@ -413,6 +413,16 @@ public class RequestProcessorProxy extends RequestProcessor
 		}
 		catch(Exception e)
 		{
+		}
+		finally
+		{
+			try
+			{
+				streamreader.close();
+			}
+			catch(Exception e)
+			{
+			}
 		}
 
 		return stream.toString();
@@ -474,7 +484,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		GZIPOutputStream gzipstream = new GZIPOutputStream(out);
 		response.addHeader("Content-Encoding", "gzip");
 
-		data = YUIFilter.compressJavaScriptString(data);
+		data = data; //YUIFilter.compressJavaScriptString(data);
 
 		gzipstream.write(data.getBytes());
 		gzipstream.close();
@@ -484,105 +494,104 @@ public class RequestProcessorProxy extends RequestProcessor
 		// out.flush();
 	}
 
-	boolean internalProcessing(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	private final void internalProcessing(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-
 		String internal = request.getQueryString();
 
-		if(internal != null)
+		if(internal == null)
+			return;
+
+		if(internal.equals("js"))
 		{
-			if(internal.equals("js"))
+			if(script == null)
 			{
-				if(script == null)
-				{
-					HttpSession session = request.getSession();
+				HttpSession session = request.getSession();
 
-					script = getResource("script/process.js");
+				script = getResource("script/process.js");
 
-					script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval() * 1000) - (10 * 1000)));
+				script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval() * 1000) - (10 * 1000)));
 
-					if(actionfieldname != null)
-						script = script.replaceAll("##actionname##", actionfieldname);
+				if(actionfieldname != null)
+					script = script.replaceAll("##actionname##", actionfieldname);
 
-					ETAG_VALUE = String.valueOf(script.hashCode());
-				}
-
-				if(ETAG_VALUE.equals(request.getHeader(IF_NONE_MATCH_HEADER)))
-				{
-					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					return true;
-				}
-				else
-				{
-					response.setHeader(ETAG_HEADER, ETAG_VALUE);
-					streamzip(response, script);
-				}
+				ETAG_VALUE = String.valueOf(script.hashCode());
 			}
-			else if(internal.startsWith("js_"))
+
+			if(ETAG_VALUE.equals(request.getHeader(IF_NONE_MATCH_HEADER)))
 			{
-				String file = internal.substring(3);
-
-				String jspath = file + ".js";
-				String etag = String.valueOf(new File(classloader.getResource(jspath).getFile()).lastModified());
-
-				if(etag.equals(request.getHeader(IF_NONE_MATCH_HEADER)))
-				{
-					response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-					return true;
-				}
-				else
-				{
-					response.setHeader(ETAG_HEADER, etag);
-					streamzip(response, getResource(jspath));
-				}
+				response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+				return;
 			}
-			else if(internal.startsWith("killer"))
+			else
 			{
-				HttpSession session = ((HttpServletRequest)request).getSession();
-
-				try
-				{
-					Thread thread = ((Thread)session.getAttribute("thread"));
-
-					System.out.println("kill: " + thread);
-
-					if(thread != null)
-						thread.interrupt();
-
-					((HttpServletResponse)response).sendRedirect("");
-				}
-				catch(Exception e)
-				{
-				}
-			}
-			else if(internal.startsWith("echo"))
-			{
-				PrintWriter out = response.getWriter();
-
-				out.println(request.getParameter("struttercache"));
-				out.flush();
-			}
-			else if(internal.startsWith("img"))
-			{
-				ServletOutputStream out = response.getOutputStream();
-
-				BufferedInputStream in = getResourceAsStream(request.getParameter("name"));
-
-				int data;
-				while((data = in.read()) != -1)
-					out.write(data);
-
-				response.setContentType("image/gif");
-				out.flush();
-				in.close();
-			}
-			else if(internal.startsWith("keepalive"))
-			{
-				System.out.println("Strutter: keep alive");
+				response.setHeader(ETAG_HEADER, ETAG_VALUE);
+				streamzip(response, script);
 			}
 		}
+		else if(internal.startsWith("js_"))
+		{
+			String file = internal.substring(3);
 
-		return true;
+			String jspath = file + ".js";
+			String etag = String.valueOf(new File(classloader.getResource(jspath).getFile()).lastModified());
+
+			if(etag.equals(request.getHeader(IF_NONE_MATCH_HEADER)))
+			{
+				response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+				return;
+			}
+			else
+			{
+				response.setHeader(ETAG_HEADER, etag);
+				streamzip(response, getResource(jspath));
+			}
+		}
+		else if(internal.startsWith("killer"))
+		{
+			HttpSession session = ((HttpServletRequest)request).getSession();
+
+			try
+			{
+				Thread thread = ((Thread)session.getAttribute("thread"));
+
+				System.out.println("kill: " + thread);
+
+				if(thread != null)
+					thread.interrupt();
+
+				((HttpServletResponse)response).sendRedirect("");
+			}
+			catch(Exception e)
+			{
+			}
+		}
+		else if(internal.startsWith("echo"))
+		{
+			PrintWriter out = response.getWriter();
+
+			out.println(request.getParameter("struttercache"));
+			out.flush();
+		}
+		else if(internal.startsWith("img"))
+		{
+			ServletOutputStream out = response.getOutputStream();
+
+			BufferedInputStream in = getResourceAsStream(request.getParameter("name"));
+
+			int data;
+			while((data = in.read()) != -1)
+				out.write(data);
+
+			response.setContentType("image/gif");
+			out.flush();
+			in.close();
+		}
+		else if(internal.startsWith("keepalive"))
+		{
+			System.out.println("Strutter: keep alive");
+		}
+
+		return;
 	}
 
 	public boolean interceptorBefore() throws ServletException, IOException
@@ -643,12 +652,10 @@ class BeforeRenderCommand implements Command
 
 	public boolean execute(Context context) throws Exception
 	{
-		ServletActionContext actioncontext = (ServletActionContext)context;
-
 		ActionForward helperforward = ActionHelper.endInterceptors();
 
 		if(helperforward != null)
-			actioncontext.setForwardConfig(helperforward);
+			((ServletActionContext)context).setForwardConfig(helperforward);
 
 		return false;
 	}
@@ -663,31 +670,34 @@ class RMatcher
 		pattern = Pattern.compile("\\$R\\{(.*?)\\}", Pattern.MULTILINE);
 	}
 
-	public final String matchall(String val)
+	public final void matchall(StringWriter out, String val)
 	{
 		if(val == null)
-			return null;
+			return;
 
 		Matcher matcher = pattern.matcher(val);
 
 		// without match return without copy / change
 		if(!matcher.find())
-			return val;
+		{
+			out.write(val);
+			return;
+		}
 
 		int pos = 0;
-		StringBuilder target = new StringBuilder(RequestProcessorProxy.BUFFERSIZE);
 
 		do
 		{
-			target.append(val.substring(pos, matcher.start()));
-			target.append(ActionHelper.getResource(matcher.group(1)));
+			out.write(val.substring(pos, matcher.start()));
+			out.write(ActionHelper.getResource(matcher.group(1)));
 
 			pos = matcher.end();
 		}
 		while(matcher.find());
 
-		target.append(val.substring(pos));
+		out.write(val.substring(pos));
+		out.flush();
 
-		return target.toString();
+		return;
 	}
 }

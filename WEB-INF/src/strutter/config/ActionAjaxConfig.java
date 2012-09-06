@@ -31,24 +31,30 @@ public class ActionAjaxConfig extends FluentConfigurator
 		{
 			String classname = (String)list.get(i); // "sample.DWRAction";
 
-			FluentConfigurator c = withCreator("strutter", "DWRAction");
-			
-			        // .addParam("scope", "request")
-			        c.addParam("actionclass", classname);
-			        c.addParam("javascript", classname.substring(classname.lastIndexOf(".") + 1));
-			
-			        try {
-    			        for (Method m : Class.forName(classname).getMethods()) {
-    			            if (m.isAnnotationPresent(Remoting.class)) {
-    			               String methodname = m.getName();
-    			               c.include(methodname);
-    			               
-    			               System.out.println("Remoting: " + classname + "." + methodname);
-    			            }
-    			        }
-			        } catch (Exception e) {
+			//FluentConfigurator fluentconfigurator = withCreator("strutter", "DWRAction");
+			FluentConfigurator fluentconfigurator = withCreator("strutter", classname.substring(classname.lastIndexOf(".") + 1));
+
+			// .addParam("scope", "request")
+			fluentconfigurator.addParam("actionclass", classname);
+			//fluentconfigurator.addParam("javascript", classname.substring(classname.lastIndexOf(".") + 1));
+
+			try
+			{
+				for(Method method : Class.forName(classname).getMethods())
+				{
+					if(method.isAnnotationPresent(Remoting.class))
+					{
+						String methodname = method.getName();
+						fluentconfigurator.include(methodname);
+
+						System.out.println("Remoting: " + classname + "." + methodname);
 					}
-			        
+				}
+			}
+			catch(Exception e)
+			{
+			}
+
 			//        c.include(methodName);
 
 			// withCreator("new", "DWRAction")

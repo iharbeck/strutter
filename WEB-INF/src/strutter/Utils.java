@@ -3,8 +3,6 @@ package strutter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Locale;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -15,25 +13,17 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.config.ForwardConfig;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.upload.MultipartRequestWrapper;
-import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 
 public class Utils
 {
-	public static void setLocale(HttpSession session, String language)
-	{
-		if(language != null)
-			session.setAttribute(Globals.LOCALE_KEY, new Locale(language));
-	}
-
 	public static void processForwardConfig(HttpServletRequest request,
 	        HttpServletResponse response, ForwardConfig forward)
 	        throws IOException, ServletException
@@ -107,128 +97,6 @@ public class Utils
 		wr.write(file.getFileData());
 	}
 
-	/****************** Struts ServletContext Resources ****************/
-
-	/**
-	 * Returns the message resources for this application or <code>null</code>
-	 * if not found.
-	 * 
-	 * @param app
-	 *            the servlet context
-	 * @since VelocityTools 1.1
-	 */
-	public static MessageResources getMessageResources(HttpServletRequest request,
-	        ServletContext app)
-	{
-		/* Identify the current module */
-		ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, app);
-		return (MessageResources)app.getAttribute(Globals.MESSAGES_KEY +
-		        moduleConfig.getPrefix());
-	}
-
-	/**
-	 * Returns the message resources with the specified bundle name for this
-	 * application or <code>null</code> if not found.
-	 * 
-	 * @param app
-	 *            the servlet context
-	 * @param bundle
-	 *            The bundle name to look for. If this is <code>null</code>, the
-	 *            default bundle name is used.
-	 * @since VelocityTools 1.1
-	 */
-	public static MessageResources getMessageResources(HttpServletRequest request,
-	        ServletContext app,
-	        String bundle)
-	{
-		MessageResources resources = null;
-
-		/* Identify the current module */
-		ModuleConfig moduleConfig = ModuleUtils.getInstance().getModuleConfig(request, app);
-
-		if(bundle == null)
-		{
-			bundle = Globals.MESSAGES_KEY;
-		}
-
-		// First check request scope
-		resources = (MessageResources)request.getAttribute(bundle + moduleConfig.getPrefix());
-
-		if(resources == null)
-		{
-			resources = (MessageResources)app.getAttribute(bundle + moduleConfig.getPrefix());
-		}
-
-		return resources;
-	}
-
-	/**
-	 * Select the module to which the specified request belongs, and add return
-	 * the corresponding ModuleConfig.
-	 * 
-	 * @param urlPath
-	 *            The requested URL
-	 * @param app
-	 *            The ServletContext for this web application
-	 * @return The ModuleConfig for the given URL path
-	 * @since VelocityTools 1.1
-	 */
-	public static ModuleConfig selectModule(String urlPath,
-	        ServletContext app)
-	{
-		/* Match against the list of sub-application prefixes */
-		String prefix = ModuleUtils.getInstance().getModuleName(urlPath, app);
-
-		/* Expose the resources for this sub-application */
-		ModuleConfig config = (ModuleConfig)
-		        app.getAttribute(Globals.MODULE_KEY + prefix);
-
-		return config;
-	}
-
-	/********************** Struts Session Resources ******************/
-
-	/**
-	 * Returns the <code>java.util.Locale</code> for the user. If a locale
-	 * object is not found in the user's session, the system default locale is
-	 * returned.
-	 * 
-	 * @param request
-	 *            the servlet request
-	 * @param session
-	 *            the HTTP session
-	 */
-	public static Locale getLocale(HttpServletRequest request,
-	        HttpSession session)
-	{
-		Locale locale = null;
-
-		if(session != null)
-		{
-			locale = (Locale)session.getAttribute(Globals.LOCALE_KEY);
-		}
-		if(locale == null)
-		{
-			locale = request.getLocale();
-		}
-		return locale;
-	}
-
-	/**
-	 * Returns the transaction token stored in this session or <code>null</code>
-	 * if not used.
-	 * 
-	 * @param session
-	 *            the HTTP session
-	 */
-	public static String getToken(HttpSession session)
-	{
-		if(session == null)
-		{
-			return null;
-		}
-		return (String)session.getAttribute(Globals.TRANSACTION_TOKEN_KEY);
-	}
 
 	/*********************** Struts Request Resources ****************/
 
@@ -293,45 +161,6 @@ public class Utils
 			}
 		}
 		return obj;
-	}
-
-	/**
-	 * Returns the <code>ActionForm</code> bean associated with this request of
-	 * <code>null</code> if none exists.
-	 * 
-	 * @param request
-	 *            the servlet request
-	 * @param session
-	 *            the HTTP session
-	 */
-	public static Object getActionForm(HttpServletRequest request)
-	{
-		/* Is there a mapping associated with this request? */
-		ActionConfig mapping = getActionConfig(request);
-		if(mapping == null)
-		{
-			return null;
-		}
-
-		/* Is there a form bean associated with this mapping? */
-		String attribute = mapping.getAttribute();
-		if(attribute == null)
-		{
-			return null;
-		}
-
-		/* Look up the existing form bean */
-		if("request".equals(mapping.getScope()))
-		{
-			return request.getAttribute(attribute);
-		}
-
-		HttpSession session = request.getSession(false);
-		if(session != null)
-		{
-			return session.getAttribute(attribute);
-		}
-		return null;
 	}
 
 	public static Object getActionForm(HttpServletRequest request, Class clazz)
@@ -459,33 +288,16 @@ public class Utils
 		return value.startsWith("/") ? value : ("/" + value);
 	}
 
-	public static final String INCLUDE_SERVLET_PATH = "javax.servlet.include.servlet_path";
-	public static final String INCLUDE_PATH_INFO = "javax.servlet.include.path_info";
-
 	public static String getActionMappingName(HttpServletRequest request) throws IOException
 	{
-		String path;
-
-		// For prefix matching, match on the path info (if any)
-		path = (String)request.getAttribute(INCLUDE_PATH_INFO);
-
-		if(path == null)
-		{
-			path = request.getPathInfo();
-		}
+		String path = request.getPathInfo();
 
 		if((path != null) && (path.length() > 0))
 		{
-			return(path);
+			return path;
 		}
 
-		// For extension matching, strip the module prefix and extension
-		path = (String)request.getAttribute(INCLUDE_SERVLET_PATH);
-
-		if(path == null)
-		{
-			path = request.getServletPath();
-		}
+		path = request.getServletPath();
 
 		int slash = path.lastIndexOf("/");
 		int period = path.lastIndexOf(".");
@@ -495,7 +307,7 @@ public class Utils
 			path = path.substring(0, period);
 		}
 
-		return(path);
+		return path ;
 	}
 
 	/**
@@ -533,153 +345,4 @@ public class Utils
 		}
 		return url.toString();
 	}
-
-	/**
-	 * Returns a formatted error message. The error message is assembled from
-	 * the following three pieces: First, value of message resource
-	 * "errors.header" is prepended. Then, the list of error messages is
-	 * rendered. Finally, the value of message resource "errors.footer" is
-	 * appended.
-	 * 
-	 * @param property
-	 *            the category of errors to markup and return
-	 * @param request
-	 *            the servlet request
-	 * @param session
-	 *            the HTTP session
-	 * @param application
-	 *            the servlet context
-	 * 
-	 * @return The formatted error message. If no error messages are queued, an
-	 *         empty string is returned.
-	 */
-	public static String errorMarkup(String property,
-	        HttpServletRequest request,
-	        HttpSession session,
-	        ServletContext application)
-	{
-		return errorMarkup(property, null, request, session, application);
-	}
-
-	/**
-	 * Returns a formatted error message. The error message is assembled from
-	 * the following three pieces: First, value of message resource
-	 * "errors.header" is prepended. Then, the list of error messages is
-	 * rendered. Finally, the value of message resource "errors.footer" is
-	 * appended.
-	 * 
-	 * @param property
-	 *            the category of errors to markup and return
-	 * @param bundle
-	 *            the message resource bundle to use
-	 * @param request
-	 *            the servlet request
-	 * @param session
-	 *            the HTTP session
-	 * @param application
-	 *            the servlet context
-	 * @since VelocityTools 1.1
-	 * @return The formatted error message. If no error messages are queued, an
-	 *         empty string is returned.
-	 */
-	public static String errorMarkup(String property,
-	        String bundle,
-	        HttpServletRequest request,
-	        HttpSession session,
-	        ServletContext application)
-	{
-		ActionMessages errors = getErrors(request);
-		if(errors == null)
-		{
-			return "";
-		}
-
-		/* fetch the error messages */
-		Iterator reports = null;
-		if(property == null)
-		{
-			reports = errors.get();
-		}
-		else
-		{
-			reports = errors.get(property);
-		}
-
-		if(!reports.hasNext())
-		{
-			return "";
-		}
-
-		/* Render the error messages appropriately if errors have been queued */
-		StringBuffer results = new StringBuffer();
-		String header = null;
-		String footer = null;
-		String prefix = null;
-		String suffix = null;
-		Locale locale = getLocale(request, session);
-
-		MessageResources resources =
-		        getMessageResources(request, application, bundle);
-		if(resources != null)
-		{
-			header = resources.getMessage(locale, "errors.header");
-			footer = resources.getMessage(locale, "errors.footer");
-			prefix = resources.getMessage(locale, "errors.prefix");
-			suffix = resources.getMessage(locale, "errors.suffix");
-		}
-		if(header == null)
-		{
-			header = "errors.header";
-		}
-		if(footer == null)
-		{
-			footer = "errors.footer";
-		}
-		/* prefix or suffix are optional, be quiet if they're missing */
-		if(prefix == null)
-		{
-			prefix = "";
-		}
-		if(suffix == null)
-		{
-			suffix = "";
-		}
-
-		results.append(header);
-		results.append("\r\n");
-
-		String message;
-		while(reports.hasNext())
-		{
-			message = null;
-			ActionMessage report = (ActionMessage)reports.next();
-			if(resources != null && report.isResource())
-			{
-				message = resources.getMessage(locale,
-				        report.getKey(),
-				        report.getValues());
-			}
-
-			results.append(prefix);
-
-			if(message != null)
-			{
-				results.append(message);
-			}
-			else
-			{
-				results.append(report.getKey());
-			}
-
-			results.append(suffix);
-			results.append("\r\n");
-		}
-
-		results.append(footer);
-		results.append("\r\n");
-
-		/* return result */
-		return results.toString();
-	}
-
 }

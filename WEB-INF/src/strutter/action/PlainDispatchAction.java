@@ -141,8 +141,8 @@ public class PlainDispatchAction extends BaseAction
 
 			action.setServlet(this.servlet);
 
-			Map properties = PopulateHelper.populate(action, actionmapping.getPrefix(), actionmapping.getSuffix(), request);
-
+			Map properties = PopulateHelper.populate(action, request);
+ 
 			if(name == null && properties.get(parameter) != null)
 				name = ((String[])properties.get(parameter))[0];
 

@@ -11,9 +11,6 @@
 <DIV class=outertable style="padding:10px">
 <a href="doc/index.html">Documentation</a><br>
 <p>
-<a href="blank.do">BLANK</a><br>
-<a href="blank.do">BLANK (Edit)</a><br>
-<p>
 <a href="sample.do">SAMPLE</a><br>
 <a href="formless.do">FORMLESS</a><br>
 <a href="zeroconf.do">ZERO CONF</a><br>
@@ -23,6 +20,7 @@
 <a href="sqlholder.do">SQLHolder</a><br>
 <a href="webservicejpeg.do">WebserviceJpeg</a><br>
 <a href="webservice.do">Webservice</a><br>
+<a href="dwr.do">DWR</a><br>
 <br>
 <a href="secured.do">SECURED</a><br>
 <a href="interceptor.do">INTERCEPTOR</a><br>

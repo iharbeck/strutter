@@ -24,7 +24,6 @@ public class ActionHelperData
 
 	public ActionHelperData()
 	{
-
 	}
 
 	public HttpServletRequest getRequest()

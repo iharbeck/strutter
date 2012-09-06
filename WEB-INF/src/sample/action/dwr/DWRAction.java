@@ -25,13 +25,16 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 	public ActionForward doView() throws Exception
 	{
 		System.out.println("VIEW " + ActionHelper.getSession());
+		
+		counter = 0;
+		
 		return ActionHelper.findForward("view");
 	}
 
 	String[] values = new String[] { "erster", "zweiter", "dritter" };
 
 	@Remoting
-	public void worker(String str)
+	public void onWorker(String str)
 	{
 		ActionHelper.init();
 
@@ -40,30 +43,60 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 		System.out.println(" DWR " + ActionHelper.getSession());
 
 		Util.setValue("target", "You send: " + str);
+		Util.setClassName("target", "borderred");
+	}
+	
+	@Remoting
+	public void onFillcombo()
+	{
+		ActionHelper.init();
+
 		Util.removeAllOptions("combo");
 		Util.addOptions("combo", values);
 	}
 
+	int counter = 0;
+	
 	@Remoting
-	public void upload(FileTransfer data)
+	public void onAddrows() throws Exception
 	{
+		ActionHelper.init();
+
+		Util.addRows("tab", new String[][] { { "<div style='border:1px solid gray'>cell " + counter++ + "</div>", "cell" }, { "cell", "cell" } }, "{escapeHtml:false}");
+	}
+	
+	@Remoting
+	public void onUpload(FileTransfer data)
+	{
+		ActionHelper.init();
+		
 		String info = "Received: " + data.getFilename() + "<br>Size: " + data.getSize();
 
 		Util.setValue("target", info);
-		Util.setClassName("target", "rumrum");
-
-		Util.addRows("tab", new String[][] { { "<div style='border:1px solid gray'>1</div>", "2" }, { "3", "4" } }, "{escapeHtml:false}");
+		Util.setClassName("target", "borderred");
+	}
+	
+	@Remoting
+	public void onToggle()
+	{
+		ActionHelper.init();
+		
+		Util.toggleClassName("target", "highlight");
 	}
 
 	@Remoting
-	public FileTransfer download(String data)
+	public FileTransfer onDownload(String data)
 	{
+		ActionHelper.init();
+		
 		return new FileTransfer("test.html", "text/html", "<h1>DOWN</h1>".getBytes());
 	}
 
 	@Remoting
-	public void echo()
+	public void onEcho()
 	{
+		ActionHelper.init();
+		
 		// ECHO to specific Page!
 		Browser.withPage("/strutter/dwr.do",
 		        new Runnable()
@@ -75,5 +108,4 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 		        }
 		        );
 	}
-
 }
