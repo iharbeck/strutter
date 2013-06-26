@@ -58,6 +58,9 @@ public class ActionHelperData
 
 	public ActionMessages getErrormsgs()
 	{
+		if(errormsgs == null)
+			errormsgs = new ActionMessages();
+		
 		return errormsgs;
 	}
 
@@ -68,6 +71,9 @@ public class ActionHelperData
 
 	public ActionMessages getInfomsgs()
 	{
+		if(infomsgs == null)
+			infomsgs = new ActionMessages();
+		
 		return infomsgs;
 	}
 

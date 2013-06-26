@@ -6,8 +6,6 @@ import java.util.Locale;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import jodd.bean.BeanUtil;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.Globals;
@@ -149,7 +147,7 @@ public class TagHelper
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			//System.out.println(e);
 			return null;
 		}
 	}
