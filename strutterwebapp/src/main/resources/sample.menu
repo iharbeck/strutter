@@ -1,0 +1,11 @@
+menu1:
+$menulable1,link1,target,permission1
+$menulable2,link2,target,permission2
+$menulable3,link3,target,permission3
+
+menu2:
+$menu2lable1,link1,target,permission1
+$menu2lable2,link2,target,permission2
+$menu2lable3,link3,target,permission3
+
+
