@@ -403,8 +403,11 @@ public class RequestProcessorProxy extends RequestProcessor
 		{
 			int data;
 
-			streamreader = new BufferedInputStream(new FileInputStream(new File(classloader.getResource(name).getFile())));
-			// classloader.getResourceAsStream(name)
+			System.out.println(getClass().getResource(name).getFile());
+			
+			//streamreader = new BufferedInputStream(new FileInputStream(new File(getClass().getResource(name).getFile())));
+			streamreader = new BufferedInputStream(getClass().getResourceAsStream(name));
+			// classloader.getResourceAsStream(name) 
 
 			while((data = streamreader.read()) != -1)
 			{
@@ -507,7 +510,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			{
 				HttpSession session = request.getSession();
 
-				script = getResource("script/process.js");
+				script = getResource("/script/process.js");
 
 				script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval() * 1000) - (10 * 1000)));
 
