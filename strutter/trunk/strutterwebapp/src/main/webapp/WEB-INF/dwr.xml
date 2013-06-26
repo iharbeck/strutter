@@ -1,0 +1,25 @@
+<!DOCTYPE dwr PUBLIC
+  "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN"
+  "http://www.getahead.ltd.uk/dwr/dwr20.dtd">
+<dwr>
+  <allow>
+<!-- 
+    <create creator="new" javascript="catalog">
+      <param name="class" 
+        value="strutter.action.FormlessAction"/>
+    </create> 
+    <create creator="struts" javascript="forms">
+      <param name="formBean" 
+        value="FormlessAction"/>
+    </create> 
+--> 
+
+    <!--  
+    <convert converter="bean" 
+      match="developerworks.ajax.store.Item">
+      <param name="include" 
+        value="id,name,description,formattedPrice"/>
+    </convert>
+    -->
+  </allow>
+</dwr>
