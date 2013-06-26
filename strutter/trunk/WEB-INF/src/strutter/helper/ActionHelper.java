@@ -384,9 +384,16 @@ public class ActionHelper
 
 	public static ActionForward findForward(String forward) throws ServletException
 	{
-		ActionForward f = getMapping().findForward(forward);
+		ActionMapping mapping = getMapping();
+		
+		if(mapping == null)
+			return new ActionForward(forward);
+		
+		ActionForward f = mapping.findForward(forward);
+		
 		if(f == null)
 			throw new ServletException("missing forward: " + forward);
+		
 		return f;
 	}
 

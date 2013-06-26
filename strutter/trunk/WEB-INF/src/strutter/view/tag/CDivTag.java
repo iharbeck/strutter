@@ -111,7 +111,7 @@ public class CDivTag extends Div
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			//System.out.println(e);
 		}
 	}
 }

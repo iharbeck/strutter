@@ -1,15 +1,9 @@
 package strutter.helper;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-
-import jodd.bean.BeanUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
@@ -18,7 +12,6 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.config.ModuleConfig;
 import org.apache.struts.upload.MultipartRequestHandler;
-import org.apache.struts.upload.MultipartRequestWrapper;
 import org.apache.struts.util.ModuleUtils;
 import org.apache.struts.util.RequestUtils;
 

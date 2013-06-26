@@ -41,7 +41,7 @@ public class MenuHolder
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			//System.out.println(e);
 		}
 	}
 

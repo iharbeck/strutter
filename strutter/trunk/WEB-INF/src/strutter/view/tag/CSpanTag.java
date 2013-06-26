@@ -115,7 +115,7 @@ public class CSpanTag extends Span
 		}
 		catch(Exception e)
 		{
-			System.out.println(e);
+			//System.out.println(e);
 		}
 	}
 
