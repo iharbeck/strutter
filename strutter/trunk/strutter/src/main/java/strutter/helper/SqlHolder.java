@@ -71,7 +71,7 @@ public class SqlHolder
 			if(cline.matches("\\w*:"))
 			{
 				String id = line.replaceAll("[\\s:]", "");
-				buf = new StringBuffer();
+				buf = new StringBuffer(5000);
 				templates.put(id, buf);
 				System.out.println(">>" + id);
 				continue;
@@ -138,7 +138,7 @@ public class SqlHolder
 
 	public String doParameter(String content, HashMap map)
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuffer buf = new StringBuffer(5000);
 
 		Matcher m = patternParameter.matcher(content);
 
