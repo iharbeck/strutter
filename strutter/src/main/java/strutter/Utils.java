@@ -195,7 +195,7 @@ public class Utils
 		/* Look up the existing form bean */
 		if("request".equals(mapping.getScope()))
 		{
-			return null;
+			return request.getAttribute(attribute);
 		}
 
 		HttpSession session = request.getSession(false);
