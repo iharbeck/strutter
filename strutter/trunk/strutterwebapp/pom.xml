@@ -18,9 +18,9 @@
   </build>
   <dependencies>
   	<dependency>
-  		<groupId>strutter</groupId>
+  		<groupId>org.ogni</groupId>
   		<artifactId>strutter</artifactId>
-  		<version>0.7.1</version>
+  		<version>0.7.2</version>
   	</dependency>
   </dependencies>
 </project>
