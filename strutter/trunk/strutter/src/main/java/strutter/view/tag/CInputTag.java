@@ -27,9 +27,9 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.util.MessageResources;
-import org.htmlparser.tags.InputTag;
-import org.htmlparser.util.ParserException;
 
+import strutter.htmlparser.tags.InputTag;
+import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
 
 public class CInputTag extends InputTag

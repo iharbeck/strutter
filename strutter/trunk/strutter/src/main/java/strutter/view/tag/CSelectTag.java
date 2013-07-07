@@ -27,14 +27,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.util.LabelValueBean;
-import org.htmlparser.filters.NodeClassFilter;
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.OptionTag;
-import org.htmlparser.tags.SelectTag;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 import strutter.Utils;
+import strutter.htmlparser.filters.NodeClassFilter;
+import strutter.htmlparser.nodes.TextNode;
+import strutter.htmlparser.tags.OptionTag;
+import strutter.htmlparser.tags.SelectTag;
+import strutter.htmlparser.util.NodeList;
+import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
 
 //TODO my own LabelValueBean
@@ -105,7 +105,10 @@ public class CSelectTag extends SelectTag
 				{
 					OptionTag optionTag = (OptionTag)list.elementAt(i);
 
-					String name = optionTag.getAttribute("id");
+					String name = optionTag.getAttribute("values");
+
+					if(name == null)
+						name = optionTag.getAttribute("id");
 
 					if(name != null)
 					{

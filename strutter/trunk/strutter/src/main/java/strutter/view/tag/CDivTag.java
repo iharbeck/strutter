@@ -19,16 +19,16 @@ package strutter.view.tag;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.Div;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 import strutter.Utils;
 import strutter.helper.ActionHelper;
+import strutter.htmlparser.nodes.TextNode;
+import strutter.htmlparser.tags.DivTag;
+import strutter.htmlparser.util.NodeList;
+import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
 
-public class CDivTag extends Div
+public class CDivTag extends DivTag
 {
 	private static final long serialVersionUID = 1L;
 
@@ -55,7 +55,7 @@ public class CDivTag extends Div
 		if(type == null)
 			return;
 
-		Div div = new Div();
+		DivTag div = new DivTag();
 		div.setTagName("/" + this.getTagName());
 		this.setEndTag(div);
 

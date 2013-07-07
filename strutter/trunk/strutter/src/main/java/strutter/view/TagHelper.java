@@ -12,9 +12,9 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
-import org.htmlparser.Tag;
 
 import strutter.Utils;
+import strutter.htmlparser.nodes.interfaces.Tag;
 
 public class TagHelper
 {

@@ -1,8 +1,8 @@
 package strutter.view.tag;
 
-import org.htmlparser.tags.FormTag;
-import org.htmlparser.tags.InputTag;
-import org.htmlparser.util.ParserException;
+import strutter.htmlparser.tags.FormTag;
+import strutter.htmlparser.tags.InputTag;
+import strutter.htmlparser.util.exception.ParserException;
 
 /**
  * Represents a FORM tag. IGNORE HTML ERROR

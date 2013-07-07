@@ -19,16 +19,16 @@ package strutter.view.tag;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.Span;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
 import strutter.Utils;
 import strutter.helper.ActionHelper;
+import strutter.htmlparser.nodes.TextNode;
+import strutter.htmlparser.tags.SpanTag;
+import strutter.htmlparser.util.NodeList;
+import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
 
-public class CSpanTag extends Span
+public class CSpanTag extends SpanTag
 {
 	private static final long serialVersionUID = 1L;
 
@@ -58,7 +58,7 @@ public class CSpanTag extends Span
 		if(type == null)
 			return;
 
-		Span span = new Span();
+		SpanTag span = new SpanTag();
 		span.setTagName("/" + this.getTagName());
 		this.setEndTag(span);
 
