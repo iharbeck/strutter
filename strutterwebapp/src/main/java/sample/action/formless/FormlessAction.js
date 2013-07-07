@@ -1,0 +1,1 @@
+document.write('scripts loaded');
