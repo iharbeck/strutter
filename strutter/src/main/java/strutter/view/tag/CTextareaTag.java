@@ -18,11 +18,11 @@ package strutter.view.tag;
 
 import javax.servlet.ServletRequest;
 
-import org.htmlparser.nodes.TextNode;
-import org.htmlparser.tags.TextareaTag;
-import org.htmlparser.util.NodeList;
-import org.htmlparser.util.ParserException;
 
+import strutter.htmlparser.nodes.TextNode;
+import strutter.htmlparser.tags.TextareaTag;
+import strutter.htmlparser.util.NodeList;
+import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
 
 public class CTextareaTag extends TextareaTag

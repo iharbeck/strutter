@@ -2,8 +2,8 @@ package strutter.view.tag;
 
 import javax.servlet.ServletRequest;
 
-import org.htmlparser.tags.MetaTag;
-import org.htmlparser.util.ParserException;
+import strutter.htmlparser.tags.MetaTag;
+import strutter.htmlparser.util.exception.ParserException;
 
 /**
  * Represents a FORM tag. IGNORE HTML ERROR

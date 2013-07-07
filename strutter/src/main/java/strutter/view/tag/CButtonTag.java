@@ -4,8 +4,9 @@ import javax.servlet.ServletRequest;
 
 import org.apache.struts.Globals;
 import org.apache.struts.config.ActionConfig;
-import org.htmlparser.tags.CompositeTag;
-import org.htmlparser.util.ParserException;
+
+import strutter.htmlparser.tags.CompositeTag;
+import strutter.htmlparser.util.exception.ParserException;
 
 public class CButtonTag extends CompositeTag
 {

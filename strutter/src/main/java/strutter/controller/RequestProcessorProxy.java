@@ -2,7 +2,6 @@ package strutter.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -34,10 +33,6 @@ import org.apache.struts.chain.contexts.ServletActionContext;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.ModuleConfig;
-import org.htmlparser.Parser;
-import org.htmlparser.PrototypicalNodeFactory;
-import org.htmlparser.tags.OptionTag;
-import org.htmlparser.util.NodeList;
 
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
@@ -46,6 +41,10 @@ import strutter.helper.ActionHelper;
 import strutter.helper.ActionHelperData;
 import strutter.helper.PopulateHelper;
 import strutter.helper.WSActionHelper;
+import strutter.htmlparser.NodeFactory;
+import strutter.htmlparser.Parser;
+import strutter.htmlparser.tags.OptionTag;
+import strutter.htmlparser.util.NodeList;
 import strutter.interceptor.WebInterceptorInterface;
 import strutter.view.tag.CButtonTag;
 import strutter.view.tag.CDivTag;
@@ -329,6 +328,8 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			URL jsscript = classloader.getResource(jspath);
 
+			//System.out.println(jsscript);
+
 			if(jsscript != null)
 			{
 				out.write("<SCRIPT src='strutter.do?js_" + type + "' type='text/javascript'></SCRIPT>\n");
@@ -393,21 +394,38 @@ public class RequestProcessorProxy extends RequestProcessor
 		RequestProcessorProxy.proxyname = proxyname;
 	}
 
+	private String getResource(String name, Class clazz)
+	{
+		BufferedInputStream streamreader = null;
+
+		streamreader = new BufferedInputStream(clazz.getResourceAsStream(name));
+		
+		return getResource(name, streamreader);
+	}
+
 	private String getResource(String name)
 	{
-		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
-
 		BufferedInputStream streamreader = null;
+
+		streamreader = new BufferedInputStream(classloader.getResourceAsStream(name));
+
+		return getResource(name, streamreader);
+	}
+
+	private String getResource(String name, BufferedInputStream streamreader)
+	{
+		StringBuffer stream = new StringBuffer(RequestProcessorProxy.BUFFERSIZE);
 
 		try
 		{
 			int data;
 
-			System.out.println(getClass().getResource(name).getFile());
-			
+			//System.out.println("> xx >" + getClass().getClassLoader().getResource(name).getFile());
+
 			//streamreader = new BufferedInputStream(new FileInputStream(new File(getClass().getResource(name).getFile())));
-			streamreader = new BufferedInputStream(getClass().getResourceAsStream(name));
 			// classloader.getResourceAsStream(name) 
+
+			//System.out.println(streamreader);
 
 			while((data = streamreader.read()) != -1)
 			{
@@ -433,7 +451,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	private BufferedInputStream getResourceAsStream(String name)
 	{
-		BufferedInputStream streamreader = new BufferedInputStream(classloader.getResourceAsStream(name));
+		BufferedInputStream streamreader = new BufferedInputStream(RequestProcessor.class.getResourceAsStream(name));
 
 		return streamreader;
 	}
@@ -444,7 +462,8 @@ public class RequestProcessorProxy extends RequestProcessor
 		{
 			Parser hparser = new Parser();
 
-			PrototypicalNodeFactory factory = new PrototypicalNodeFactory(true);
+			//PrototypicalNodeFactory
+			NodeFactory factory = new NodeFactory();
 
 			if(form == null)
 				form = new Object();
@@ -465,7 +484,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			hparser.setInputHTML(doc);
 
 			//DEBUG System.out.println("P" + System.currentTimeMillis());
-			NodeList nl = hparser.parse(null);
+			NodeList nl = hparser.parse();
 			//DEBUG System.out.println("E" + System.currentTimeMillis());
 
 			return nl.toHtml(); // --as close to original as possible
@@ -510,7 +529,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			{
 				HttpSession session = request.getSession();
 
-				script = getResource("/script/process.js");
+				script = getResource("/script/process.js", RequestProcessor.class);
 
 				script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval() * 1000) - (10 * 1000)));
 
