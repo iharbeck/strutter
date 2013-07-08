@@ -28,243 +28,247 @@ package strutter.htmlparser.util;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-import strutter.htmlparser.filters.NodeClassFilter;
 import strutter.htmlparser.nodes.interfaces.Node;
 
 public class NodeList implements Serializable
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final int INITIAL_CAPACITY=10;
-    //private static final int CAPACITY_INCREMENT=20;
-    private Node nodeData[];
-    private int size;
-    private int capacity;
-    private int capacityIncrement;
+	private static final int INITIAL_CAPACITY = 10;
+	//private static final int CAPACITY_INCREMENT=20;
+	private Node nodeData[];
+	private int size;
+	private int capacity;
+	private int capacityIncrement;
 
-    public NodeList ()
-    {
-        removeAll ();
-    }
-    
-    public void add (Node node)
-    {
-        if (size == capacity)
-            adjustVectorCapacity ();
-        nodeData[size++] = node;
-    }
-    
-    /**
-     * Add another node list to this one.
-     * @param list The list to add.
-     */
-    public void add (NodeList list)
-    {
-        for (int i = 0; i < list.size; i++)
-            add (list.nodeData[i]);
-    }
-    
-    /**
-     * Insert the given node at the head of the list.
-     * @param node The new first element.
-     */
-    public void prepend (Node node)
-    {
-        if (size == capacity)
-            adjustVectorCapacity ();
-        System.arraycopy (nodeData, 0, nodeData, 1, size);
-        size++;
-        nodeData[0]=node;
-    }
-    
-    private void adjustVectorCapacity ()
-    {
-        capacity += capacityIncrement;
-        capacityIncrement *= 2;
-        Node oldData [] = nodeData;
-        nodeData = newNodeArrayFor (capacity);
-        System.arraycopy (oldData, 0, nodeData, 0, size);
-    }
-    
-    private Node[] newNodeArrayFor (int capacity)
-    {
-        return new Node[capacity];
-    }
-    
-    public int size ()
-    {
-        return size;
-    }
-    
-    public Node elementAt (int i)
-    {
-        return nodeData[i];
-    }
-    
-    public SimpleNodeIterator elements ()
-    {
-        return new SimpleNodeIterator ()
-        {
-            int count = 0;
-            
-            public boolean hasMoreNodes ()
-            {
-                return count < size;
-            }
-            
-            public Node nextNode ()
-            {
-                synchronized (NodeList.this)
-                {
-                    if (count < size)
-                    {
-                        return nodeData[count++];
-                    }
-                }
-                throw new NoSuchElementException ("Vector Enumeration");
-            }
-        };
-    }
-    
-    public Node [] toNodeArray ()
-    {
-        Node [] nodeArray = newNodeArrayFor (size);
-        System.arraycopy (nodeData, 0, nodeArray, 0, size);
-        return nodeArray;
-    }
-    
-    public void copyToNodeArray (Node[] array)
-    {
-        System.arraycopy (nodeData, 0, array, 0, size);
-    }
-    
-    /**
-     * Convert this nodelist into the equivalent HTML.
-     * @param verbatim If <code>true</code> return as close to the original
-     * page text as possible.
-     * @return The contents of the list as HTML text.
-     */
-    public String toHtml (boolean verbatim)
-    {
-        StringBuffer ret;
-        
-        ret = new StringBuffer ();
-        for (int i = 0; i < size; i++)
-            ret.append (nodeData[i].toHtml (verbatim));
+	public NodeList()
+	{
+		removeAll();
+	}
 
-        return (ret.toString ());
-    }
+	public void add(Node node)
+	{
+		if(size == capacity)
+			adjustVectorCapacity();
+		nodeData[size++] = node;
+	}
 
-    /**
-     * Convert this nodelist into the equivalent HTML.
-     * @return The contents of the list as HTML text.
-     */
-    public String toHtml ()
-    {
-        return (toHtml (false));
-    }
+	/**
+	 * Add another node list to this one.
+	 * @param list The list to add.
+	 */
+	public void add(NodeList list)
+	{
+		for(int i = 0; i < list.size; i++)
+			add(list.nodeData[i]);
+	}
 
-    /**
-     * Remove the node at index.
-     * @param index The index of the node to remove.
-     * @return The node that was removed.
-     */
-    public Node remove (int index)
-    {
-        Node ret;
+	/**
+	 * Insert the given node at the head of the list.
+	 * @param node The new first element.
+	 */
+	public void prepend(Node node)
+	{
+		if(size == capacity)
+			adjustVectorCapacity();
+		System.arraycopy(nodeData, 0, nodeData, 1, size);
+		size++;
+		nodeData[0] = node;
+	}
 
-        ret = nodeData[index];
-        System.arraycopy (nodeData, index+1, nodeData, index, size - index - 1);
-        nodeData[size-1] = null;
-        size--;
+	private void adjustVectorCapacity()
+	{
+		capacity += capacityIncrement;
+		capacityIncrement *= 2;
+		Node oldData[] = nodeData;
+		nodeData = newNodeArrayFor(capacity);
+		System.arraycopy(oldData, 0, nodeData, 0, size);
+	}
 
-        return (ret);
-    }
-    
-    public void removeAll ()
-    {
-        size = 0;
-        capacity = INITIAL_CAPACITY;
-        nodeData = newNodeArrayFor (capacity);
-        capacityIncrement = capacity * 2;
-    }
-    
-    /**
-     * Finds the index of the supplied Node.
-     * @param node The node to look for.
-     * @return The index of the node in the list or -1 if it isn't found.
-     */
-    public int indexOf (Node node)
-    {
-        int ret;
+	private Node[] newNodeArrayFor(int capacity)
+	{
+		return new Node[capacity];
+	}
 
-        ret = -1;
-        for (int i = 0; (i < size) && (-1 == ret); i++)
-            if (nodeData[i].equals (node))
-                ret = i;
+	public int size()
+	{
+		return size;
+	}
 
-        return (ret);
-    }
-    
-    /**
-     * Return the contents of the list as a string.
-     * Suitable for debugging.
-     * @return A string representation of the list. 
-     */
-    public String toString()
-    {
-        StringBuffer ret;
-        
-        ret = new StringBuffer ();
-        for (int i = 0; i < size; i++)
-            ret.append (nodeData[i]);
+	public Node elementAt(int i)
+	{
+		return nodeData[i];
+	}
 
-        return (ret.toString ());
-    }
+	public SimpleNodeIterator elements()
+	{
+		return new SimpleNodeIterator()
+		{
+			int count = 0;
 
-    /**
-     * Filter the list with the given filter non-recursively.
-     * @param filter The filter to use.
-     * @return A new node array containing the nodes accepted by the filter.
-     * This is a linear list and preserves the nested structure of the returned
-     * nodes only.
-     */
-    public NodeList extractAllNodesThatMatch (NodeClassFilter filter)
-    {
-        return (extractAllNodesThatMatch (filter, false));
-    }
+			public boolean hasMoreNodes()
+			{
+				return count < size;
+			}
 
-    /**
-     * Filter the list with the given filter.
-     * @param filter The filter to use.
-     * @param recursive If <code>true<code> digs into the children recursively.
-     * @return A new node array containing the nodes accepted by the filter.
-     * This is a linear list and preserves the nested structure of the returned
-     * nodes only.
-     */
-    public NodeList extractAllNodesThatMatch (NodeClassFilter filter, boolean recursive)
-    {
-        Node node;
-        NodeList children;
-        NodeList ret;
+			public Node nextNode()
+			{
+				synchronized(NodeList.this)
+				{
+					if(count < size)
+					{
+						return nodeData[count++];
+					}
+				}
+				throw new NoSuchElementException("Vector Enumeration");
+			}
+		};
+	}
 
-        ret = new NodeList ();
-        for (int i = 0; i < size; i++)
-        {
-            node = nodeData[i];
-            if (filter.accept (node))
-                ret.add (node);
-            if (recursive)
-            {
-                children = node.getChildren ();
-                if (null != children)
-                    ret.add (children.extractAllNodesThatMatch (filter, recursive));
-            }
-        }
+	public Node[] toNodeArray()
+	{
+		Node[] nodeArray = newNodeArrayFor(size);
+		System.arraycopy(nodeData, 0, nodeArray, 0, size);
+		return nodeArray;
+	}
 
-        return (ret);
-    }
+	public void copyToNodeArray(Node[] array)
+	{
+		System.arraycopy(nodeData, 0, array, 0, size);
+	}
+
+	/**
+	 * Convert this nodelist into the equivalent HTML.
+	 * @param verbatim If <code>true</code> return as close to the original
+	 * page text as possible.
+	 * @return The contents of the list as HTML text.
+	 */
+	public String toHtml(boolean verbatim)
+	{
+		StringBuffer ret;
+
+		ret = new StringBuffer();
+		for(int i = 0; i < size; i++)
+			ret.append(nodeData[i].toHtml(verbatim));
+
+		return(ret.toString());
+	}
+
+	/**
+	 * Convert this nodelist into the equivalent HTML.
+	 * @return The contents of the list as HTML text.
+	 */
+	public String toHtml()
+	{
+		return(toHtml(false));
+	}
+
+	/**
+	 * Remove the node at index.
+	 * @param index The index of the node to remove.
+	 * @return The node that was removed.
+	 */
+	public Node remove(int index)
+	{
+		Node ret;
+
+		ret = nodeData[index];
+		System.arraycopy(nodeData, index + 1, nodeData, index, size - index - 1);
+		nodeData[size - 1] = null;
+		size--;
+
+		return(ret);
+	}
+
+	public void removeAll()
+	{
+		size = 0;
+		capacity = INITIAL_CAPACITY;
+		nodeData = newNodeArrayFor(capacity);
+		capacityIncrement = capacity * 2;
+	}
+
+	/**
+	 * Finds the index of the supplied Node.
+	 * @param node The node to look for.
+	 * @return The index of the node in the list or -1 if it isn't found.
+	 */
+	public int indexOf(Node node)
+	{
+		int ret;
+
+		ret = -1;
+		for(int i = 0; (i < size) && (-1 == ret); i++)
+			if(nodeData[i].equals(node))
+				ret = i;
+
+		return(ret);
+	}
+
+	/**
+	 * Return the contents of the list as a string.
+	 * Suitable for debugging.
+	 * @return A string representation of the list. 
+	 */
+	public String toString()
+	{
+		StringBuffer ret;
+
+		ret = new StringBuffer();
+		for(int i = 0; i < size; i++)
+			ret.append(nodeData[i]);
+
+		return(ret.toString());
+	}
+
+	/**
+	 * Filter the list with the given filter non-recursively.
+	 * @param filter The filter to use.
+	 * @return A new node array containing the nodes accepted by the filter.
+	 * This is a linear list and preserves the nested structure of the returned
+	 * nodes only.
+	 */
+	public NodeList extractAllNodesThatMatchClass(Class clazz)
+	{
+		return(extractAllNodesThatMatchClass(clazz, false));
+	}
+
+	/**
+	 * Filter the list with the given filter.
+	 * @param filter The filter to use.
+	 * @param recursive If <code>true<code> digs into the children recursively.
+	 * @return A new node array containing the nodes accepted by the filter.
+	 * This is a linear list and preserves the nested structure of the returned
+	 * nodes only.
+	 */
+	public NodeList extractAllNodesThatMatchClass(Class clazz, boolean recursive)
+	{
+		Node node;
+		NodeList children;
+		NodeList ret;
+
+		ret = new NodeList();
+		for(int i = 0; i < size; i++)
+		{
+			node = nodeData[i];
+			if(accept(node, clazz))
+				ret.add(node);
+			if(recursive)
+			{
+				children = node.getChildren();
+				if(null != children)
+					ret.add(children.extractAllNodesThatMatchClass(clazz, recursive));
+			}
+		}
+
+		return(ret);
+	}
+
+	public final boolean accept(Node node, Class clazz)
+	{
+		return((null != clazz) && clazz.isAssignableFrom(node.getClass()));
+	}
 
 }

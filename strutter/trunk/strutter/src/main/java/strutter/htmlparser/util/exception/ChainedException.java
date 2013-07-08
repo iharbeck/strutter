@@ -60,107 +60,108 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 public class ChainedException
-  extends Exception
+        extends Exception
 {
-  /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-protected Throwable throwable;
+	protected Throwable throwable;
 
-  public ChainedException() {}
+	public ChainedException()
+	{
+	}
 
-  public ChainedException(String message)
-  {
-    super(message);
-  }
+	public ChainedException(String message)
+	{
+		super(message);
+	}
 
-  public ChainedException(Throwable throwable)
-  {
-    this.throwable = throwable;
-  }
+	public ChainedException(Throwable throwable)
+	{
+		this.throwable = throwable;
+	}
 
-  public ChainedException(String message, Throwable throwable)
-  {
-    super(message);
-    this.throwable = throwable;
-  }
+	public ChainedException(String message, Throwable throwable)
+	{
+		super(message);
+		this.throwable = throwable;
+	}
 
-  public String[] getMessageChain()
-  {
-    Vector<String> list = getMessageList();
-    String[] chain = new String[list.size()];
-    list.copyInto (chain);
-    return chain;
-  }
+	public String[] getMessageChain()
+	{
+		Vector<String> list = getMessageList();
+		String[] chain = new String[list.size()];
+		list.copyInto(chain);
+		return chain;
+	}
 
-  public Vector<String> getMessageList()
-  {
-    Vector<String> list = new Vector<String> ();
-    list.addElement(getMessage());
-    if (throwable != null)
-    {
-      if (throwable instanceof ChainedException)
-      {
-        ChainedException chain = (ChainedException)throwable;
-        Vector<String> sublist = chain.getMessageList ();
-        for (int i = 0; i < sublist.size (); i++)
-            list.addElement (sublist.elementAt (i));
-      }
-      else
-      {
-        String message = throwable.getMessage();
-        if (message != null && !message.equals(""))
-        {
-          list.addElement (message);
-        }
-      }
-    }
-    return list;
-  }
+	public Vector<String> getMessageList()
+	{
+		Vector<String> list = new Vector<String>();
+		list.addElement(getMessage());
+		if(throwable != null)
+		{
+			if(throwable instanceof ChainedException)
+			{
+				ChainedException chain = (ChainedException)throwable;
+				Vector<String> sublist = chain.getMessageList();
+				for(int i = 0; i < sublist.size(); i++)
+					list.addElement(sublist.elementAt(i));
+			}
+			else
+			{
+				String message = throwable.getMessage();
+				if(message != null && !message.equals(""))
+				{
+					list.addElement(message);
+				}
+			}
+		}
+		return list;
+	}
 
-  public Throwable getThrowable()
-  {
-    return throwable;
-  }
+	public Throwable getThrowable()
+	{
+		return throwable;
+	}
 
-  public void printStackTrace()
-  {
-    printStackTrace(System.err);
-  }
+	public void printStackTrace()
+	{
+		printStackTrace(System.err);
+	}
 
-  public void printStackTrace(PrintStream out)
-  {
-    synchronized (out)
-    {
-      if (throwable != null)
-      {
-        out.println(getClass().getName() +
-          ": " + getMessage() + ";");
-        throwable.printStackTrace(out);
-      }
-      else
-      {
-        super.printStackTrace(out);
-      }
-    }
-  }
+	public void printStackTrace(PrintStream out)
+	{
+		synchronized(out)
+		{
+			if(throwable != null)
+			{
+				out.println(getClass().getName() +
+				        ": " + getMessage() + ";");
+				throwable.printStackTrace(out);
+			}
+			else
+			{
+				super.printStackTrace(out);
+			}
+		}
+	}
 
-  public void printStackTrace(PrintWriter out)
-  {
-    synchronized (out)
-    {
-      if (throwable != null)
-      {
-        out.println(getClass().getName() +
-          ": " + getMessage() + ";");
-        throwable.printStackTrace(out);
-      }
-      else
-      {
-        super.printStackTrace(out);
-      }
-    }
-  }
+	public void printStackTrace(PrintWriter out)
+	{
+		synchronized(out)
+		{
+			if(throwable != null)
+			{
+				out.println(getClass().getName() +
+				        ": " + getMessage() + ";");
+				throwable.printStackTrace(out);
+			}
+			else
+			{
+				super.printStackTrace(out);
+			}
+		}
+	}
 }
-

@@ -31,31 +31,31 @@ import strutter.htmlparser.nodes.TagNode;
  * An input tag in a form.
  */
 public class InputTag
-    extends
+        extends
         TagNode
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-     * The set of names handled by this tag.
-     */
-    private static final String[] mIds = new String[] {"INPUT"};
+	 * The set of names handled by this tag.
+	 */
+	private static final String[] mIds = new String[] { "INPUT" };
 
-    /**
-     * Create a new input tag.
-     */
-    public InputTag ()
-    {
-    }
+	/**
+	 * Create a new input tag.
+	 */
+	public InputTag()
+	{
+	}
 
-    /**
-     * Return the set of names handled by this tag.
-     * @return The names to be matched that create tags of this type.
-     */
-    public String[] getIds ()
-    {
-        return (mIds);
-    }
+	/**
+	 * Return the set of names handled by this tag.
+	 * @return The names to be matched that create tags of this type.
+	 */
+	public String[] getIds()
+	{
+		return(mIds);
+	}
 }

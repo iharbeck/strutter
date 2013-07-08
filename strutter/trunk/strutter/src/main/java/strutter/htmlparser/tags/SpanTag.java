@@ -30,28 +30,28 @@ package strutter.htmlparser.tags;
  */
 public class SpanTag extends CompositeTag
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-     * The set of names handled by this tag.
-     */
-    private static final String[] mIds = new String[] {"SPAN"};
+	 * The set of names handled by this tag.
+	 */
+	private static final String[] mIds = new String[] { "SPAN" };
 
-    /**
-     * Create a new span tag.
-     */
-    public SpanTag ()
-    {
-    }
+	/**
+	 * Create a new span tag.
+	 */
+	public SpanTag()
+	{
+	}
 
-    /**
-     * Return the set of names handled by this tag.
-     * @return The names to be matched that create tags of this type.
-     */
-    public String[] getIds ()
-    {
-        return (mIds);
-    }
+	/**
+	 * Return the set of names handled by this tag.
+	 * @return The names to be matched that create tags of this type.
+	 */
+	public String[] getIds()
+	{
+		return(mIds);
+	}
 }

@@ -39,36 +39,36 @@ import strutter.htmlparser.util.exception.ParserException;
  * Use TagScanner when you have a meta task to do like setting the BASE url for
  * the page when a BASE tag is encountered.
  * If you want to match end tags and handle special syntax between tags,
- * then you'll probably want to subclass {@link CompositeTagScanner} instead.
+ * then you'll probably want to subclass {@link ScannerCompositeTag} instead.
  */
-public class TagScanner implements Scanner, Serializable
+public class ScannerTag implements Scanner, Serializable
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * Create a (non-composite) tag scanner.
-     */
-    public TagScanner ()
-    {
-    }
+	 * Create a (non-composite) tag scanner.
+	 */
+	public ScannerTag()
+	{
+	}
 
-    /**
-     * Scan the tag.
-     * For this implementation, the only operation is to perform the tag's
-     * semantic action.
-     * @param tag The tag to scan.
-     * @param lexer Provides html page access.
-     * @param stack The parse stack. May contain pending tags that enclose
-     * this tag.
-     * @return The resultant tag (may be unchanged).
-     */
-    public Tag scan (Tag tag, Lexer lexer, NodeList stack) throws ParserException
-    {
-        tag.doSemanticAction ();
+	/**
+	 * Scan the tag.
+	 * For this implementation, the only operation is to perform the tag's
+	 * semantic action.
+	 * @param tag The tag to scan.
+	 * @param lexer Provides html page access.
+	 * @param stack The parse stack. May contain pending tags that enclose
+	 * this tag.
+	 * @return The resultant tag (may be unchanged).
+	 */
+	public Tag scan(Tag tag, Lexer lexer, NodeList stack) throws ParserException
+	{
+		tag.doSemanticAction();
 
-        return (tag);
-    }
+		return(tag);
+	}
 }

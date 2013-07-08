@@ -34,140 +34,140 @@ import strutter.htmlparser.util.sort.Ordered;
  * This class remembers the page it came from and its position within the page.
  */
 public class Cursor
-    implements
+        implements
         Serializable,
         Ordered,
         Cloneable
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * This cursor's position.
-     */
-    protected int mPosition;
+	 * This cursor's position.
+	 */
+	protected int mPosition;
 
-    /**
-     * This cursor's page.
-     */
-    protected Page mPage;
+	/**
+	 * This cursor's page.
+	 */
+	protected Page mPage;
 
-    /**
-     * Construct a <code>Cursor</code> from the page and position given.
-     * @param page The page this cursor is on.
-     * @param offset The character offset within the page.
-     */
-    public Cursor (Page page, int offset)
-    {
-        mPage = page;
-        mPosition = offset;
-    }
+	/**
+	 * Construct a <code>Cursor</code> from the page and position given.
+	 * @param page The page this cursor is on.
+	 * @param offset The character offset within the page.
+	 */
+	public Cursor(Page page, int offset)
+	{
+		mPage = page;
+		mPosition = offset;
+	}
 
-    /**
-     * Get this cursor's page.
-     * @return The page associated with this cursor.
-     */
-    public Page getPage ()
-    {
-        return (mPage);
-    }
+	/**
+	 * Get this cursor's page.
+	 * @return The page associated with this cursor.
+	 */
+	public Page getPage()
+	{
+		return(mPage);
+	}
 
-    /**
-     * Get the position of this cursor.
-     * @return The cursor position.
-     */
-    public int getPosition ()
-    {
-        return (mPosition);
-    }
+	/**
+	 * Get the position of this cursor.
+	 * @return The cursor position.
+	 */
+	public int getPosition()
+	{
+		return(mPosition);
+	}
 
-    /**
-     * Set the position of this cursor.
-     * @param position The new cursor position.
-     */
-    public void setPosition (int position)
-    {
-        mPosition = position;
-    }
+	/**
+	 * Set the position of this cursor.
+	 * @param position The new cursor position.
+	 */
+	public void setPosition(int position)
+	{
+		mPosition = position;
+	}
 
-    /**
-     * Move the cursor position ahead one character.
-     */
-    public void advance ()
-    {
-        mPosition++;
-    }
+	/**
+	 * Move the cursor position ahead one character.
+	 */
+	public void advance()
+	{
+		mPosition++;
+	}
 
-    /**
-     * Move the cursor position back one character.
-     */
-    public void retreat ()
-    {
-        mPosition--;
-        if (0 > mPosition)
-            mPosition = 0;
-    }
+	/**
+	 * Move the cursor position back one character.
+	 */
+	public void retreat()
+	{
+		mPosition--;
+		if(0 > mPosition)
+			mPosition = 0;
+	}
 
-    /**
-     * Make a new cursor just like this one.
-     * @return The new cursor positioned where <code>this</code> one is,
-     * and referring to the same page.
-     */
-    public Cursor dup ()
-    {
-        try
-        {
-            return ((Cursor)clone ());
-        }
-        catch (CloneNotSupportedException cnse)
-        {
-            return (new Cursor (getPage (), getPosition ()));
-        }
-    }
+	/**
+	 * Make a new cursor just like this one.
+	 * @return The new cursor positioned where <code>this</code> one is,
+	 * and referring to the same page.
+	 */
+	public Cursor dup()
+	{
+		try
+		{
+			return((Cursor)clone());
+		}
+		catch(CloneNotSupportedException cnse)
+		{
+			return(new Cursor(getPage(), getPosition()));
+		}
+	}
 
-    /**
-     * Return a string representation of this cursor
-     * @return A string of the form "n[r,c]", where n is the character position,
-     * r is the row (zero based) and c is the column (zero based) on the page.
-     */
-    public String toString ()
-    {
-        StringBuffer ret;
+	/**
+	 * Return a string representation of this cursor
+	 * @return A string of the form "n[r,c]", where n is the character position,
+	 * r is the row (zero based) and c is the column (zero based) on the page.
+	 */
+	public String toString()
+	{
+		StringBuffer ret;
 
-        ret = new StringBuffer (9 * 3 + 3); // three ints and delimiters
-        ret.append (getPosition ());
-        ret.append ("[");
-        if (null != mPage)
-            ret.append (mPage.row (this));
-        else
-            ret.append ("?");
-        ret.append (",");
-        if (null != mPage)
-            ret.append (mPage.column (this));
-        else
-            ret.append ("?");
-        ret.append ("]");
+		ret = new StringBuffer(9 * 3 + 3); // three ints and delimiters
+		ret.append(getPosition());
+		ret.append("[");
+		if(null != mPage)
+			ret.append(mPage.row(this));
+		else
+			ret.append("?");
+		ret.append(",");
+		if(null != mPage)
+			ret.append(mPage.column(this));
+		else
+			ret.append("?");
+		ret.append("]");
 
-        return (ret.toString ());
-    }
+		return(ret.toString());
+	}
 
-    //
-    // Ordered interface
-    //
+	//
+	// Ordered interface
+	//
 
-    /**
-     * Compare one reference to another.
-     * @param that The object to compare this to.
-     * @return A negative integer, zero, or a positive
-     * integer as this object is less than, equal to,
-     * or greater than that object.
-     * @see strutter.htmlparser.util.sort.Ordered
-     */
-    public int compare (Object that)
-    {
-        Cursor r = (Cursor)that;
-        return (getPosition () - r.getPosition ());
-    }
+	/**
+	 * Compare one reference to another.
+	 * @param that The object to compare this to.
+	 * @return A negative integer, zero, or a positive
+	 * integer as this object is less than, equal to,
+	 * or greater than that object.
+	 * @see strutter.htmlparser.util.sort.Ordered
+	 */
+	public int compare(Object that)
+	{
+		Cursor r = (Cursor)that;
+		return(getPosition() - r.getPosition());
+	}
 }

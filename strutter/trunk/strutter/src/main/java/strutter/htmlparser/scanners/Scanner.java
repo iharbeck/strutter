@@ -39,15 +39,15 @@ import strutter.htmlparser.util.exception.ParserException;
  */
 public interface Scanner
 {
-    /**
-     * Scan the tag.
-     * The Lexer is provided in order to do a lookahead operation.
-     * @param tag HTML tag to be scanned for identification.
-     * @param lexer Provides html page access.
-     * @param stack The parse stack. May contain pending tags that enclose
-     * this tag. Nodes on the stack should be considered incomplete.
-     * @return The resultant tag (may be unchanged).
-     * @exception ParserException if an unrecoverable problem occurs.
-     */
-    public Tag scan (Tag tag, Lexer lexer, NodeList stack) throws ParserException;
+	/**
+	 * Scan the tag.
+	 * The Lexer is provided in order to do a lookahead operation.
+	 * @param tag HTML tag to be scanned for identification.
+	 * @param lexer Provides html page access.
+	 * @param stack The parse stack. May contain pending tags that enclose
+	 * this tag. Nodes on the stack should be considered incomplete.
+	 * @return The resultant tag (may be unchanged).
+	 * @exception ParserException if an unrecoverable problem occurs.
+	 */
+	public Tag scan(Tag tag, Lexer lexer, NodeList stack) throws ParserException;
 }
