@@ -33,7 +33,7 @@ import org.w3c.dom.traversal.NodeFilter;
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
 import strutter.htmlparser.nodes.interfaces.Node;
-import strutter.htmlparser.util.IteratorImpl;
+import strutter.htmlparser.util.NodeIteratorImpl;
 import strutter.htmlparser.util.NodeIterator;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
@@ -272,7 +272,7 @@ public class Parser implements Serializable
 	 */
 	public NodeIterator elements() throws ParserException
 	{
-		return(new IteratorImpl(mLexer));
+		return(new NodeIteratorImpl(mLexer));
 	}
 
 	/**

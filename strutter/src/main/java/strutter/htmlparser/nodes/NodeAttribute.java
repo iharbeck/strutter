@@ -207,7 +207,7 @@ import java.io.Serializable;
  * </cite>
  * <p>
  */
-public class Attribute implements Serializable
+public class NodeAttribute implements Serializable
 {
 	/**
 	 * 
@@ -252,7 +252,7 @@ public class Attribute implements Serializable
 	 * @param value The value of this attribute.
 	 * @param quote The quote around the value of this attribute.
 	 */
-	public Attribute(String name, String assignment, String value, char quote)
+	public NodeAttribute(String name, String assignment, String value, char quote)
 	{
 		setName(name);
 		setAssignment(assignment);
@@ -274,7 +274,7 @@ public class Attribute implements Serializable
 	 * @param value The value of this attribute.
 	 * @param quote The quote around the value of this attribute.
 	 */
-	public Attribute(String name, String value, char quote)
+	public NodeAttribute(String name, String value, char quote)
 	{
 		this(name, (null == value ? "" : "="), value, quote);
 	}
@@ -285,7 +285,7 @@ public class Attribute implements Serializable
 	 * @exception IllegalArgumentException if the value contains other than
 	 * whitespace. To set a real value use {@link #Attribute(String,String)}.
 	 */
-	public Attribute(String value)
+	public NodeAttribute(String value)
 	        throws
 	        IllegalArgumentException
 	{
@@ -308,7 +308,7 @@ public class Attribute implements Serializable
 	 * @param name The name of this attribute.
 	 * @param value The value of this attribute.
 	 */
-	public Attribute(String name, String value)
+	public NodeAttribute(String name, String value)
 	{
 		this(name, (null == value ? "" : "="), value, (char)0);
 	}
@@ -320,7 +320,7 @@ public class Attribute implements Serializable
 	 * @param assignment The assignment string of this attribute.
 	 * @param value The value of this attribute.
 	 */
-	public Attribute(String name, String assignment, String value)
+	public NodeAttribute(String name, String assignment, String value)
 	{
 		this(name, assignment, value, (char)0);
 	}
@@ -330,7 +330,7 @@ public class Attribute implements Serializable
 	 * This will provide "" from the {@link #toString} and
 	 * {@link #toString(StringBuffer)} methods.
 	 */
-	public Attribute()
+	public NodeAttribute()
 	{
 		this(null, null, null, (char)0);
 	}

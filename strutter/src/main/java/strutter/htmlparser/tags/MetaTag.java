@@ -26,7 +26,7 @@
 package strutter.htmlparser.tags;
 
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.Attribute;
+import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.util.exception.ParserException;
 
@@ -98,12 +98,12 @@ public class MetaTag
 	 */
 	public void setHttpEquiv(String httpEquiv)
 	{
-		Attribute equiv;
+		NodeAttribute equiv;
 		equiv = getAttributeEx("HTTP-EQUIV");
 		if(null != equiv)
 			equiv.setValue(httpEquiv);
 		else
-			getAttributesEx().add(new Attribute("HTTP-EQUIV", httpEquiv));
+			getAttributesEx().add(new NodeAttribute("HTTP-EQUIV", httpEquiv));
 	}
 
 	/**
@@ -112,12 +112,12 @@ public class MetaTag
 	 */
 	public void setMetaTagContents(String metaTagContents)
 	{
-		Attribute content;
+		NodeAttribute content;
 		content = getAttributeEx("CONTENT");
 		if(null != content)
 			content.setValue(metaTagContents);
 		else
-			getAttributesEx().add(new Attribute("CONTENT", metaTagContents));
+			getAttributesEx().add(new NodeAttribute("CONTENT", metaTagContents));
 	}
 
 	/**
@@ -126,12 +126,12 @@ public class MetaTag
 	 */
 	public void setMetaTagName(String metaTagName)
 	{
-		Attribute name;
+		NodeAttribute name;
 		name = getAttributeEx("NAME");
 		if(null != name)
 			name.setValue(metaTagName);
 		else
-			getAttributesEx().add(new Attribute("NAME", metaTagName));
+			getAttributesEx().add(new NodeAttribute("NAME", metaTagName));
 	}
 
 	/**

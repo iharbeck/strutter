@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.Attribute;
+import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.RemarkNode;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.nodes.TextNode;
@@ -296,9 +296,9 @@ public class NodeFactory
 	 * @param attributes The attributes contained in this tag.
 	 * @return A tag node comprising the indicated characters from the page.
 	 */
-	public Tag createTagNode(Page page, int start, int end, Vector<Attribute> attributes)
+	public Tag createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
 	{
-		Attribute attribute;
+		NodeAttribute attribute;
 		String id;
 		Tag prototype;
 		Tag ret;

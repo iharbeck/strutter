@@ -34,12 +34,12 @@ import strutter.htmlparser.scanners.Scanner;
 import strutter.htmlparser.util.NodeIterator;
 import strutter.htmlparser.util.exception.ParserException;
 
-public class IteratorImpl implements NodeIterator
+public class NodeIteratorImpl implements NodeIterator
 {
 	Lexer mLexer;
 	Cursor mCursor;
 
-	public IteratorImpl(Lexer lexer)
+	public NodeIteratorImpl(Lexer lexer)
 	{
 		mLexer = lexer;
 		mCursor = new Cursor(mLexer.getPage(), 0);

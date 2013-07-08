@@ -27,7 +27,7 @@ package strutter.htmlparser.nodes.interfaces;
 
 import java.util.Vector;
 
-import strutter.htmlparser.nodes.Attribute;
+import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.scanners.Scanner;
 
 /**
@@ -78,7 +78,7 @@ public interface Tag extends Node
 	 * not exist.
 	 * @see #setAttributeEx
 	 */
-	Attribute getAttributeEx(String name);
+	NodeAttribute getAttributeEx(String name);
 
 	/**
 	 * Set an attribute.
@@ -87,14 +87,14 @@ public interface Tag extends Node
 	 * @param attribute The attribute to set.
 	 * @see #getAttributeEx
 	 */
-	void setAttributeEx(Attribute attribute);
+	void setAttributeEx(NodeAttribute attribute);
 
 	/**
 	 * Gets the attributes in the tag.
-	 * @return Returns the list of {@link Attribute Attributes} in the tag.
+	 * @return Returns the list of {@link NodeAttribute Attributes} in the tag.
 	 * @see #setAttributesEx
 	 */
-	Vector<Attribute> getAttributesEx();
+	Vector<NodeAttribute> getAttributesEx();
 
 	/**
 	 * Sets the attributes.
@@ -104,7 +104,7 @@ public interface Tag extends Node
 	 * @param attribs The attribute collection to set.
 	 * @see #getAttributesEx
 	 */
-	void setAttributesEx(Vector<Attribute> attribs);
+	void setAttributesEx(Vector<NodeAttribute> attribs);
 
 	/**
 	 * Return the name of this tag.
