@@ -34,199 +34,199 @@ import strutter.htmlparser.util.exception.ParserException;
  * Normal text in the HTML document is represented by this class.
  */
 public class TextNode
-    extends
+        extends
         AbstractNode
-    implements
+        implements
         Text
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-     * The contents of the string node, or override text.
-     */
-    protected String mText;
+	 * The contents of the string node, or override text.
+	 */
+	protected String mText;
 
-    /**
-     * Constructor takes in the text string.
-     * @param text The string node text. For correct generation of HTML, this
-     * should not contain representations of tags (unless they are balanced).
-     */
-    public TextNode (String text)
-    {
-        super (null, 0, 0);
-        setText (text);
-    }
+	/**
+	 * Constructor takes in the text string.
+	 * @param text The string node text. For correct generation of HTML, this
+	 * should not contain representations of tags (unless they are balanced).
+	 */
+	public TextNode(String text)
+	{
+		super(null, 0, 0);
+		setText(text);
+	}
 
-    /**
-     * Constructor takes in the page and beginning and ending posns.
-     * @param page The page this string is on.
-     * @param start The beginning position of the string.
-     * @param end The ending positiong of the string.
-     */
-    public TextNode (Page page, int start, int end)
-    {
-        super (page, start, end);
-        mText = null;
-    }
+	/**
+	 * Constructor takes in the page and beginning and ending posns.
+	 * @param page The page this string is on.
+	 * @param start The beginning position of the string.
+	 * @param end The ending positiong of the string.
+	 */
+	public TextNode(Page page, int start, int end)
+	{
+		super(page, start, end);
+		mText = null;
+	}
 
-    /**
-     * Returns the text of the node.
-     * This is the same as {@link #toHtml} for this type of node.
-     * @return The contents of this text node.
-     */
-    public String getText ()
-    {
-        return (toHtml ());
-    }
+	/**
+	 * Returns the text of the node.
+	 * This is the same as {@link #toHtml} for this type of node.
+	 * @return The contents of this text node.
+	 */
+	public String getText()
+	{
+		return(toHtml());
+	}
 
-    /**
-     * Sets the string contents of the node.
-     * @param text The new text for the node.
-     */
-    public void setText (String text)
-    {
-        mText = text;
-        nodeBegin = 0;
-        nodeEnd = mText.length ();
-    }
+	/**
+	 * Sets the string contents of the node.
+	 * @param text The new text for the node.
+	 */
+	public void setText(String text)
+	{
+		mText = text;
+		nodeBegin = 0;
+		nodeEnd = mText.length();
+	}
 
-    /**
-     * Returns the text of the node.
-     * This is the same as {@link #toHtml} for this type of node.
-     * @return The contents of this text node.
-     */
-    public String toPlainTextString ()
-    {
-        return (toHtml ());
-    }
+	/**
+	 * Returns the text of the node.
+	 * This is the same as {@link #toHtml} for this type of node.
+	 * @return The contents of this text node.
+	 */
+	public String toPlainTextString()
+	{
+		return(toHtml());
+	}
 
-    /**
-     * Returns the text of the node.
-     * @param verbatim If <code>true</code> return as close to the original
-     * page text as possible.
-     * @return The contents of this text node.
-     */
-    public String toHtml (boolean verbatim)
-    {
-        String ret;
-        
-        ret = mText;
-        if (null == ret)
-            ret = mPage.getText (getStartPosition (),  getEndPosition ());
+	/**
+	 * Returns the text of the node.
+	 * @param verbatim If <code>true</code> return as close to the original
+	 * page text as possible.
+	 * @return The contents of this text node.
+	 */
+	public String toHtml(boolean verbatim)
+	{
+		String ret;
 
-        return (ret);
-    }
+		ret = mText;
+		if(null == ret)
+			ret = mPage.getText(getStartPosition(), getEndPosition());
 
-    /**
-     * Express this string node as a printable string
-     * This is suitable for display in a debugger or output to a printout.
-     * Control characters are replaced by their equivalent escape
-     * sequence and contents is truncated to 80 characters.
-     * @return A string representation of the string node.
-     */
-    public String toString ()
-    {
-        int startpos;
-        int endpos;
-        Cursor start;
-        Cursor end;
-        char c;
-        StringBuffer ret;
+		return(ret);
+	}
 
-        startpos = getStartPosition ();
-        endpos = getEndPosition ();
-        ret = new StringBuffer (endpos - startpos + 20);
-        if (null == mText)
-        {
-            start = new Cursor (getPage (), startpos);
-            end = new Cursor (getPage (), endpos);
-            ret.append ("Txt (");
-            ret.append (start);
-            ret.append (",");
-            ret.append (end);
-            ret.append ("): ");
-            while (start.getPosition () < endpos)
-            {
-                try
-                {
-                    c = mPage.getCharacter (start);
-                    switch (c)
-                    {
-                        case '\t':
-                            ret.append ("\\t");
-                            break;
-                        case '\n':
-                            ret.append ("\\n");
-                            break;
-                        case '\r':
-                            ret.append ("\\r");
-                            break;
-                        default:
-                            ret.append (c);
-                    }
-                }
-                catch (ParserException pe)
-                {
-                    // not really expected, but we're only doing toString, so ignore
-                }
-                if (77 <= ret.length ())
-                {
-                    ret.append ("...");
-                    break;
-                }
-            }
-        }
-        else
-        {
-            ret.append ("Txt (");
-            ret.append (startpos);
-            ret.append (",");
-            ret.append (endpos);
-            ret.append ("): ");
-            for (int i = 0; i < mText.length (); i++)
-            {
-                c = mText.charAt (i);
-                switch (c)
-                {
-                    case '\t':
-                        ret.append ("\\t");
-                        break;
-                    case '\n':
-                        ret.append ("\\n");
-                        break;
-                    case '\r':
-                        ret.append ("\\r");
-                        break;
-                    default:
-                        ret.append (c);
-                }
-                if (77 <= ret.length ())
-                {
-                    ret.append ("...");
-                    break;
-                }
-            }
-        }
+	/**
+	 * Express this string node as a printable string
+	 * This is suitable for display in a debugger or output to a printout.
+	 * Control characters are replaced by their equivalent escape
+	 * sequence and contents is truncated to 80 characters.
+	 * @return A string representation of the string node.
+	 */
+	public String toString()
+	{
+		int startpos;
+		int endpos;
+		Cursor start;
+		Cursor end;
+		char c;
+		StringBuffer ret;
 
-        return (ret.toString ());
-    }
+		startpos = getStartPosition();
+		endpos = getEndPosition();
+		ret = new StringBuffer(endpos - startpos + 20);
+		if(null == mText)
+		{
+			start = new Cursor(getPage(), startpos);
+			end = new Cursor(getPage(), endpos);
+			ret.append("Txt (");
+			ret.append(start);
+			ret.append(",");
+			ret.append(end);
+			ret.append("): ");
+			while(start.getPosition() < endpos)
+			{
+				try
+				{
+					c = mPage.getCharacter(start);
+					switch(c)
+					{
+						case '\t':
+							ret.append("\\t");
+							break;
+						case '\n':
+							ret.append("\\n");
+							break;
+						case '\r':
+							ret.append("\\r");
+							break;
+						default:
+							ret.append(c);
+					}
+				}
+				catch(ParserException pe)
+				{
+					// not really expected, but we're only doing toString, so ignore
+				}
+				if(77 <= ret.length())
+				{
+					ret.append("...");
+					break;
+				}
+			}
+		}
+		else
+		{
+			ret.append("Txt (");
+			ret.append(startpos);
+			ret.append(",");
+			ret.append(endpos);
+			ret.append("): ");
+			for(int i = 0; i < mText.length(); i++)
+			{
+				c = mText.charAt(i);
+				switch(c)
+				{
+					case '\t':
+						ret.append("\\t");
+						break;
+					case '\n':
+						ret.append("\\n");
+						break;
+					case '\r':
+						ret.append("\\r");
+						break;
+					default:
+						ret.append(c);
+				}
+				if(77 <= ret.length())
+				{
+					ret.append("...");
+					break;
+				}
+			}
+		}
 
-    /**
-     * Returns true if the node consists of only white space.
-     * White space can be spaces, new lines, etc.
-     */
-    public boolean isWhiteSpace()
-    {
-        String text;
-        
-        text = mText;
-        if (null == text)
-            text = mPage.getText (getStartPosition (),  getEndPosition ());
+		return(ret.toString());
+	}
 
-        if (text == null || text.trim().equals(""))
-            return true;
-        return false;
-    }
+	/**
+	 * Returns true if the node consists of only white space.
+	 * White space can be spaces, new lines, etc.
+	 */
+	public boolean isWhiteSpace()
+	{
+		String text;
+
+		text = mText;
+		if(null == text)
+			text = mPage.getText(getStartPosition(), getEndPosition());
+
+		if(text == null || text.trim().equals(""))
+			return true;
+		return false;
+	}
 }

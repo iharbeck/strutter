@@ -25,87 +25,86 @@
 
 package strutter.htmlparser.nodes.interfaces;
 
-
 /**
  * This interface represents a piece of the content of the HTML document.
  */
 public interface Text extends Node
 {
-    /**
-     * Accesses the textual contents of the node.
-     * @return The text of the node.
-     * @see #setText
-     */
-    String getText ();
+	/**
+	 * Accesses the textual contents of the node.
+	 * @return The text of the node.
+	 * @see #setText
+	 */
+	String getText();
 
-    /**
-     * Sets the contents of the node.
-     * @param text The new text for the node.
-     * @see #getText
-     */
-    void setText (String text);
+	/**
+	 * Sets the contents of the node.
+	 * @param text The new text for the node.
+	 * @see #getText
+	 */
+	void setText(String text);
 
-    //
-    // Node interface
-    //
+	//
+	// Node interface
+	//
 
-//    public void accept (NodeVisitor visitor)
-//    {
-//    }
-//
-//    public void collectInto (.NodeList collectionList, NodeFilter filter)
-//    {
-//    }
-//
-//    public void doSemanticAction () throws ParserException
-//    {
-//    }
-//
-//    public NodeList getChildren ()
-//    {
-//    }
-//
-//    public int getEndPosition ()
-//    {
-//    }
-//
-//    public Node getParent ()
-//    {
-//    }
-//
-//    public int getStartPosition ()
-//    {
-//    }
-//
-//    public String getText ()
-//    {
-//    }
-//
-//    public void setChildren (NodeList children)
-//    {
-//    }
-//
-//    public void setEndPosition (int position)
-//    {
-//    }
-//
-//    public void setParent (Node node)
-//    {
-//    }
-//
-//    public void setStartPosition (int position)
-//    {
-//    }
-//
-//    public void setText (String text)
-//    {
-//    }
-//
-//    public String toHtml ()
-//    {
-//    }
-//
-//    public String toPlainTextString ()
-//    {
-//    }
+	//    public void accept (NodeVisitor visitor)
+	//    {
+	//    }
+	//
+	//    public void collectInto (.NodeList collectionList, NodeFilter filter)
+	//    {
+	//    }
+	//
+	//    public void doSemanticAction () throws ParserException
+	//    {
+	//    }
+	//
+	//    public NodeList getChildren ()
+	//    {
+	//    }
+	//
+	//    public int getEndPosition ()
+	//    {
+	//    }
+	//
+	//    public Node getParent ()
+	//    {
+	//    }
+	//
+	//    public int getStartPosition ()
+	//    {
+	//    }
+	//
+	//    public String getText ()
+	//    {
+	//    }
+	//
+	//    public void setChildren (NodeList children)
+	//    {
+	//    }
+	//
+	//    public void setEndPosition (int position)
+	//    {
+	//    }
+	//
+	//    public void setParent (Node node)
+	//    {
+	//    }
+	//
+	//    public void setStartPosition (int position)
+	//    {
+	//    }
+	//
+	//    public void setText (String text)
+	//    {
+	//    }
+	//
+	//    public String toHtml ()
+	//    {
+	//    }
+	//
+	//    public String toPlainTextString ()
+	//    {
+	//    }
 }

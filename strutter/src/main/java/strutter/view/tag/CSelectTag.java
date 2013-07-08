@@ -29,7 +29,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.util.LabelValueBean;
 
 import strutter.Utils;
-import strutter.htmlparser.filters.NodeClassFilter;
 import strutter.htmlparser.nodes.TextNode;
 import strutter.htmlparser.tags.OptionTag;
 import strutter.htmlparser.tags.SelectTag;
@@ -96,7 +95,7 @@ public class CSelectTag extends SelectTag
 				 */
 
 				// alle optionen ermitteln
-				NodeList list = this.children.extractAllNodesThatMatch(new NodeClassFilter(OptionTag.class));
+				NodeList list = this.children.extractAllNodesThatMatchClass(OptionTag.class);
 
 				// Alle bestehenden optionen l�schen
 				this.getChildren().removeAll();

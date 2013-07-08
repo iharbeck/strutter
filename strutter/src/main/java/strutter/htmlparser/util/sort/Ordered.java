@@ -50,32 +50,32 @@ package strutter.htmlparser.util.sort;
  */
 public interface Ordered
 {
-    /**
-     * Compares this object with another for order.
-     * Returns a negative integer, zero, or a positive integer
-     * as this object is less than, equal to, or greater
-     * than the second.
-     * <p>
-     * The implementor must ensure that
-     * <code>sgn(x.compare(y)) == -sgn(y.compare(x))</code>
-     * for all x and y. (This implies that <code>x.compare(y)</code>
-     * must throw an exception if and only if <code>y.compare(x)</code>
-     * throws an exception.)
-     * <p>
-     * The implementor must also ensure that the relation is transitive:
-     * <code>((x.compare(y)>0) && (y.compare(z)>0))</code>
-     * implies <code>x.compare(z)>0</code>.
-     * <p>
-     * Finally, the implementer must ensure that
-     * <code>x.compare(y)==0</code> implies that
-     * <code>sgn(x.compare(z))==sgn(y.compare(z))</code>
-     * for all z.
-     * @param that The object to compare this object against.
-     * @return A negative integer, zero, or a positive
-     * integer as this object is less than, equal to,
-     * or greater than the second.
-     * @exception ClassCastException The arguments type prevents it
-     * from being compared by this Ordered.
-     */
-    public int compare (Object that);
+	/**
+	 * Compares this object with another for order.
+	 * Returns a negative integer, zero, or a positive integer
+	 * as this object is less than, equal to, or greater
+	 * than the second.
+	 * <p>
+	 * The implementor must ensure that
+	 * <code>sgn(x.compare(y)) == -sgn(y.compare(x))</code>
+	 * for all x and y. (This implies that <code>x.compare(y)</code>
+	 * must throw an exception if and only if <code>y.compare(x)</code>
+	 * throws an exception.)
+	 * <p>
+	 * The implementor must also ensure that the relation is transitive:
+	 * <code>((x.compare(y)>0) && (y.compare(z)>0))</code>
+	 * implies <code>x.compare(z)>0</code>.
+	 * <p>
+	 * Finally, the implementer must ensure that
+	 * <code>x.compare(y)==0</code> implies that
+	 * <code>sgn(x.compare(z))==sgn(y.compare(z))</code>
+	 * for all z.
+	 * @param that The object to compare this object against.
+	 * @return A negative integer, zero, or a positive
+	 * integer as this object is less than, equal to,
+	 * or greater than the second.
+	 * @exception ClassCastException The arguments type prevents it
+	 * from being compared by this Ordered.
+	 */
+	public int compare(Object that);
 }

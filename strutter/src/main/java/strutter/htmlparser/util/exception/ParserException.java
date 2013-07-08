@@ -31,28 +31,29 @@ package strutter.htmlparser.util.exception;
  * @see ChainedException
  **/
 public class ParserException
-  extends ChainedException
+        extends ChainedException
 {
-  /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-public ParserException() {}
+	public ParserException()
+	{
+	}
 
-  public ParserException(String message)
-  {
-    super(message);
-  }
+	public ParserException(String message)
+	{
+		super(message);
+	}
 
-  public ParserException(Throwable throwable)
-  {
-    super(throwable);
-  }
+	public ParserException(Throwable throwable)
+	{
+		super(throwable);
+	}
 
-  public ParserException(String message, Throwable throwable)
-  {
-    super(message, throwable);
-  }
+	public ParserException(String message, Throwable throwable)
+	{
+		super(message, throwable);
+	}
 }
-

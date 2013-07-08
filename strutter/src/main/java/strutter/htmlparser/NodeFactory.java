@@ -228,7 +228,6 @@ public class NodeFactory
 		return(mTag);
 	}
 
-
 	//
 	// NodeFactory interface
 	//

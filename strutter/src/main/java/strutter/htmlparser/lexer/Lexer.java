@@ -50,7 +50,7 @@ import strutter.htmlparser.util.exception.ParserException;
  * Each time <code>nextNode()</code> is called, another node is returned until
  * the stream is exhausted, and <code>null</code> is returned.
  */
-public class Lexer extends NodeFactory implements Serializable 
+public class Lexer extends NodeFactory implements Serializable
 {
 	/**
 	 * Process remarks strictly flag.

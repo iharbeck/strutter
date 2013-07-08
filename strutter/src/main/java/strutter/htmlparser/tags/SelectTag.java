@@ -32,73 +32,73 @@ import strutter.htmlparser.util.NodeList;
  */
 public class SelectTag extends CompositeTag
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-     * The set of names handled by this tag.
-     */
-    private static final String[] mIds = new String[] {"SELECT"};
+	 * The set of names handled by this tag.
+	 */
+	private static final String[] mIds = new String[] { "SELECT" };
 
-    /**
-     * The set of tag names that indicate the end of this tag.
-     */
-    private static final String[] mEnders = new String[] {"INPUT", "TEXTAREA", "SELECT"};
+	/**
+	 * The set of tag names that indicate the end of this tag.
+	 */
+	private static final String[] mEnders = new String[] { "INPUT", "TEXTAREA", "SELECT" };
 
-    /**
-     * The set of end tag names that indicate the end of this tag.
-     */
-    private static final String[] mEndTagEnders = new String[] {"FORM", "BODY", "HTML"};
+	/**
+	 * The set of end tag names that indicate the end of this tag.
+	 */
+	private static final String[] mEndTagEnders = new String[] { "FORM", "BODY", "HTML" };
 
-    /**
-     * Create a new select tag.
-     */
-    public SelectTag ()
-    {
-    }
+	/**
+	 * Create a new select tag.
+	 */
+	public SelectTag()
+	{
+	}
 
-    /**
-     * Return the set of names handled by this tag.
-     * @return The names to be matched that create tags of this type.
-     */
-    public String[] getIds ()
-    {
-        return (mIds);
-    }
+	/**
+	 * Return the set of names handled by this tag.
+	 * @return The names to be matched that create tags of this type.
+	 */
+	public String[] getIds()
+	{
+		return(mIds);
+	}
 
-    /**
-     * Return the set of tag names that cause this tag to finish.
-     * @return The names of following tags that stop further scanning.
-     */
-    public String[] getEnders ()
-    {
-        return (mEnders);
-    }
+	/**
+	 * Return the set of tag names that cause this tag to finish.
+	 * @return The names of following tags that stop further scanning.
+	 */
+	public String[] getEnders()
+	{
+		return(mEnders);
+	}
 
-    /**
-     * Return the set of end tag names that cause this tag to finish.
-     * @return The names of following end tags that stop further scanning.
-     */
-    public String[] getEndTagEnders ()
-    {
-        return (mEndTagEnders);
-    }
+	/**
+	 * Return the set of end tag names that cause this tag to finish.
+	 * @return The names of following end tags that stop further scanning.
+	 */
+	public String[] getEndTagEnders()
+	{
+		return(mEndTagEnders);
+	}
 
-    /**
-     * Get the list of options in this <code>SELECT</code> tag.
-     * @return The {@.html <OPTION>} tags contained by this tag.
-     */
-    public OptionTag [] getOptionTags ()
-    {
-        NodeList list;
-        OptionTag[] ret;
-        
-        list = searchFor (OptionTag.class, true);
-        ret = new OptionTag[list.size()];
-        list.copyToNodeArray (ret);
+	/**
+	 * Get the list of options in this <code>SELECT</code> tag.
+	 * @return The {@.html <OPTION>} tags contained by this tag.
+	 */
+	public OptionTag[] getOptionTags()
+	{
+		NodeList list;
+		OptionTag[] ret;
 
-        return (ret);
-    }
+		list = searchFor(OptionTag.class, true);
+		ret = new OptionTag[list.size()];
+		list.copyToNodeArray(ret);
+
+		return(ret);
+	}
 }

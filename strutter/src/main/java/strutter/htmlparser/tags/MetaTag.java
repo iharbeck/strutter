@@ -34,126 +34,126 @@ import strutter.htmlparser.util.exception.ParserException;
  * A Meta Tag
  */
 public class MetaTag
-    extends
+        extends
         TagNode
 {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	/**
-     * The set of names handled by this tag.
-     */
-    private static final String[] mIds = new String[] {"META"};
+	 * The set of names handled by this tag.
+	 */
+	private static final String[] mIds = new String[] { "META" };
 
-    /**
-     * Create a new meta tag.
-     */
-    public MetaTag ()
-    {
-    }
+	/**
+	 * Create a new meta tag.
+	 */
+	public MetaTag()
+	{
+	}
 
-    /**
-     * Return the set of names handled by this tag.
-     * @return The names to be matched that create tags of this type.
-     */
-    public String[] getIds ()
-    {
-        return (mIds);
-    }
+	/**
+	 * Return the set of names handled by this tag.
+	 * @return The names to be matched that create tags of this type.
+	 */
+	public String[] getIds()
+	{
+		return(mIds);
+	}
 
-    /**
-     * Get the <code>HTTP-EQUIV</code> attribute, if any.
-     * @return The value of the <code>HTTP-EQUIV</code> attribute,
-     * or <code>null</code> if the attribute doesn't exist.
-     */
-    public String getHttpEquiv ()
-    {
-        return (getAttribute ("HTTP-EQUIV"));
-    }
+	/**
+	 * Get the <code>HTTP-EQUIV</code> attribute, if any.
+	 * @return The value of the <code>HTTP-EQUIV</code> attribute,
+	 * or <code>null</code> if the attribute doesn't exist.
+	 */
+	public String getHttpEquiv()
+	{
+		return(getAttribute("HTTP-EQUIV"));
+	}
 
-    /**
-     * Get the <code>CONTENT</code> attribute, if any.
-     * @return The value of the <code>CONTENT</code> attribute,
-     * or <code>null</code> if the attribute doesn't exist.
-     */
-    public String getMetaContent ()
-    {
-        return (getAttribute ("CONTENT"));
-    }
+	/**
+	 * Get the <code>CONTENT</code> attribute, if any.
+	 * @return The value of the <code>CONTENT</code> attribute,
+	 * or <code>null</code> if the attribute doesn't exist.
+	 */
+	public String getMetaContent()
+	{
+		return(getAttribute("CONTENT"));
+	}
 
-    /**
-     * Get the <code>NAME</code> attribute, if any.
-     * @return The value of the <code>NAME</code> attribute,
-     * or <code>null</code> if the attribute doesn't exist.
-     */
-    public String getMetaTagName ()
-    {
-        return (getAttribute ("NAME"));
-    }
+	/**
+	 * Get the <code>NAME</code> attribute, if any.
+	 * @return The value of the <code>NAME</code> attribute,
+	 * or <code>null</code> if the attribute doesn't exist.
+	 */
+	public String getMetaTagName()
+	{
+		return(getAttribute("NAME"));
+	}
 
-    /**
-     * Set the <code>HTTP-EQUIV</code> attribute.
-     * @param httpEquiv The new value of the <code>HTTP-EQUIV</code> attribute.
-     */
-    public void setHttpEquiv (String httpEquiv)
-    {
-        Attribute equiv;
-        equiv = getAttributeEx ("HTTP-EQUIV");
-        if (null != equiv)
-            equiv.setValue (httpEquiv);
-        else
-            getAttributesEx ().add (new Attribute ("HTTP-EQUIV", httpEquiv));
-    }
+	/**
+	 * Set the <code>HTTP-EQUIV</code> attribute.
+	 * @param httpEquiv The new value of the <code>HTTP-EQUIV</code> attribute.
+	 */
+	public void setHttpEquiv(String httpEquiv)
+	{
+		Attribute equiv;
+		equiv = getAttributeEx("HTTP-EQUIV");
+		if(null != equiv)
+			equiv.setValue(httpEquiv);
+		else
+			getAttributesEx().add(new Attribute("HTTP-EQUIV", httpEquiv));
+	}
 
-    /**
-     * Set the <code>CONTENT</code> attribute.
-     * @param metaTagContents The new value of the <code>CONTENT</code> attribute.
-     */
-    public void setMetaTagContents (String metaTagContents)
-    {
-        Attribute content;
-        content = getAttributeEx ("CONTENT");
-        if (null != content)
-            content.setValue (metaTagContents);
-        else
-            getAttributesEx ().add (new Attribute ("CONTENT", metaTagContents));
-    }
+	/**
+	 * Set the <code>CONTENT</code> attribute.
+	 * @param metaTagContents The new value of the <code>CONTENT</code> attribute.
+	 */
+	public void setMetaTagContents(String metaTagContents)
+	{
+		Attribute content;
+		content = getAttributeEx("CONTENT");
+		if(null != content)
+			content.setValue(metaTagContents);
+		else
+			getAttributesEx().add(new Attribute("CONTENT", metaTagContents));
+	}
 
-    /**
-     * Set the <code>NAME</code> attribute.
-     * @param metaTagName The new value of the <code>NAME</code> attribute.
-     */
-    public void setMetaTagName (String metaTagName)
-    {
-        Attribute name;
-        name = getAttributeEx ("NAME");
-        if (null != name)
-            name.setValue (metaTagName);
-        else
-            getAttributesEx ().add (new Attribute ("NAME", metaTagName));
-    }
-    
-    /**
-     * Perform the META tag semantic action.
-     * Check for a charset directive, and if found, set the charset for the page.
-     * @exception ParserException If setting the encoding fails.
-     */
-    public void doSemanticAction ()
-        throws
-            ParserException
-    {
-        String httpEquiv;
-        String charset;
+	/**
+	 * Set the <code>NAME</code> attribute.
+	 * @param metaTagName The new value of the <code>NAME</code> attribute.
+	 */
+	public void setMetaTagName(String metaTagName)
+	{
+		Attribute name;
+		name = getAttributeEx("NAME");
+		if(null != name)
+			name.setValue(metaTagName);
+		else
+			getAttributesEx().add(new Attribute("NAME", metaTagName));
+	}
 
-        httpEquiv = getHttpEquiv ();
-        if ("Content-Type".equalsIgnoreCase (httpEquiv))
-        {
-            if (Page.DEFAULT_CHARSET == getPage ().getEncoding ())
-            {
-                charset = getPage ().getCharset (getAttribute ("CONTENT"));
-                getPage ().setEncoding (charset);
-            }
-        }
-    }
+	/**
+	 * Perform the META tag semantic action.
+	 * Check for a charset directive, and if found, set the charset for the page.
+	 * @exception ParserException If setting the encoding fails.
+	 */
+	public void doSemanticAction()
+	        throws
+	        ParserException
+	{
+		String httpEquiv;
+		String charset;
+
+		httpEquiv = getHttpEquiv();
+		if("Content-Type".equalsIgnoreCase(httpEquiv))
+		{
+			if(Page.DEFAULT_CHARSET == getPage().getEncoding())
+			{
+				charset = getPage().getCharset(getAttribute("CONTENT"));
+				getPage().setEncoding(charset);
+			}
+		}
+	}
 }
