@@ -36,9 +36,6 @@ import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.RemarkNode;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.nodes.TextNode;
-import strutter.htmlparser.nodes.interfaces.Remark;
-import strutter.htmlparser.nodes.interfaces.Tag;
-import strutter.htmlparser.nodes.interfaces.Text;
 
 /**
  * This interface defines the methods needed to create new nodes.
@@ -65,23 +62,23 @@ public class NodeFactory
 	/**
 	 * The prototypical text node.
 	 */
-	protected Text mText;
+	protected TextNode mText;
 
 	/**
 	 * The prototypical remark node.
 	 */
-	protected Remark mRemark;
+	protected RemarkNode mRemark;
 
 	/**
 	 * The prototypical tag node.
 	 */
-	protected Tag mTag;
+	protected TagNode mTag;
 
 	/**
 	 * The list of tags to return.
 	 * The list is keyed by tag name.
 	 */
-	protected Map<String, Tag> mBlastocyst;
+	protected Map<String, TagNode> mBlastocyst;
 
 	/**
 	 * Create a new factory.
@@ -105,7 +102,7 @@ public class NodeFactory
 	 * @return The tag previously registered with that id if any,
 	 * or <code>null</code> if none.
 	 */
-	public Tag put(String id, Tag tag)
+	public TagNode put(String id, TagNode tag)
 	{
 		return(mBlastocyst.put(id, tag));
 	}
@@ -116,7 +113,7 @@ public class NodeFactory
 	 * @return The tag registered under the <code>id</code> name,
 	 * or <code>null</code> if none.
 	 */
-	public Tag get(String id)
+	public TagNode get(String id)
 	{
 		return(mBlastocyst.get(id));
 	}
@@ -127,7 +124,7 @@ public class NodeFactory
 	 * @return The tag that was registered with that <code>id</code>,
 	 * or <code>null</code> if none.
 	 */
-	public Tag remove(String id)
+	public TagNode remove(String id)
 	{
 		return(mBlastocyst.remove(id));
 	}
@@ -137,7 +134,7 @@ public class NodeFactory
 	 */
 	public void clear()
 	{
-		mBlastocyst = new Hashtable<String, Tag>();
+		mBlastocyst = new Hashtable<String, TagNode>();
 	}
 
 	/**
@@ -151,13 +148,13 @@ public class NodeFactory
 
 	/**
 	 * Register a tag.
-	 * Registers the given tag under every {@link Tag#getIds() id} that the
-	 * tag has (i.e. all names returned by {@link Tag#getIds() tag.getIds()}.
+	 * Registers the given tag under every {@link TagNode#getIds() id} that the
+	 * tag has (i.e. all names returned by {@link TagNode#getIds() tag.getIds()}.
 	 * <p><strong>For proper operation, the ids are converted to uppercase so
 	 * they will be matched by a Map lookup.</strong>
 	 * @param tag The tag to register.
 	 */
-	public void registerTag(Tag tag)
+	public void registerTag(TagNode tag)
 	{
 		String[] ids;
 
@@ -168,22 +165,22 @@ public class NodeFactory
 
 	/**
 	 * Get the object that is cloned to generate text nodes.
-	 * @return The prototype for {@link Text} nodes.
+	 * @return The prototype for {@link TextNode} nodes.
 	 * @see #setTextPrototype
 	 */
-	public Text getTextPrototype()
+	public TextNode getTextPrototype()
 	{
 		return(mText);
 	}
 
 	/**
 	 * Set the object to be used to generate text nodes.
-	 * @param text The prototype for {@link Text} nodes.
+	 * @param text The prototype for {@link TextNode} nodes.
 	 * If <code>null</code> the prototype is set to the default
 	 * ({@link TextNode}).
 	 * @see #getTextPrototype
 	 */
-	public void setTextPrototype(Text text)
+	public void setTextPrototype(TextNode text)
 	{
 		if(null == text)
 			mText = new TextNode(null, 0, 0);
@@ -193,22 +190,22 @@ public class NodeFactory
 
 	/**
 	 * Get the object that is cloned to generate remark nodes.
-	 * @return The prototype for {@link Remark} nodes.
+	 * @return The prototype for {@link RemarkNode} nodes.
 	 * @see #setRemarkPrototype
 	 */
-	public Remark getRemarkPrototype()
+	public RemarkNode getRemarkPrototype()
 	{
 		return(mRemark);
 	}
 
 	/**
 	 * Set the object to be used to generate remark nodes.
-	 * @param remark The prototype for {@link Remark} nodes.
+	 * @param remark The prototype for {@link RemarkNode} nodes.
 	 * If <code>null</code> the prototype is set to the default
 	 * ({@link RemarkNode}).
 	 * @see #getRemarkPrototype
 	 */
-	public void setRemarkPrototype(Remark remark)
+	public void setRemarkPrototype(RemarkNode remark)
 	{
 		if(null == remark)
 			mRemark = new RemarkNode(null, 0, 0);
@@ -220,10 +217,10 @@ public class NodeFactory
 	 * Get the object that is cloned to generate tag nodes.
 	 * Clones of this object are returned from {@link #createTagNode} when no
 	 * specific tag is found in the list of registered tags.
-	 * @return The prototype for {@link Tag} nodes.
+	 * @return The prototype for {@link TagNode} nodes.
 	 * @see #setTagPrototype
 	 */
-	public Tag getTagPrototype()
+	public TagNode getTagPrototype()
 	{
 		return(mTag);
 	}
@@ -239,13 +236,13 @@ public class NodeFactory
 	 * @param end The ending position of the string.
 	 * @return A text node comprising the indicated characters from the page.
 	 */
-	public Text createStringNode(Page page, int start, int end)
+	public TextNode createStringNode(Page page, int start, int end)
 	{
-		Text ret;
+		TextNode ret;
 
 		try
 		{
-			ret = (Text)(getTextPrototype().clone());
+			ret = (TextNode)(getTextPrototype().clone());
 			ret.setPage(page);
 			ret.setStartPosition(start);
 			ret.setEndPosition(end);
@@ -265,13 +262,13 @@ public class NodeFactory
 	 * @param end The ending positiong of the remark.
 	 * @return A remark node comprising the indicated characters from the page.
 	 */
-	public Remark createRemarkNode(Page page, int start, int end)
+	public RemarkNode createRemarkNode(Page page, int start, int end)
 	{
-		Remark ret;
+		RemarkNode ret;
 
 		try
 		{
-			ret = (Remark)(getRemarkPrototype().clone());
+			ret = (RemarkNode)(getRemarkPrototype().clone());
 			ret.setPage(page);
 			ret.setStartPosition(start);
 			ret.setEndPosition(end);
@@ -296,12 +293,12 @@ public class NodeFactory
 	 * @param attributes The attributes contained in this tag.
 	 * @return A tag node comprising the indicated characters from the page.
 	 */
-	public Tag createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
+	public TagNode createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
 	{
 		NodeAttribute attribute;
 		String id;
-		Tag prototype;
-		Tag ret;
+		TagNode prototype;
+		TagNode ret;
 
 		ret = null;
 
@@ -321,7 +318,7 @@ public class NodeFactory
 						prototype = mBlastocyst.get(id);
 						if(null != prototype)
 						{
-							ret = (Tag)prototype.clone();
+							ret = (TagNode)prototype.clone();
 							ret.setPage(page);
 							ret.setStartPosition(start);
 							ret.setEndPosition(end);
@@ -339,7 +336,7 @@ public class NodeFactory
 		{ // generate a generic node
 			try
 			{
-				ret = (Tag)getTagPrototype().clone();
+				ret = (TagNode)getTagPrototype().clone();
 				ret.setPage(page);
 				ret.setStartPosition(start);
 				ret.setEndPosition(end);

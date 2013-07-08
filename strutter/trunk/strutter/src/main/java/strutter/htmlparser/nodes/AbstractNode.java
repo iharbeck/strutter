@@ -28,7 +28,6 @@ package strutter.htmlparser.nodes;
 import java.io.Serializable;
 
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.interfaces.Node;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.SimpleNodeIterator;
 import strutter.htmlparser.util.exception.ParserException;
@@ -39,7 +38,7 @@ import strutter.htmlparser.util.exception.ParserException;
  * starting and ending position in the page, the parent and the list of
  * {@link NodeList children}.
  */
-public abstract class AbstractNode implements Serializable
+public abstract class AbstractNode implements Serializable, Node
 {
 	/**
 	 * The page this node came from.

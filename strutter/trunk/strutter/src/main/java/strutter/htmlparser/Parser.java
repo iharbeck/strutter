@@ -32,7 +32,7 @@ import org.w3c.dom.traversal.NodeFilter;
 
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.interfaces.Node;
+import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.util.NodeIteratorImpl;
 import strutter.htmlparser.util.NodeIterator;
 import strutter.htmlparser.util.NodeList;

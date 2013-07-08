@@ -28,7 +28,7 @@ package strutter.htmlparser.scanners;
 import java.io.Serializable;
 
 import strutter.htmlparser.lexer.Lexer;
-import strutter.htmlparser.nodes.interfaces.Tag;
+import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
 
@@ -65,7 +65,7 @@ public class ScannerTag implements Scanner, Serializable
 	 * this tag.
 	 * @return The resultant tag (may be unchanged).
 	 */
-	public Tag scan(Tag tag, Lexer lexer, NodeList stack) throws ParserException
+	public TagNode scan(TagNode tag, Lexer lexer, NodeList stack) throws ParserException
 	{
 		tag.doSemanticAction();
 

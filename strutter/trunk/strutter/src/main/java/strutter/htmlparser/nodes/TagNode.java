@@ -32,7 +32,6 @@ import java.util.Vector;
 import strutter.htmlparser.lexer.Cursor;
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.interfaces.Tag;
 import strutter.htmlparser.scanners.Scanner;
 import strutter.htmlparser.scanners.ScannerTag;
 import strutter.htmlparser.util.exception.ParserException;
@@ -42,7 +41,7 @@ import strutter.htmlparser.util.exception.ParserException;
  * If no scanner is registered for a given tag name, this is what you get.
  * This is also the base class for all tags created by the parser.
  */
-public class TagNode extends AbstractNode implements Tag
+public class TagNode extends AbstractNode
 {
 	/**
 	 * 
@@ -594,7 +593,7 @@ public class TagNode extends AbstractNode implements Tag
 	 * @param verbatim If <code>true</code> return as close to the original
 	 * page text as possible.
 	 * @return The tag as an HTML fragment.
-	 * @see strutter.htmlparser.nodes.interfaces.Node#toHtml()
+	 * @see strutter.htmlparser.nodes.Node#toHtml()
 	 */
 	public String toHtml(boolean verbatim)
 	{
@@ -890,7 +889,7 @@ public class TagNode extends AbstractNode implements Tag
 	 * For a non-composite tag this always returns <code>null</code>.
 	 * @return The tag that terminates this composite tag, i.e. &lt;/HTML&gt;.
 	 */
-	public Tag getEndTag()
+	public TagNode getEndTag()
 	{
 		return(null);
 	}
@@ -900,7 +899,7 @@ public class TagNode extends AbstractNode implements Tag
 	 * For a non-composite tag this is a no-op.
 	 * @param end The tag that terminates this composite tag, i.e. &lt;/HTML&gt;.
 	 */
-	public void setEndTag(Tag end)
+	public void setEndTag(TagNode end)
 	{
 	}
 }

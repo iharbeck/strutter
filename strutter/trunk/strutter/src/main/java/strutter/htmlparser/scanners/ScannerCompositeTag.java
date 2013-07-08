@@ -29,9 +29,9 @@ import java.util.Vector;
 
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
+import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.nodes.NodeAttribute;
-import strutter.htmlparser.nodes.interfaces.Node;
-import strutter.htmlparser.nodes.interfaces.Tag;
+import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.scanners.Scanner;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
@@ -94,13 +94,13 @@ public class ScannerCompositeTag extends ScannerTag
 	 * this tag.
 	 * @return The resultant tag (may be unchanged).
 	 */
-	public Tag scan(Tag tag, Lexer lexer, NodeList stack) throws ParserException
+	public TagNode scan(TagNode tag, Lexer lexer, NodeList stack) throws ParserException
 	{
 		Node node;
-		Tag next;
+		TagNode next;
 		String name;
 		Scanner scanner;
-		Tag ret;
+		TagNode ret;
 
 		ret = tag;
 
@@ -112,9 +112,9 @@ public class ScannerCompositeTag extends ScannerTag
 				node = lexer.nextNode(false);
 				if(null != node)
 				{
-					if(node instanceof Tag)
+					if(node instanceof TagNode)
 					{
-						next = (Tag)node;
+						next = (TagNode)node;
 						name = next.getTagName();
 						// check for normal end tag
 						if(next.isEndTag() && name.equals(ret.getTagName()))
@@ -189,7 +189,7 @@ public class ScannerCompositeTag extends ScannerTag
 								// happened.
 								Vector<NodeAttribute> attributes = new Vector<NodeAttribute>();
 								attributes.addElement(new NodeAttribute(name, null));
-								Tag opener = lexer.getNodeFactory().createTagNode(
+								TagNode opener = lexer.getNodeFactory().createTagNode(
 								        lexer.getPage(), next.getStartPosition(), next.getEndPosition(),
 								        attributes);
 
@@ -202,7 +202,7 @@ public class ScannerCompositeTag extends ScannerTag
 									{
 										// short circuit here... assume everything on the stack has this as it's scanner
 										// we'll need to stop if either of those conditions isn't met
-										Tag boffo = (Tag)stack.elementAt(i);
+										TagNode boffo = (TagNode)stack.elementAt(i);
 										if(name.equals(boffo.getTagName()))
 											index = i;
 										else if(isTagToBeEndedFor(boffo, next)) // check DTD
@@ -212,14 +212,14 @@ public class ScannerCompositeTag extends ScannerTag
 									{
 										// finish off the current one first
 										finishTag(ret, lexer);
-										addChild((Tag)stack.elementAt(stack.size() - 1), ret);
+										addChild((TagNode)stack.elementAt(stack.size() - 1), ret);
 										for(int i = stack.size() - 1; i > index; i--)
 										{
-											Tag fred = (Tag)stack.remove(i);
+											TagNode fred = (TagNode)stack.remove(i);
 											finishTag(fred, lexer);
-											addChild((Tag)stack.elementAt(i - 1), fred);
+											addChild((TagNode)stack.elementAt(i - 1), fred);
 										}
-										ret = (Tag)stack.remove(index);
+										ret = (TagNode)stack.remove(index);
 										node = null;
 									}
 									else
@@ -246,9 +246,9 @@ public class ScannerCompositeTag extends ScannerTag
 						if(0 != depth)
 						{
 							node = stack.elementAt(depth - 1);
-							if(node instanceof Tag)
+							if(node instanceof TagNode)
 							{
-								Tag precursor = (Tag)node;
+								TagNode precursor = (TagNode)node;
 								scanner = precursor.getThisScanner();
 								if(scanner == this)
 								{
@@ -278,7 +278,7 @@ public class ScannerCompositeTag extends ScannerTag
 	 * @param parent The parent tag.
 	 * @param child The child node.
 	 */
-	protected void addChild(Tag parent, Node child)
+	protected void addChild(TagNode parent, Node child)
 	{
 		if(null == parent.getChildren())
 			parent.setChildren(new NodeList());
@@ -294,7 +294,7 @@ public class ScannerCompositeTag extends ScannerTag
 	 * @param tag The tag to finish off.
 	 * @param lexer A lexer positioned at the end of the tag.
 	 */
-	protected void finishTag(Tag tag, Lexer lexer)
+	protected void finishTag(TagNode tag, Lexer lexer)
 	        throws
 	        ParserException
 	{
@@ -315,11 +315,11 @@ public class ScannerCompositeTag extends ScannerTag
 	 * and end position at the given position. The fact these positions are
 	 * equal may be used to distinguish it as a virtual tag later on.
 	 */
-	protected Tag createVirtualEndTag(Tag tag, Lexer lexer, Page page, int position)
+	protected TagNode createVirtualEndTag(TagNode tag, Lexer lexer, Page page, int position)
 	        throws
 	        ParserException
 	{
-		Tag ret;
+		TagNode ret;
 		String name;
 		Vector<NodeAttribute> attributes;
 
@@ -342,7 +342,7 @@ public class ScannerCompositeTag extends ScannerTag
 	 * @return <code>true</code> if the name of the given tag is a member of
 	 * the appropriate list.
 	 */
-	public final boolean isTagToBeEndedFor(Tag current, Tag tag)
+	public final boolean isTagToBeEndedFor(TagNode current, TagNode tag)
 	{
 		String name;
 		String[] ends;

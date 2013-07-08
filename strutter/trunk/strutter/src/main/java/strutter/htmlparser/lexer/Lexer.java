@@ -29,14 +29,11 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import strutter.htmlparser.NodeFactory;
+import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.RemarkNode;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.nodes.TextNode;
-import strutter.htmlparser.nodes.interfaces.Node;
-import strutter.htmlparser.nodes.interfaces.Remark;
-import strutter.htmlparser.nodes.interfaces.Tag;
-import strutter.htmlparser.nodes.interfaces.Text;
 import strutter.htmlparser.util.exception.ParserException;
 
 /**
@@ -563,7 +560,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param end The ending positiong of the string.
 	 * @return The created Text node.
 	 */
-	public Text createStringNode(Page page, int start, int end)
+	public TextNode createStringNode(Page page, int start, int end)
 	{
 		return(new TextNode(page, start, end));
 	}
@@ -575,7 +572,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param end The ending positiong of the remark.
 	 * @return The created Remark node.
 	 */
-	public Remark createRemarkNode(Page page, int start, int end)
+	public RemarkNode createRemarkNode(Page page, int start, int end)
 	{
 		return(new RemarkNode(page, start, end));
 	}
@@ -592,7 +589,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The attributes contained in this tag.
 	 * @return The created Tag node.
 	 */
-	public Tag createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
+	public TagNode createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
 	{
 		return(new TagNode(page, start, end, attributes));
 	}

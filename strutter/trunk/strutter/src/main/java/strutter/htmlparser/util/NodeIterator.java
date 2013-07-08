@@ -25,7 +25,7 @@
 
 package strutter.htmlparser.util;
 
-import strutter.htmlparser.nodes.interfaces.Node;
+import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.util.exception.ParserException;
 
 public interface NodeIterator

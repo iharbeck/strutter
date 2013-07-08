@@ -27,13 +27,12 @@ package strutter.htmlparser.nodes;
 
 import strutter.htmlparser.lexer.Cursor;
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.interfaces.Text;
 import strutter.htmlparser.util.exception.ParserException;
 
 /**
  * Normal text in the HTML document is represented by this class.
  */
-public class TextNode extends AbstractNode implements Text
+public class TextNode extends AbstractNode
 {
 	/**
 	 * 

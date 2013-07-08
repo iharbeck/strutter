@@ -27,13 +27,12 @@ package strutter.htmlparser.nodes;
 
 import strutter.htmlparser.lexer.Cursor;
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.interfaces.Remark;
 import strutter.htmlparser.util.exception.ParserException;
 
 /**
  * The remark tag is identified and represented by this class.
  */
-public class RemarkNode extends AbstractNode implements Remark
+public class RemarkNode extends AbstractNode
 {
 	/**
 	 * 
