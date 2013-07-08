@@ -28,8 +28,8 @@ package strutter.htmlparser.util;
 import strutter.htmlparser.lexer.Cursor;
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.interfaces.Node;
-import strutter.htmlparser.nodes.interfaces.Tag;
+import strutter.htmlparser.nodes.Node;
+import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.scanners.Scanner;
 import strutter.htmlparser.util.NodeIterator;
 import strutter.htmlparser.util.exception.ParserException;
@@ -66,7 +66,7 @@ public class NodeIteratorImpl implements NodeIterator
 	 */
 	public Node nextNode() throws ParserException
 	{
-		Tag tag;
+		TagNode tag;
 		Scanner scanner;
 		NodeList stack;
 		Node ret;
@@ -77,9 +77,9 @@ public class NodeIteratorImpl implements NodeIterator
 			if(null != ret)
 			{
 				// kick off recursion for the top level node
-				if(ret instanceof Tag)
+				if(ret instanceof TagNode)
 				{
-					tag = (Tag)ret;
+					tag = (TagNode)ret;
 					if(!tag.isEndTag())
 					{
 						// now recurse if there is a scanner for this type of tag
