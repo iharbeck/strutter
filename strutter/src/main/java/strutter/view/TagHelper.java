@@ -14,12 +14,12 @@ import org.apache.struts.action.ActionMessages;
 import org.apache.struts.util.MessageResources;
 
 import strutter.Utils;
-import strutter.htmlparser.nodes.interfaces.Tag;
+import strutter.htmlparser.nodes.TagNode;
 
 public class TagHelper
 {
 
-	public static String handleError(Tag tag, ServletRequest request, String superhtml) throws Exception
+	public static String handleError(TagNode tag, ServletRequest request, String superhtml) throws Exception
 	{
 		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
 
@@ -54,7 +54,7 @@ public class TagHelper
 		return superhtml;
 	}
 
-	public static String handleList(Tag tag, ServletRequest request, ActionMessages am)
+	public static String handleList(TagNode tag, ServletRequest request, ActionMessages am)
 	{
 		if(am == null)
 			return null;

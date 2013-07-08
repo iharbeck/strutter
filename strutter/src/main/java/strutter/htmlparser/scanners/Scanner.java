@@ -26,7 +26,7 @@
 package strutter.htmlparser.scanners;
 
 import strutter.htmlparser.lexer.Lexer;
-import strutter.htmlparser.nodes.interfaces.Tag;
+import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
 
@@ -49,5 +49,5 @@ public interface Scanner
 	 * @return The resultant tag (may be unchanged).
 	 * @exception ParserException if an unrecoverable problem occurs.
 	 */
-	public Tag scan(Tag tag, Lexer lexer, NodeList stack) throws ParserException;
+	public TagNode scan(TagNode tag, Lexer lexer, NodeList stack) throws ParserException;
 }

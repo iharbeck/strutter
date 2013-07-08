@@ -28,7 +28,8 @@ package strutter.htmlparser.util;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-import strutter.htmlparser.nodes.interfaces.Node;
+import strutter.htmlparser.nodes.AbstractNode;
+import strutter.htmlparser.nodes.Node;
 
 public class NodeList implements Serializable
 {
