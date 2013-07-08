@@ -29,7 +29,7 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import strutter.htmlparser.NodeFactory;
-import strutter.htmlparser.nodes.Attribute;
+import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.RemarkNode;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.nodes.TextNode;
@@ -592,7 +592,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The attributes contained in this tag.
 	 * @return The created Tag node.
 	 */
-	public Tag createTagNode(Page page, int start, int end, Vector<Attribute> attributes)
+	public Tag createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
 	{
 		return(new TagNode(page, start, end, attributes));
 	}
@@ -839,7 +839,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The list so far.
 	 * @param bookmarks The array of positions.
 	 */
-	private void whitespace(Vector<Attribute> attributes, int[] bookmarks)
+	private void whitespace(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		if(bookmarks[1] > bookmarks[0])
 			attributes.addElement(new TagAttribute(
@@ -851,7 +851,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The list so far.
 	 * @param bookmarks The array of positions.
 	 */
-	private void standalone(Vector<Attribute> attributes, int[] bookmarks)
+	private void standalone(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		attributes.addElement(new TagAttribute(
 		        mPage, bookmarks[1], bookmarks[2], -1, -1, (char)0));
@@ -862,7 +862,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The list so far.
 	 * @param bookmarks The array of positions.
 	 */
-	private void empty(Vector<Attribute> attributes, int[] bookmarks)
+	private void empty(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		attributes.addElement(new TagAttribute(
 		        mPage, bookmarks[1], bookmarks[2], bookmarks[2] + 1, -1, (char)0));
@@ -873,7 +873,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The list so far.
 	 * @param bookmarks The array of positions.
 	 */
-	private void naked(Vector<Attribute> attributes, int[] bookmarks)
+	private void naked(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		attributes.addElement(new TagAttribute(
 		        mPage, bookmarks[1], bookmarks[2], bookmarks[3],
@@ -885,7 +885,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The list so far.
 	 * @param bookmarks The array of positions.
 	 */
-	private void single_quote(Vector<Attribute> attributes, int[] bookmarks)
+	private void single_quote(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		attributes.addElement(new TagAttribute(
 		        mPage, bookmarks[1], bookmarks[2], bookmarks[4] + 1,
@@ -897,7 +897,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The list so far.
 	 * @param bookmarks The array of positions.
 	 */
-	private void double_quote(Vector<Attribute> attributes, int[] bookmarks)
+	private void double_quote(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		attributes.addElement(new TagAttribute(
 		        mPage, bookmarks[1], bookmarks[2], bookmarks[5] + 1,
@@ -977,10 +977,10 @@ public class Lexer extends NodeFactory implements Serializable
 		char ch;
 		int state;
 		int[] bookmarks;
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 
 		done = false;
-		attributes = new Vector<Attribute>();
+		attributes = new Vector<NodeAttribute>();
 		state = 0;
 		bookmarks = new int[8];
 		bookmarks[0] = mCursor.getPosition();
@@ -1146,7 +1146,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @exception ParserException If the nodefactory creation of the tag node fails.
 	 * @return The new Tag node.
 	 */
-	protected Node makeTag(int start, int end, Vector<Attribute> attributes)
+	protected Node makeTag(int start, int end, Vector<NodeAttribute> attributes)
 	        throws
 	        ParserException
 	{
@@ -1332,13 +1332,13 @@ public class Lexer extends NodeFactory implements Serializable
 		boolean done;
 		char ch;
 		int state;
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		int code;
 
 		done = false;
 		state = 0;
 		code = 0;
-		attributes = new Vector<Attribute>();
+		attributes = new Vector<NodeAttribute>();
 		// <%xyz%>
 		// 012223d
 		// <%=xyz%>
@@ -1513,13 +1513,13 @@ public class Lexer extends NodeFactory implements Serializable
 		boolean done;
 		char ch;
 		int state;
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		int code;
 
 		done = false;
 		state = 0;
 		code = 0;
-		attributes = new Vector<Attribute>();
+		attributes = new Vector<NodeAttribute>();
 		// <?xyz?>
 		// 011112d
 		while(!done)

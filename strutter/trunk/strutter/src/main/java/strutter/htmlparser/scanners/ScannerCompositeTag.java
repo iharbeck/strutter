@@ -29,7 +29,7 @@ import java.util.Vector;
 
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
-import strutter.htmlparser.nodes.Attribute;
+import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.interfaces.Node;
 import strutter.htmlparser.nodes.interfaces.Tag;
 import strutter.htmlparser.scanners.Scanner;
@@ -187,8 +187,8 @@ public class ScannerCompositeTag extends ScannerTag
 								// If there is something, we close off all the tags
 								// walked over and continue on as if nothing
 								// happened.
-								Vector<Attribute> attributes = new Vector<Attribute>();
-								attributes.addElement(new Attribute(name, null));
+								Vector<NodeAttribute> attributes = new Vector<NodeAttribute>();
+								attributes.addElement(new NodeAttribute(name, null));
 								Tag opener = lexer.getNodeFactory().createTagNode(
 								        lexer.getPage(), next.getStartPosition(), next.getEndPosition(),
 								        attributes);
@@ -321,11 +321,11 @@ public class ScannerCompositeTag extends ScannerTag
 	{
 		Tag ret;
 		String name;
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 
 		name = "/" + tag.getRawTagName();
-		attributes = new Vector<Attribute>();
-		attributes.addElement(new Attribute(name, (String)null));
+		attributes = new Vector<NodeAttribute>();
+		attributes.addElement(new NodeAttribute(name, (String)null));
 		ret = lexer.getNodeFactory().createTagNode(
 		        page, position, position, attributes);
 

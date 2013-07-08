@@ -25,7 +25,7 @@
 
 package strutter.htmlparser.lexer;
 
-import strutter.htmlparser.nodes.Attribute;
+import strutter.htmlparser.nodes.NodeAttribute;
 
 /**
  * An attribute within a tag on a page.
@@ -42,7 +42,7 @@ import strutter.htmlparser.nodes.Attribute;
  */
 public class TagAttribute
         extends
-        Attribute
+        NodeAttribute
 {
 	/**
 	 * 

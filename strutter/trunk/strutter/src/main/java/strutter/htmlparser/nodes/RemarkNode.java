@@ -33,11 +33,7 @@ import strutter.htmlparser.util.exception.ParserException;
 /**
  * The remark tag is identified and represented by this class.
  */
-public class RemarkNode
-        extends
-        AbstractNode
-        implements
-        Remark
+public class RemarkNode extends AbstractNode implements Remark
 {
 	/**
 	 * 

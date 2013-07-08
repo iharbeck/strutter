@@ -39,13 +39,8 @@ import strutter.htmlparser.util.exception.ParserException;
  * starting and ending position in the page, the parent and the list of
  * {@link NodeList children}.
  */
-public abstract class AbstractNode implements Node, Serializable
+public abstract class AbstractNode implements Serializable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * The page this node came from.
 	 */

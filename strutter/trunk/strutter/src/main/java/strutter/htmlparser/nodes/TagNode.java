@@ -42,11 +42,7 @@ import strutter.htmlparser.util.exception.ParserException;
  * If no scanner is registered for a given tag name, this is what you get.
  * This is also the base class for all tags created by the parser.
  */
-public class TagNode
-        extends
-        AbstractNode
-        implements
-        Tag
+public class TagNode extends AbstractNode implements Tag
 {
 	/**
 	 * 
@@ -70,11 +66,11 @@ public class TagNode
 
 	/**
 	 * The tag attributes.
-	 * Objects of type {@link Attribute}.
+	 * Objects of type {@link NodeAttribute}.
 	 * The first element is the tag name, subsequent elements being either
 	 * whitespace or real attributes.
 	 */
-	protected Vector<Attribute> mAttributes;
+	protected Vector<NodeAttribute> mAttributes;
 
 	/**
 	 * Set of tags that breaks the flow.
@@ -120,7 +116,7 @@ public class TagNode
 	 */
 	public TagNode()
 	{
-		this(null, -1, -1, new Vector<Attribute>());
+		this(null, -1, -1, new Vector<NodeAttribute>());
 	}
 
 	/**
@@ -129,9 +125,9 @@ public class TagNode
 	 * @param start The starting offset of this node within the page.
 	 * @param end The ending offset of this node within the page.
 	 * @param attributes The list of attributes that were parsed in this tag.
-	 * @see Attribute
+	 * @see NodeAttribute
 	 */
-	public TagNode(Page page, int start, int end, Vector<Attribute> attributes)
+	public TagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
 	{
 		super(page, start, end);
 
@@ -168,7 +164,7 @@ public class TagNode
 	 */
 	public String getAttribute(String name)
 	{
-		Attribute attribute;
+		NodeAttribute attribute;
 		String ret;
 
 		ret = null;
@@ -195,7 +191,7 @@ public class TagNode
 		String ref;
 		StringBuffer buffer;
 		char quote;
-		Attribute attribute;
+		NodeAttribute attribute;
 
 		// first determine if there's whitespace in the value
 		// and while we'return at it find a suitable quote character
@@ -259,7 +255,7 @@ public class TagNode
 	 */
 	public void removeAttribute(String key)
 	{
-		Attribute attribute;
+		NodeAttribute attribute;
 
 		attribute = getAttributeEx(key);
 		if(null != attribute)
@@ -275,7 +271,7 @@ public class TagNode
 	 */
 	public void setAttribute(String key, String value, char quote)
 	{
-		setAttribute(new Attribute(key, value, quote));
+		setAttribute(new NodeAttribute(key, value, quote));
 	}
 
 	/**
@@ -284,13 +280,13 @@ public class TagNode
 	 * @return The attribute or null if it does
 	 * not exist.
 	 */
-	public Attribute getAttributeEx(String name)
+	public NodeAttribute getAttributeEx(String name)
 	{
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		int size;
-		Attribute attribute;
+		NodeAttribute attribute;
 		String string;
-		Attribute ret;
+		NodeAttribute ret;
 
 		ret = null;
 
@@ -316,9 +312,9 @@ public class TagNode
 	/**
 	 * Set an attribute.
 	 * @param attribute The attribute to set.
-	 * @see #setAttribute(Attribute)
+	 * @see #setAttribute(NodeAttribute)
 	 */
-	public void setAttributeEx(Attribute attribute)
+	public void setAttributeEx(NodeAttribute attribute)
 	{
 		setAttribute(attribute);
 	}
@@ -329,14 +325,14 @@ public class TagNode
 	 * To set the zeroth attribute (the tag name), use setTagName().
 	 * @param attribute The attribute to set.
 	 */
-	public void setAttribute(Attribute attribute)
+	public void setAttribute(NodeAttribute attribute)
 	{
 		boolean replaced;
 		boolean empty_xml;
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		int length;
 		String name;
-		Attribute test;
+		NodeAttribute test;
 		String test_name;
 		int size;
 
@@ -373,14 +369,14 @@ public class TagNode
 						if(1 != size)
 						{
 							attributes.remove(length - 1);
-							attributes.addElement(new Attribute(test_name.substring(0, size - 1), null));
-							attributes.addElement(new Attribute(" "));
-							attributes.addElement(new Attribute("/", null));
+							attributes.addElement(new NodeAttribute(test_name.substring(0, size - 1), null));
+							attributes.addElement(new NodeAttribute(" "));
+							attributes.addElement(new NodeAttribute("/", null));
 							length += 2;
 						}
 						else if((1 != length) && !(attributes.elementAt(length - 2)).isWhitespace())
 						{
-							attributes.insertElementAt(new Attribute(" "), length - 1);
+							attributes.insertElementAt(new NodeAttribute(" "), length - 1);
 							length++;
 						}
 						// at this point the / is the last attribute, and whitespace precedes it
@@ -388,7 +384,7 @@ public class TagNode
 						length++;
 						// need to insert whitespace if there is a value and it's not quoted
 						if((null != attribute.getValue()) && (0 == attribute.getQuote()))
-							attributes.insertElementAt(new Attribute(" "), length - 1);
+							attributes.insertElementAt(new NodeAttribute(" "), length - 1);
 						replaced = true;
 					}
 				}
@@ -398,18 +394,18 @@ public class TagNode
 		{
 			// add whitespace between attributes
 			if((0 != length) && !(attributes.elementAt(length - 1)).isWhitespace())
-				attributes.addElement(new Attribute(" "));
+				attributes.addElement(new NodeAttribute(" "));
 			attributes.addElement(attribute);
 		}
 	}
 
 	/**
 	 * Gets the attributes in the tag.
-	 * @return Returns the list of {@link Attribute Attributes} in the tag.
+	 * @return Returns the list of {@link NodeAttribute Attributes} in the tag.
 	 * The first element is the tag name, subsequent elements being either
 	 * whitespace or real attributes.
 	 */
-	public Vector<Attribute> getAttributesEx()
+	public Vector<NodeAttribute> getAttributesEx()
 	{
 		return(mAttributes);
 	}
@@ -451,7 +447,7 @@ public class TagNode
 	 */
 	public String getRawTagName()
 	{
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		String ret;
 
 		ret = null;
@@ -471,15 +467,15 @@ public class TagNode
 	 */
 	public void setTagName(String name)
 	{
-		Attribute attribute;
-		Vector<Attribute> attributes;
-		Attribute zeroth;
+		NodeAttribute attribute;
+		Vector<NodeAttribute> attributes;
+		NodeAttribute zeroth;
 
-		attribute = new Attribute(name, null, (char)0);
+		attribute = new NodeAttribute(name, null, (char)0);
 		attributes = getAttributesEx();
 		if(null == attributes)
 		{
-			attributes = new Vector<Attribute>();
+			attributes = new Vector<NodeAttribute>();
 			setAttributesEx(attributes);
 		}
 		if(0 == attributes.size())
@@ -517,7 +513,7 @@ public class TagNode
 	 * and the second element being the value.
 	 * @param attribs The attribute collection to set.
 	 */
-	public void setAttributesEx(Vector<Attribute> attribs)
+	public void setAttributesEx(Vector<NodeAttribute> attribs)
 	{
 		mAttributes = attribs;
 	}
@@ -616,8 +612,8 @@ public class TagNode
 	{
 		int length;
 		int size;
-		Vector<Attribute> attributes;
-		Attribute attribute;
+		Vector<NodeAttribute> attributes;
+		NodeAttribute attribute;
 		StringBuffer ret;
 
 		length = 2;
@@ -694,9 +690,9 @@ public class TagNode
 	 */
 	public boolean isEmptyXmlTag()
 	{
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		int size;
-		Attribute attribute;
+		NodeAttribute attribute;
 		String name;
 		int length;
 		boolean ret;
@@ -727,9 +723,9 @@ public class TagNode
 	 */
 	public void setEmptyXmlTag(boolean emptyXmlTag)
 	{
-		Vector<Attribute> attributes;
+		Vector<NodeAttribute> attributes;
 		int size;
-		Attribute attribute;
+		NodeAttribute attribute;
 		String name;
 		String value;
 		int length;
@@ -757,7 +753,7 @@ public class TagNode
 								// where no whitespace separates the slash
 								// from the previous attribute
 								name = name.substring(0, length - 1);
-								attribute = new Attribute(name, null);
+								attribute = new NodeAttribute(name, null);
 								attributes.removeElementAt(size - 1);
 								attributes.addElement(attribute);
 							}
@@ -767,9 +763,9 @@ public class TagNode
 						// ends with attribute, add whitespace + slash if requested
 						if(emptyXmlTag)
 						{
-							attribute = new Attribute(" ");
+							attribute = new NodeAttribute(" ");
 							attributes.addElement(attribute);
-							attribute = new Attribute("/", null);
+							attribute = new NodeAttribute("/", null);
 							attributes.addElement(attribute);
 						}
 					}
@@ -778,9 +774,9 @@ public class TagNode
 					// some valued attribute, add whitespace + slash if requested
 					if(emptyXmlTag)
 					{
-						attribute = new Attribute(" ");
+						attribute = new NodeAttribute(" ");
 						attributes.addElement(attribute);
-						attribute = new Attribute("/", null);
+						attribute = new NodeAttribute("/", null);
 						attributes.addElement(attribute);
 					}
 				}
@@ -790,7 +786,7 @@ public class TagNode
 				// ends with whitespace, add if requested
 				if(emptyXmlTag)
 				{
-					attribute = new Attribute("/", null);
+					attribute = new NodeAttribute("/", null);
 					attributes.addElement(attribute);
 				}
 			}
@@ -799,7 +795,7 @@ public class TagNode
 		// nothing there, add if requested
 		if(emptyXmlTag)
 		{
-			attribute = new Attribute("/", null);
+			attribute = new NodeAttribute("/", null);
 			attributes.addElement(attribute);
 		}
 	}
