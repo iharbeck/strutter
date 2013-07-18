@@ -1,1 +1,0 @@
-TEST include of WEB-INF file
