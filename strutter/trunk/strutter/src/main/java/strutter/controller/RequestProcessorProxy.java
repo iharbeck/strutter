@@ -261,6 +261,8 @@ public class RequestProcessorProxy extends RequestProcessor
 				out.write("<script type='text/javascript' src='dwr/interface/" + classname + ".js'> </script>\n");
 			}
 
+			//System.out.println(doc);
+
 			if(plugin.getViewer().equals("1"))
 				doc = htmlProcessing(requestwrapper, form, doc);
 
@@ -272,12 +274,14 @@ public class RequestProcessorProxy extends RequestProcessor
 
 				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse)_response);
 
-				RequestDispatcher dispatcher = requestwrapper.getRequestDispatcher("/WEB-INF/classes/include/decorator/" + decorator);
+				RequestDispatcher dispatcher = requestwrapper.getRequestDispatcher("include/decorator/" + decorator);
 				dispatcher.include((ServletRequest)requestwrapper, (ServletResponse)decoresponsewrapper);
 
 				try
 				{
 					doc = decoresponsewrapper.toString(plugin.getEncoding());
+
+					//System.out.println(doc);
 				}
 				catch(Exception e)
 				{
@@ -290,8 +294,11 @@ public class RequestProcessorProxy extends RequestProcessor
 				// localisierung $R{nachname}
 				localisation.matchall(out, doc);
 			}
+			else
+			{
+				out.write(doc);
+			}
 
-			//out.write(doc);
 			out.flush();
 
 			if(isMainThread && isHeading)
@@ -399,7 +406,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		BufferedInputStream streamreader = null;
 
 		streamreader = new BufferedInputStream(clazz.getResourceAsStream(name));
-		
+
 		return getResource(name, streamreader);
 	}
 
