@@ -33,13 +33,13 @@ import strutter.htmlparser.util.exception.ParserException;
  * A source of characters based on a String.
  */
 public class StringSource
-        extends
-        Source
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public static final int EOF = -1;
 
 	/**
 	 * The source of characters.

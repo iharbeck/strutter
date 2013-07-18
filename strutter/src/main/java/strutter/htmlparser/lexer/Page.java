@@ -66,7 +66,7 @@ public class Page implements Serializable
 	 * Character value when the page is exhausted.
 	 * Has a value of {@value}.
 	 */
-	public static final char EOF = (char)Source.EOF;
+	public static final char EOF = (char)StringSource.EOF;
 
 	/**
 	 * The URL this page is coming from.
@@ -83,7 +83,7 @@ public class Page implements Serializable
 	/**
 	 * The source of characters.
 	 */
-	protected Source mSource;
+	protected StringSource mSource;
 
 	/**
 	 * Character positions of the first character in each line.
@@ -409,7 +409,7 @@ public class Page implements Serializable
 			try
 			{
 				i = mSource.read();
-				if(Source.EOF == i)
+				if(StringSource.EOF == i)
 					ret = EOF;
 				else
 				{
@@ -454,7 +454,7 @@ public class Page implements Serializable
 				try
 				{
 					i = mSource.read();
-					if(Source.EOF == i)
+					if(StringSource.EOF == i)
 					{
 						// do nothing
 					}
