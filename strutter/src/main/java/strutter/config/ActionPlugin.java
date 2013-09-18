@@ -18,6 +18,7 @@ package strutter.config;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -113,7 +114,18 @@ public class ActionPlugin implements PlugIn
 				String packagepath = packages[i];
 
 				packagepath = normalizePath(packagepath.replace('.', '/'));
-				String path = servlet.getServletContext().getRealPath("/WEB-INF/classes");
+				
+				URL url =  ActionPlugin.class.getResource("/ROOT");
+				String path = url.getPath();
+				
+				if(path != null)
+				{
+					path = path.substring(0, path.length()-4);
+				}
+				else
+				{
+					path = servlet.getServletContext().getRealPath("/WEB-INF/classes");
+				}
 
 				list.addAll(ActionPlugin.getClasses(path, packages[i]));
 			}
