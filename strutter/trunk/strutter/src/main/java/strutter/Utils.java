@@ -287,17 +287,35 @@ public class Utils
 
 		return value.startsWith("/") ? value : ("/" + value);
 	}
+	
+	public static final String INCLUDE_SERVLET_PATH = "javax.servlet.include.servlet_path";
+	public static final String INCLUDE_PATH_INFO = "javax.servlet.include.path_info";
+
 
 	public static String getActionMappingName(HttpServletRequest request) throws IOException
 	{
-		String path = request.getPathInfo();
+		String path;
+
+		// For prefix matching, match on the path info (if any)
+		path = (String)request.getAttribute(INCLUDE_PATH_INFO);
+
+		if(path == null)
+		{
+			path = request.getPathInfo();
+		}
 
 		if((path != null) && (path.length() > 0))
 		{
-			return path;
+			return(path);
 		}
 
-		path = request.getServletPath();
+		// For extension matching, strip the module prefix and extension
+		path = (String)request.getAttribute(INCLUDE_SERVLET_PATH);
+
+		if(path == null)
+		{
+			path = request.getServletPath();
+		}
 
 		int slash = path.lastIndexOf("/");
 		int period = path.lastIndexOf(".");
@@ -307,7 +325,7 @@ public class Utils
 			path = path.substring(0, period);
 		}
 
-		return path ;
+		return(path);
 	}
 
 	/**
