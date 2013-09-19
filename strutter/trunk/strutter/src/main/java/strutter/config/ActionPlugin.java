@@ -116,7 +116,10 @@ public class ActionPlugin implements PlugIn
 				packagepath = normalizePath(packagepath.replace('.', '/'));
 				
 				URL url =  ActionPlugin.class.getResource("/ROOT");
-				String path = url.getPath();
+				String path = null; 
+				
+				if(url != null)
+					path = url.getPath();
 				
 				if(path != null)
 				{
