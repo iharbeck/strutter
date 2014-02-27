@@ -32,13 +32,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import strutter.Utils;
 import strutter.config.ActionConfig;
 import strutter.config.ActionPlugin;
 
@@ -119,7 +118,11 @@ public class BasicFilter implements Filter {
 		{
 			DirectInterface bean = (DirectInterface)config.getActionclass().newInstance();
 
-			BeanUtils.populate(bean, request.getParameterMap());
+			//BeanUtils.populate(bean, request.getParameterMap());
+			
+			BeanUtilsBean beanutil = BeanUtilsBean.getInstance();
+			
+			beanutil.populate(bean, request.getParameterMap());
 
 			bean.doexecute((HttpServletRequest)request, (HttpServletResponse)response);
 
