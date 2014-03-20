@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.Globals;
@@ -73,10 +73,7 @@ public class PopulateHelper
 		try
 		{
 			//BeanUtil.populateBean(bean, parameters);
-			//BeanUtils.populate(bean, parameters);
-			
-			BeanUtilsBean beanutil = BeanUtilsBean.getInstance();
-			beanutil.populate(bean, parameters);
+			BeanUtils.populate(bean, parameters);
 		}
 		catch(Exception e)
 		{

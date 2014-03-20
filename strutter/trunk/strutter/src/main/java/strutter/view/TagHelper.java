@@ -6,7 +6,7 @@ import java.util.Locale;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionMessage;
@@ -103,11 +103,7 @@ public class TagHelper
 		try
 		{
 			//String ret = (String)BeanUtil.getProperty(form, name);
-			//String ret = BeanUtils.getProperty(form, name);
-			
-			BeanUtilsBean beanutil = BeanUtilsBean.getInstance();
-			String ret = beanutil.getProperty(form, name);
-			
+			String ret = BeanUtils.getProperty(form, name);
 			if(ret == null)
 				return "";
 			return ret;
@@ -131,10 +127,7 @@ public class TagHelper
 	{
 		try
 		{
-			//BeanUtils.setProperty(form, name, value);
-			
-			BeanUtilsBean beanutil = BeanUtilsBean.getInstance();
-			beanutil.setProperty(form, name, value);
+			BeanUtils.setProperty(form, name, value);
 		}
 		catch(Exception e)
 		{
@@ -145,11 +138,7 @@ public class TagHelper
 	{
 		try
 		{
-			//return BeanUtils.getArrayProperty(form, name);
-			
-			BeanUtilsBean beanutil = BeanUtilsBean.getInstance();
-
-			return beanutil.getArrayProperty(form, name);
+			return BeanUtils.getArrayProperty(form, name);
 		}
 		catch(NoSuchMethodException e)
 		{
