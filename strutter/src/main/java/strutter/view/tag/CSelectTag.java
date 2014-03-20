@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.util.LabelValueBean;
 
 import strutter.Utils;
@@ -118,12 +118,7 @@ public class CSelectTag extends SelectTag
 							// in Form suchen
 							// System.out.println("options: " +
 							// ((OptionTag)list.elementAt(0)).getAttribute("id"));
-							
-							//listvalues = PropertyUtils.getNestedProperty(form, name);
-
-							BeanUtilsBean beanutil = BeanUtilsBean.getInstance();
-							
-							listvalues = beanutil.getNestedProperty(form, name);
+							listvalues = PropertyUtils.getNestedProperty(form, name);
 						}
 
 						if(listvalues instanceof ArrayList)
