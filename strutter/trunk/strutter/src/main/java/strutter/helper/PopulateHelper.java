@@ -72,6 +72,11 @@ public class PopulateHelper
 
 		try
 		{
+		    // Exclude 
+			// ^class\..*,^dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,^parameters\..*,^action:.*,^method:.*
+			
+			parameters.remove("class");
+			
 			//BeanUtil.populateBean(bean, parameters);
 			BeanUtils.populate(bean, parameters);
 		}
