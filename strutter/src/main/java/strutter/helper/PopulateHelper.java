@@ -1,7 +1,9 @@
 package strutter.helper;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import javax.print.attribute.HashPrintJobAttributeSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -75,10 +77,16 @@ public class PopulateHelper
 		    // Exclude 
 			// ^class\..*,^dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,^parameters\..*,^action:.*,^method:.*
 			
-			parameters.remove("class");
+			//parameters.remove("class");
+			
+			HashMap tMap = new HashMap();
+			
+			tMap.putAll(parameters);
+			tMap.remove("class");
+			
 			
 			//BeanUtil.populateBean(bean, parameters);
-			BeanUtils.populate(bean, parameters);
+			BeanUtils.populate(bean, tMap);
 		}
 		catch(Exception e)
 		{
