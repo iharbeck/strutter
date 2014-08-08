@@ -1,5 +1,6 @@
 package strutter.action;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,6 @@ public class PlainDispatchAction extends BaseAction
 
 	static final String PREFIX = "do";
 
-	protected Class clazz = this.getClass();
 	protected HashMap methods = new HashMap();
 
 	protected Class[] types =
@@ -45,6 +45,8 @@ public class PlainDispatchAction extends BaseAction
 		return dispatchMethod(ActionHelper.getMapping(), null, ActionHelper.getRequest(), ActionHelper.getResponse(), name);
 	}
 
+	
+	
 	/**
 	 * try to get method name: doView, do_view, view try to call with and in a
 	 * second step without parameters
@@ -59,6 +61,28 @@ public class PlainDispatchAction extends BaseAction
 
 		ActionMethodWrapper methodwrapper = (ActionMethodWrapper)methods.get(name);
 
+		Object obj = this;
+
+		String objname = null;
+		String func = name;
+		
+		Class clazz = this.getClass();
+		
+		if(name.contains("."))
+		{
+			String parse[] = name.split("\\.");
+			
+			objname = parse[0];
+			func = parse[1];
+		
+			Field field = clazz.getDeclaredField(objname);
+			field.setAccessible(true);
+
+			obj = field.get(this);
+			
+			clazz = obj.getClass();
+		}
+		
 		if(methodwrapper == null)
 		{
 			boolean parameter = true;
@@ -67,7 +91,7 @@ public class PlainDispatchAction extends BaseAction
 
 			try
 			{
-				method = getMethod(name, null);
+				method = getMethod(clazz, func, null);
 				parameter = false;
 			}
 			catch(Exception e)
@@ -80,7 +104,7 @@ public class PlainDispatchAction extends BaseAction
 			{
 				try
 				{
-					method = getMethod(name, types);
+					method = getMethod(clazz, func, types);
 				}
 				catch(Exception e)
 				{
@@ -91,10 +115,10 @@ public class PlainDispatchAction extends BaseAction
 			methods.put(name, methodwrapper);
 		}
 
-		return methodwrapper.execute(this, mapping, actionform, request, response);
+		return methodwrapper.execute(obj, mapping, actionform, request, response);
 	}
 
-	public Method getMethod(String name, Class[] types) throws Exception
+	public Method getMethod(Class clazz, String name, Class[] types) throws Exception
 	{
 		try
 		{
