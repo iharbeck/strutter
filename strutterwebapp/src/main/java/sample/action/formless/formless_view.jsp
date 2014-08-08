@@ -61,6 +61,7 @@
 
 <br>
 <input type="button" onclick="subber('update')" value="Continue">
+<input type="button" onclick="subber('subaction.update')" value="Continue Subaction">
 
 
 </form>
