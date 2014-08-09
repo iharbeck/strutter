@@ -1,0 +1,106 @@
+<project name="strutter" default="all" basedir=".">
+
+	<property name="name" value="strutter" />
+	<property name="version" value="-0.6.1" />
+
+	<property name="bin" value="WEB-INF/classes" />
+	<property name="src" value="WEB-INF/src" />
+	<property name="base" value="." />
+
+
+	<target name="all" depends="binary,blank,full">
+		<delete file="WEB-INF/lib/${name}${version}.jar" />
+	</target>
+
+	<target name="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="${name}-?.?.*.jar"/>
+		 	<fileset dir="WEB-INF/lib" includes="${name}-?.?.*.jar"/>
+		 </delete>
+         <jar destfile="bin/${name}${version}.jar">
+         	<fileset dir="${bin}" >
+         	    <exclude name="**/sample**" />
+         		<exclude name="*" />
+         	</fileset>
+         	<fileset dir="${src}" >
+         	    <exclude name="**/sample**" />
+         		<exclude name="*" />
+         	</fileset>
+         </jar>
+	</target>
+
+	<target name="binary" depends="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="${name}-bin*.zip"/>
+		 </delete>
+
+		<zip destfile="bin/${name}-bin${version}.zip">
+			<zipfileset dir="doc" includes="doc.html" fullpath="doc/doc.html"/>
+			<zipfileset dir="bin" includes="${name}${version}.jar" fullpath="lib/${name}${version}.jar"/>
+			<zipfileset dir="WEB-INF/lib/" includes="htmlparser.jar" fullpath="lib/htmlparser.jar"/>
+		</zip>
+	</target>
+
+	<target name="full" depends="jar">
+		 <delete>
+		 	<fileset dir="bin" includes="${name}-full-**.war"/>
+		 </delete>
+		 <copy file="bin/${name}${version}.jar" todir="WEB-INF/lib/" />
+     	 <war destfile="bin/${name}-full${version}.war" webxml="conf/web-struts1.xml">
+           <fileset dir="${base}">
+           		<patternset refid="strutter.full"/>
+           </fileset>
+         </war>
+    </target>
+
+	<target name="blank" depends="jar">
+			 <delete>
+			 	<fileset dir="bin" includes="strutter-blank-*.war"/>
+			 </delete>
+	     	 <war destfile="bin/strutter-blank${version}.war" webxml="conf/web-blank.xml">
+	     	   <lib dir="bin">
+	     	 	  	<include name="${name}${version}.jar"/>
+	     	   </lib>
+	           <fileset dir="${base}">
+	           		<exclude name="**/build.xml"/>
+	           		<patternset refid="strutter.full"/>
+
+	           		<!-- Sample stuff -->
+	           		<exclude name="sample**.jsp"/>
+	           		<exclude name="formless**.jsp"/>
+	           		<exclude name="zeroconf**.jsp"/>
+	           		<exclude name="spring**.jsp"/>
+	           		<exclude name="home**.jsp"/>
+	           		<exclude name="secured**.jsp"/>
+	           		<exclude name="*interceptor**.jsp"/>
+	           		<exclude name="login**.jsp"/>
+	           		<exclude name="**/SampleAction**" />
+	           		<exclude name="**/FormlessAction**" />
+	           		<exclude name="**/ZeroconfAction**" />
+	           		<exclude name="**/SpringAction**" />
+	           		<exclude name="**/SecuredAction**" />
+	           		<exclude name="**/*InterceptorAction**" />
+	           		<exclude name="**/LoginAction**" />
+	           		<exclude name="**/object**" />
+	           		<exclude name="**/SSO**" />
+	           	    <exclude name="**/depends.txt"/>
+	           </fileset>
+	         </war>
+	 </target>
+
+	<patternset id="strutter.full">
+		<exclude name="**/strutter/**" />
+		<exclude name="**/struts/**" />
+		<exclude name="**/bin**" />
+		<exclude name="**/conf**" />
+		<exclude name="**/work**" />
+		<exclude name="**/.settings**" />
+		<exclude name="**/gawky*" />
+	</patternset>
+
+	<!-- todo -->
+	<patternset id="struts1.libs">
+		<include name="**/WEB-INF/lib/struts.jar" />
+    </patternset>
+
+</project>
