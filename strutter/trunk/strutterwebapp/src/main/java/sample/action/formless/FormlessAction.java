@@ -42,7 +42,8 @@ public class FormlessAction extends FormlessDispatchAction implements ConfigInte
 	Address customer = new Address();
 	String memo;
 	
-	private SubAction subaction = new SubAction();
+	private SubAction1 subaction1 = new SubAction1();
+	private SubAction2 subaction2 = new SubAction2();
 
 	public ActionForward doView() throws Exception
 	{

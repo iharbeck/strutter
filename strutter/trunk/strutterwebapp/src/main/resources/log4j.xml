@@ -20,7 +20,7 @@
 	  </appender>
 	
 	  <logger name="sample">
-		  <level value="debug"/>
+		  <level value="info"/>
 	  </logger>
 		
 	  <root>

@@ -4,22 +4,28 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts.action.ActionForward;
 
+import sample.dao.Address;
+import strutter.config.annotation.WireActionForm;
 import strutter.helper.ActionHelper;
 
-public class SubAction 
+public class SubAction1 
 {
 	private static Log log = LogFactory.getLog(FormlessAction.class);
 
+	@WireActionForm
+	FormlessAction form;
+	
 	public ActionForward doUpdate() throws Exception
 	{
-		log.debug("sub action");
+		log.info("called: sub action" + this.getClass());
+		log.info("wired: " + form);
 		
-		FormlessAction form = (FormlessAction)ActionHelper.getForm();
+		log.info(form.getCustomer().getFirstname());
 		
-		log.debug(form);
-		log.debug(form.getCustomer().getFirstname());
+		Address adr = form.getCustomer();
+		
+		adr.setFirstname(adr.getFirstname().toUpperCase());
 		
 		return ActionHelper.findForward("view");
 	}
-	
 }
