@@ -19,6 +19,7 @@ import org.apache.struts.actions.BaseAction;
 
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
+import strutter.config.annotation.WireActionForm;
 import strutter.helper.ActionHelper;
 import strutter.helper.PopulateHelper;
 
@@ -46,6 +47,27 @@ public class PlainDispatchAction extends BaseAction
 	}
 
 	
+	private void inject(Object target, Object value, Class annotation) throws Exception
+	{
+		Field[] fieldList = target.getClass().getDeclaredFields();
+
+        for (Field afield : fieldList) 
+        {
+            if(afield.isAnnotationPresent(annotation))
+            {
+            	afield.setAccessible(true);
+            	afield.set(target, value);
+            }
+        } 
+	}
+	
+	private Object object(Object source, String objname) throws Exception
+	{
+		Field field = source.getClass().getDeclaredField(objname);
+		field.setAccessible(true);
+
+		return field.get(this);
+	}
 	
 	/**
 	 * try to get method name: doView, do_view, view try to call with and in a
@@ -75,12 +97,11 @@ public class PlainDispatchAction extends BaseAction
 			objname = parse[0];
 			func = parse[1];
 		
-			Field field = clazz.getDeclaredField(objname);
-			field.setAccessible(true);
-
-			obj = field.get(this);
+			obj = object(this, objname);
 			
 			clazz = obj.getClass();
+			
+			inject(obj, this, WireActionForm.class);
 		}
 		
 		if(methodwrapper == null)
