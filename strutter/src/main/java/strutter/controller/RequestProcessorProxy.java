@@ -364,6 +364,9 @@ public class RequestProcessorProxy extends RequestProcessor
 
 				_response.flushBuffer();
 			}
+			catch(IOException e)
+			{
+			}
 			catch(Exception e)
 			{
 				PrintWriter writer2 = _response.getWriter();
