@@ -97,8 +97,11 @@ public class DWRAction extends FormlessDispatchAction implements ConfigInterface
 	{
 		ActionHelper.init();
 		
+		
 		// ECHO to specific Page!
-		Browser.withPage("/strutter/dwr.do",
+		//Browser.withAllSessions(//task);withPage("/strutter/dwr.do",
+		Browser.withCurrentPage(
+		//Browser.withPage("/strutterwebapp/dwr.do",
 		        new Runnable()
 		        {
 			        public void run()
