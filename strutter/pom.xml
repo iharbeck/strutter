@@ -80,7 +80,13 @@
 			<name>ProjectRepo</name>
 			<url>file://${project.basedir}/repro</url>
 		</repository>
+		<repository>
+			<id>ogni</id>
+			<name>ogni repository</name>
+			<url>https://svn.code.sf.net/p/strutter/code/maven</url>
+		</repository>
 	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.ogni</groupId>
