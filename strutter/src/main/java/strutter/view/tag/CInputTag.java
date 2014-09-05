@@ -82,6 +82,11 @@ public class CInputTag extends InputTag
 					        "cancel".equals(type) ||
 					        "password".equals(type))
 					{
+						if(value.indexOf('"') >= 0)
+						{
+							value = value.replaceAll("\"", "\\\"");
+						}
+						
 						this.setAttribute("value", value, '"');
 						processed = true;
 					}
@@ -139,7 +144,12 @@ public class CInputTag extends InputTag
 
 					valuetext = resources.getMessage(loc, valuetext.substring(1));
 
-					setAttribute("value", valuetext);
+					if(valuetext.indexOf('"') >= 0)
+					{
+						valuetext = valuetext.replaceAll("\"", "\\\"");
+					}
+					
+					setAttribute("value", valuetext, '"');
 				}
 			}
 		}
