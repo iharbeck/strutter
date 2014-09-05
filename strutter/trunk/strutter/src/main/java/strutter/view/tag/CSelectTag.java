@@ -164,6 +164,11 @@ public class CSelectTag extends SelectTag
 				disabled += "<input type='hidden' name='" + getAttribute("name") + "' value='" + value + "'>";
 		}
 
+		if(value.indexOf('"') >= 0)
+		{
+			value = value.replaceAll("\"", "\\\"");
+		}
+		
 		// option.setValue(value);
 		option.setAttribute("VALUE", value, '"');
 
