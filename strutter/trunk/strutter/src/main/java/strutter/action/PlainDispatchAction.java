@@ -193,7 +193,16 @@ public class PlainDispatchAction extends BaseAction
 
 			// Store Action (Form)
 			Utils.setActionForm(request, (Action)action);
-			return action.dispatchMethod(actionmapping, null, request, response, name);
+
+			if(action instanceof InterceptorInterface)
+				((InterceptorInterface)action).beforeExecute();
+
+			ActionForward forward = action.dispatchMethod(actionmapping, null, request, response, name);
+			
+			if(action instanceof InterceptorInterface)
+				((InterceptorInterface)action).afterExecute();
+
+			return forward;
 		}
 
 		return dispatchMethod(actionmapping, actionform, request, response, name);

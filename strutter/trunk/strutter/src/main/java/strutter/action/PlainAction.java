@@ -56,8 +56,15 @@ public abstract class PlainAction extends BaseAction
 		// Store Action (Form)
 		Utils.setActionForm(ActionHelper.getRequest(), action);
 
+		if(action instanceof InterceptorInterface)
+			((InterceptorInterface)action).beforeExecute();
+		
 		ActionForward forward = action.execute();
 
+		if(action instanceof InterceptorInterface)
+			((InterceptorInterface)action).afterExecute();
+		
+		
 		return forward;
 	}
 
