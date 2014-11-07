@@ -166,9 +166,9 @@ public class CSelectTag extends SelectTag
 
 		if(value.indexOf('"') >= 0)
 		{
-			value = value.replaceAll("\"", "\\\"");
+			value = value.replaceAll("\"", "&quot;");
 		}
-		
+		 
 		// option.setValue(value);
 		option.setAttribute("VALUE", value, '"');
 
