@@ -84,7 +84,7 @@ public class CInputTag extends InputTag
 					{
 						if(value.indexOf('"') >= 0)
 						{
-							value = value.replaceAll("\"", "\\\"");
+							value = value.replaceAll("\"", "&quot;");
 						}
 						
 						this.setAttribute("value", value, '"');
@@ -146,7 +146,7 @@ public class CInputTag extends InputTag
 
 					if(valuetext.indexOf('"') >= 0)
 					{
-						valuetext = valuetext.replaceAll("\"", "\\\"");
+						valuetext = valuetext.replaceAll("\"", "&quot;");
 					}
 					
 					setAttribute("value", valuetext, '"');
