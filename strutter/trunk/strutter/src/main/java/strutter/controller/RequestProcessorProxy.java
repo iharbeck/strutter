@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
@@ -25,6 +26,7 @@ import org.apache.commons.chain.CatalogFactory;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.apache.commons.chain.impl.ChainBase;
+import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.RequestProcessor;
@@ -33,6 +35,7 @@ import org.apache.struts.chain.contexts.ServletActionContext;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.ModuleConfig;
+import org.apache.struts.util.MessageResources;
 
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
@@ -144,7 +147,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 		ActionMappingExtended mappingext = null;
 
-		ActionHelperData data = null;
+		ActionHelperData ahd = null;
 		HttpSession session = null;
 
 		try
@@ -153,11 +156,11 @@ public class RequestProcessorProxy extends RequestProcessor
 			boolean isHeading = false;
 			boolean isRemoting = false;
 
-			data = ActionHelper.init(getServletContext(), requestwrapper, _response);
+			ahd = ActionHelper.init(getServletContext(), requestwrapper, _response);
 
-			session = data.getSession();
+			session = ahd.getSession();
 
-			ActionConfig mapping = data.getMapping();
+			ActionConfig mapping = ahd.getMapping();
 
 			if(mapping instanceof ActionMappingExtended)
 				mappingext = (ActionMappingExtended)mapping;
@@ -179,7 +182,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				try
 				{
 					Object direct = Class.forName(mapping.getType()).newInstance();
-					PopulateHelper.populate(direct, requestwrapper);
+					PopulateHelper.populate(requestwrapper, direct);
 
 					String method = requestwrapper.getParameter(mapping.getParameter());
 					WSActionHelper.dispatchMethod(direct, method);
@@ -227,13 +230,13 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			try
 			{
-				form = Utils.getActionFormFromSession(data.getRequest());
+				form = Utils.getActionFormFromSession(ahd.getRequest());
 			}
 			catch(Exception e1)
 			{
 			}
 
-			isMainThread = (data.getThreadcount() == 1);
+			isMainThread = (ahd.getThreadcount() == 1);
 			isHeading = (mappingext != null && mappingext.isHeading());
 			isRemoting = (mappingext != null && mappingext.isRemoteaction());
 
@@ -292,7 +295,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(mappingext != null && !"0".equals(mappingext.getProperty("INLINELOCALISATION")))
 			{
 				// localisierung $R{nachname}
-				localisation.matchall(out, doc);
+				localisation.matchall(ahd, out, doc);
 			}
 			else
 			{
@@ -702,11 +705,15 @@ class RMatcher
 		pattern = Pattern.compile("\\$R\\{(.*?)\\}", Pattern.MULTILINE);
 	}
 
-	public final void matchall(StringWriter out, String val)
+	public final void matchall(ActionHelperData ahd, StringWriter out, String val)
 	{
 		if(val == null)
 			return;
 
+		MessageResources resources = (MessageResources) ahd.getRequest().getAttribute(Globals.MESSAGES_KEY);
+
+		Locale locale = ahd.getLocale();	
+		
 		Matcher matcher = pattern.matcher(val);
 
 		// without match return without copy / change
@@ -721,7 +728,7 @@ class RMatcher
 		do
 		{
 			out.write(val.substring(pos, matcher.start()));
-			out.write(ActionHelper.getResource(matcher.group(1)));
+			out.write(resources.getMessage(locale, matcher.group(1)));
 
 			pos = matcher.end();
 		}

@@ -21,6 +21,7 @@ import strutter.Utils;
 import strutter.config.ActionMappingExtended;
 import strutter.config.annotation.WireActionForm;
 import strutter.helper.ActionHelper;
+import strutter.helper.ActionHelperData;
 import strutter.helper.PopulateHelper;
 
 public class PlainDispatchAction extends BaseAction
@@ -43,7 +44,9 @@ public class PlainDispatchAction extends BaseAction
 
 	public ActionForward dispatch(String name) throws Exception
 	{
-		return dispatchMethod(ActionHelper.getMapping(), null, ActionHelper.getRequest(), ActionHelper.getResponse(), name);
+		ActionHelperData ahd = ActionHelper.getActionHelperData();
+		
+		return dispatchMethod(ahd.getMapping(), null, ahd.getRequest(), ahd.getResponse(), name);
 	}
 
 	
@@ -186,7 +189,7 @@ public class PlainDispatchAction extends BaseAction
 
 			action.setServlet(this.servlet);
 
-			Map properties = PopulateHelper.populate(action, request);
+			Map properties = PopulateHelper.populate(request, action);
  
 			if(name == null && properties.get(parameter) != null)
 				name = ((String[])properties.get(parameter))[0];

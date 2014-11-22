@@ -42,8 +42,10 @@ public abstract class PlainAction extends BaseAction
 
 	private ActionForward execute_formless() throws Exception
 	{
+		HttpServletRequest request = ActionHelper.getRequest();
+		
 		// Get existing Action
-		PlainAction action = (PlainAction)Utils.getActionFormFromSession(ActionHelper.getRequest());
+		PlainAction action = (PlainAction)Utils.getActionFormFromSession(request);
 
 		if(action == null) // No Session scope or first call
 			action = (PlainAction)this.getClass().newInstance();
@@ -51,10 +53,10 @@ public abstract class PlainAction extends BaseAction
 		action.servlet = this.servlet;
 
 		if(action instanceof FormlessInterface)
-			PopulateHelper.populate(action, ActionHelper.getRequest());
+			PopulateHelper.populate(request, action);
 
 		// Store Action (Form)
-		Utils.setActionForm(ActionHelper.getRequest(), action);
+		Utils.setActionForm(request, action);
 
 		if(action instanceof InterceptorInterface)
 			((InterceptorInterface)action).beforeExecute();
