@@ -22,11 +22,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts.action.ActionForward;
 
 import strutter.helper.ActionHelper;
+import strutter.helper.ActionHelperData;
 
 public class TokenInterceptor implements WebInterceptorInterface
 {
 	public ActionForward beforeMethod() throws ServletException
 	{
+		ActionHelperData ahd = ActionHelper.getActionHelperData();
+		
 		String token = ActionHelper.getParameter("TOKEN");
 
 		if(token == null)

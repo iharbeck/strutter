@@ -347,6 +347,11 @@ public class ActionHelper
 	{
 		return me().isInitialized();
 	}
+	
+	public static ActionHelperData getActionHelperData()
+	{
+		return me();
+	}
 
 	public static ActionForward getForward(String forward) throws ServletException
 	{

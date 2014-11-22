@@ -23,7 +23,7 @@ public class PopulateHelper
 {
 	private static Log log = LogFactory.getLog(PopulateHelper.class);
 
-	public static Map populate(Object bean, HttpServletRequest request) throws ServletException
+	public static Map populate(HttpServletRequest request, Object bean) throws ServletException
 	{ 
 		Map parameters = null;
 
