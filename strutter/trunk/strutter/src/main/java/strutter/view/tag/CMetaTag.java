@@ -19,6 +19,7 @@ public class CMetaTag extends MetaTag
 		this.request = request;
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		super.doSemanticAction();
@@ -34,7 +35,9 @@ public class CMetaTag extends MetaTag
 
 				String name = getAttribute("NAME");
 				if(name != null && name.startsWith("decorator_"))
+				{
 					request.setAttribute(name, getAttribute("CONTENT"));
+				}
 			}
 		}
 	}
@@ -44,6 +47,7 @@ public class CMetaTag extends MetaTag
 	 * 
 	 * @return The names of following end tags that stop further scanning.
 	 */
+	@Override
 	public String[] getEndTagEnders()
 	{
 		return(new String[] {});

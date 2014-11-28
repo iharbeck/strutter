@@ -157,7 +157,9 @@ public class PageIndex implements Serializable, Sortable
 		{
 			last = mIndices[mCount - 1];
 			if(position == last)
+			{
 				ret = mCount - 1;
+			}
 			else if(position > last)
 			{
 				ret = mCount;
@@ -170,7 +172,9 @@ public class PageIndex implements Serializable, Sortable
 
 				// insert, but not twice
 				if(!((ret < size()) && (position == mIndices[ret])))
+				{
 					insertElementAt(position, ret);
+				}
 			}
 		}
 
@@ -201,7 +205,9 @@ public class PageIndex implements Serializable, Sortable
 
 		// remove
 		if((i < size()) && (cursor.getPosition() == mIndices[i]))
+		{
 			removeElementAt(i);
+		}
 	}
 
 	/**
@@ -220,10 +226,14 @@ public class PageIndex implements Serializable, Sortable
 	 */
 	public int elementAt(int index)
 	{
-		if(index >= mCount) // negative index is handled by array.. below
+		if(index >= mCount)
+		{
 			throw new IndexOutOfBoundsException("index " + index + " beyond current limit");
+		}
 		else
+		{
 			return(mIndices[index]);
+		}
 	}
 
 	/**
@@ -241,7 +251,9 @@ public class PageIndex implements Serializable, Sortable
 		// it's equal to the offset at the row index, since that position is
 		// actually the beginning of the next line
 		if((ret < mCount) && (cursor.getPosition() == mIndices[ret]))
+		{
 			ret++;
+		}
 
 		return(ret);
 	}
@@ -268,9 +280,13 @@ public class PageIndex implements Serializable, Sortable
 
 		row = row(cursor);
 		if(0 != row)
+		{
 			previous = this.elementAt(row - 1);
+		}
 		else
+		{
 			previous = 0;
+		}
 
 		return(cursor.getPosition() - previous);
 	}
@@ -340,12 +356,16 @@ public class PageIndex implements Serializable, Sortable
 				System.arraycopy(mIndices, index, new_values, index + 1, capacity() - index);
 			}
 			else
+			{
 				System.arraycopy(mIndices, 0, new_values, 0, capacity());
+			}
 			mIndices = new_values;
 		}
 		else if(index < size())
+		{
 			// shift up
 			System.arraycopy(mIndices, index, mIndices, index + 1, capacity() - (index + 1));
+		}
 		mIndices[index] = cursor;
 		mCount++;
 	}
@@ -370,6 +390,7 @@ public class PageIndex implements Serializable, Sortable
 	 * Returns the first index of the Sortable.
 	 * @return The index of the first element.
 	 */
+	@Override
 	public int first()
 	{
 		return(0);
@@ -381,6 +402,7 @@ public class PageIndex implements Serializable, Sortable
 	 * If this were an array object this would be (object.length - 1).
 	 * For an empty index this will return -1.
 	 */
+	@Override
 	public int last()
 	{
 		return(mCount - 1);
@@ -397,6 +419,7 @@ public class PageIndex implements Serializable, Sortable
 	 * object if that would normally be the strategy.
 	 * @return The Ordered object at that index.
 	 */
+	@Override
 	public Ordered fetch(int index, Ordered reuse)
 	{
 		Cursor ret;
@@ -408,7 +431,9 @@ public class PageIndex implements Serializable, Sortable
 			ret.mPage = getPage(); // redundant
 		}
 		else
+		{
 			ret = new Cursor(getPage(), mIndices[index]);
+		}
 
 		return(ret);
 	}
@@ -418,6 +443,7 @@ public class PageIndex implements Serializable, Sortable
 	 * @param i One index.
 	 * @param j The other index.
 	 */
+	@Override
 	public void swap(int i, int j)
 	{
 		int temp = mIndices[i];

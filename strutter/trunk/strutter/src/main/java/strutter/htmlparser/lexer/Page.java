@@ -108,9 +108,13 @@ public class Page implements Serializable
 	public Page(String text, String charset)
 	{
 		if(null == text)
+		{
 			throw new IllegalArgumentException("text cannot be null");
+		}
 		if(null == charset)
+		{
 			charset = DEFAULT_CHARSET;
+		}
 		mSource = new StringSource(text, charset);
 		mIndex = new PageIndex(this);
 		mUrl = null;
@@ -164,11 +168,15 @@ public class Page implements Serializable
 		String ret;
 
 		if(null == mSource)
+		{
 			ret = DEFAULT_CHARSET;
+		}
 		else
+		{
 			// use existing (possibly supplied) character set:
 			// bug #1322686 when illegal charset specified
 			ret = mSource.getEncoding();
+		}
 		if(null != content)
 		{
 			index = content.indexOf(CHARSET_STRING);
@@ -182,17 +190,23 @@ public class Page implements Serializable
 					content = content.substring(1).trim();
 					index = content.indexOf(";");
 					if(index != -1)
+					{
 						content = content.substring(0, index);
+					}
 
 					//remove any double quotes from around charset string
 					if(content.startsWith("\"") && content.endsWith("\"")
 					        && (1 < content.length()))
+					{
 						content = content.substring(1, content.length() - 1);
+					}
 
 					//remove any single quote from around charset string
 					if(content.startsWith("'") && content.endsWith("'")
 					        && (1 < content.length()))
+					{
 						content = content.substring(1, content.length() - 1);
+					}
 
 					ret = findCharset(content, ret);
 
@@ -314,7 +328,9 @@ public class Page implements Serializable
 	public void close() throws IOException
 	{
 		if(null != mSource)
+		{
 			mSource.destroy();
+		}
 	}
 
 	/**
@@ -323,6 +339,7 @@ public class Page implements Serializable
 	 * @exception Throwable if <code>close()</code> throws an
 	 * <code>IOException</code>.
 	 */
+	@Override
 	protected void finalize()
 	        throws
 	        Throwable
@@ -406,11 +423,14 @@ public class Page implements Serializable
 		i = cursor.getPosition();
 		offset = mSource.offset();
 		if(offset == i)
+		{
 			try
 			{
 				i = mSource.read();
 				if(StringSource.EOF == i)
+				{
 					ret = EOF;
+				}
 				else
 				{
 					ret = (char)i;
@@ -423,6 +443,7 @@ public class Page implements Serializable
 				        "problem reading a character at position "
 				                + cursor.getPosition(), ioe);
 			}
+		}
 		else if(offset > i)
 		{
 			// historic read
@@ -439,10 +460,12 @@ public class Page implements Serializable
 			cursor.advance();
 		}
 		else
+		{
 			// hmmm, we could skip ahead, but then what about the EOL index
 			throw new ParserException(
 			        "attempt to read future characters from source "
 			                + i + " > " + mSource.offset());
+		}
 
 		// handle \r
 		if('\r' == ret)
@@ -451,6 +474,7 @@ public class Page implements Serializable
 
 			// check for a \n in the next position
 			if(mSource.offset() == cursor.getPosition())
+			{
 				try
 				{
 					i = mSource.read();
@@ -459,8 +483,11 @@ public class Page implements Serializable
 						// do nothing
 					}
 					else if('\n' == (char)i)
+					{
 						cursor.advance();
+					}
 					else
+					{
 						try
 						{
 							mSource.unread();
@@ -471,6 +498,7 @@ public class Page implements Serializable
 							        "can't unread a character at position "
 							                + cursor.getPosition(), ioe);
 						}
+					}
 				}
 				catch(IOException ioe)
 				{
@@ -478,11 +506,15 @@ public class Page implements Serializable
 					        "problem reading a character at position "
 					                + cursor.getPosition(), ioe);
 				}
+			}
 			else
+			{
 				try
 				{
 					if('\n' == mSource.getCharacter(cursor.getPosition()))
+					{
 						cursor.advance();
+					}
 				}
 				catch(IOException ioe)
 				{
@@ -490,10 +522,13 @@ public class Page implements Serializable
 					        "can't read a character at position "
 					                + cursor.getPosition(), ioe);
 				}
+			}
 		}
 		if('\n' == ret)
+		{
 			// update the EOL index in any case
 			mIndex.add(cursor);
+		}
 
 		return(ret);
 	}
@@ -523,7 +558,9 @@ public class Page implements Serializable
 			{
 				ch = mSource.getCharacter(i - 1);
 				if('\r' == ch)
+				{
 					cursor.retreat();
+				}
 			}
 		}
 		catch(IOException ioe)
@@ -611,11 +648,15 @@ public class Page implements Serializable
 		if(!strict && ('?' == link.charAt(0)))
 		{ // remove query part of base if any
 			if(-1 != (index = base.lastIndexOf('?')))
+			{
 				base = base.substring(0, index);
+			}
 			url = new URL(base + link);
 		}
 		else
+		{
 			url = new URL(new URL(base), link);
+		}
 		path = url.getFile();
 		modified = false;
 		absolute = link.startsWith("/");
@@ -635,7 +676,9 @@ public class Page implements Serializable
 					modified = true;
 				}
 				else
+				{
 					break;
+				}
 			}
 		}
 		// fix backslashes
@@ -645,7 +688,9 @@ public class Page implements Serializable
 			modified = true;
 		}
 		if(modified)
+		{
 			url = new URL(url, path);
+		}
 
 		return(url);
 	}
@@ -678,15 +723,22 @@ public class Page implements Serializable
 		String ret;
 
 		if((null == link) || ("".equals(link)))
+		{
 			ret = "";
+		}
 		else
+		{
 			try
 			{
 				base = getBaseUrl();
 				if(null == base)
+				{
 					base = getUrl();
+				}
 				if(null == base)
+				{
 					ret = link;
+				}
 				else
 				{
 					url = constructUrl(link, base, strict);
@@ -697,6 +749,7 @@ public class Page implements Serializable
 			{
 				ret = link;
 			}
+		}
 
 		return(ret);
 	}
@@ -793,9 +846,11 @@ public class Page implements Serializable
 		int length;
 
 		if((mSource.offset() < start) || (mSource.offset() < end))
+		{
 			throw new IllegalArgumentException(
 			        "attempt to extract future characters from source"
 			                + start + "|" + end + " > " + mSource.offset());
+		}
 		if(end < start)
 		{
 			length = end;
@@ -857,7 +912,9 @@ public class Page implements Serializable
 		int length;
 
 		if((mSource.offset() < start) || (mSource.offset() < end))
+		{
 			throw new IllegalArgumentException("attempt to extract future characters from source");
+		}
 		if(end < start)
 		{ // swap
 			length = end;
@@ -901,9 +958,13 @@ public class Page implements Serializable
 			start = mIndex.elementAt(line);
 			line++;
 			if(line <= size)
+			{
 				end = mIndex.elementAt(line);
+			}
 			else
+			{
 				end = mSource.offset();
+			}
 		}
 		else
 		// current line
@@ -930,6 +991,7 @@ public class Page implements Serializable
 	 * Display some of this page as a string.
 	 * @return The last few characters the source read in.
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer buffer;
@@ -941,14 +1003,20 @@ public class Page implements Serializable
 			buffer = new StringBuffer(43);
 			start = mSource.offset() - 40;
 			if(0 > start)
+			{
 				start = 0;
+			}
 			else
+			{
 				buffer.append("...");
+			}
 			getText(buffer, start, mSource.offset());
 			ret = buffer.toString();
 		}
 		else
+		{
 			ret = super.toString();
+		}
 
 		return(ret);
 	}

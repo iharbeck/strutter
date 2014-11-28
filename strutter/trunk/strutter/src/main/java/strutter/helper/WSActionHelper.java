@@ -58,9 +58,13 @@ public class WSActionHelper
 		if(name == null)
 		{
 			if(bean instanceof ConfigWSInterface)
+			{
 				((ConfigWSInterface)bean).doGet();
+			}
 			else
+			{
 				dispatchMethod(bean, "doGet");
+			}
 			return;
 		}
 
@@ -137,7 +141,9 @@ public class WSActionHelper
 		try
 		{
 			while((str = reader.readLine()) != null)
+			{
 				buf.append(str);
+			}
 		}
 		finally
 		{
@@ -156,7 +162,9 @@ public class WSActionHelper
 
 		int c;
 		while((c = is.read()) != -1)
+		{
 			out.write(c);
+		}
 
 		out.close();
 

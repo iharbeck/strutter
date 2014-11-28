@@ -38,54 +38,54 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import strutter.Utils;
 import strutter.config.ActionConfig;
 import strutter.config.ActionPlugin;
 
-public class BasicFilter implements Filter {
+public class BasicFilter implements Filter
+{
 
 	/*
 	 
-  <!-- Struts1 Filter -->
-  <filter>
-    <filter-name>strutterview</filter-name>
-    <filter-class>strutter.view.PageFilter</filter-class>
-    <init-param>
-    	<param-name>encoding</param-name>
+	<!-- Struts1 Filter -->
+	<filter>
+	<filter-name>strutterview</filter-name>
+	<filter-class>strutter.view.PageFilter</filter-class>
+	<init-param>
+		<param-name>encoding</param-name>
 		<param-value>UTF-8</param-value>    <!-- iso-8859-1 -->
-    </init-param>
-  </filter>
-  
-  <filter-mapping>
-    <filter-name>strutterview</filter-name>
-    <url-pattern>*.do</url-pattern> 
-  </filter-mapping>
+	</init-param>
+	</filter>
+	
+	<filter-mapping>
+	<filter-name>strutterview</filter-name>
+	<url-pattern>*.do</url-pattern> 
+	</filter-mapping>
 
-<!-- 
-  <filter>
-    <filter-name>strutter</filter-name>
-    <filter-class>strutter.optional.controller.BasicFilter</filter-class>
-    <init-param>
-    	<param-name>encoding</param-name>
+	<!-- 
+	<filter>
+	<filter-name>strutter</filter-name>
+	<filter-class>strutter.optional.controller.BasicFilter</filter-class>
+	<init-param>
+		<param-name>encoding</param-name>
 		<param-value>UTF-8</param-value>    < iso-8859-1->
-    </init-param>
-  </filter>
+	</init-param>
+	</filter>
 
-  <filter-mapping>
-    <filter-name>strutter</filter-name>
-    <url-pattern>*.go</url-pattern> 
-  </filter-mapping>
--->
+	<filter-mapping>
+	<filter-name>strutter</filter-name>
+	<url-pattern>*.go</url-pattern> 
+	</filter-mapping>
+	-->
 	 */
-	
-	
+
 	public FilterConfig filterConfig;
 
 	// storing all actions here
 	protected HashMap actions = new HashMap();
 
+	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException
+	        FilterChain chain) throws IOException, ServletException
 	{
 		//extract actionname cut of ".do" results in /actionname
 		String look = getActionMappingName(((HttpServletRequest)request).getServletPath());
@@ -94,7 +94,8 @@ public class BasicFilter implements Filter {
 
 		boolean isMultipart = ServletFileUpload.isMultipartContent((HttpServletRequest)request);
 
-		try {
+		try
+		{
 			// Create a factory for disk-based file items
 			FileItemFactory factory = new DiskFileItemFactory();
 
@@ -102,9 +103,11 @@ public class BasicFilter implements Filter {
 			ServletFileUpload upload = new ServletFileUpload(factory);
 
 			// Parse the request
-			List /* FileItem */ items = upload.parseRequest((HttpServletRequest)request);
+			List /* FileItem */items = upload.parseRequest((HttpServletRequest)request);
 
-		} catch (FileUploadException e) {
+		}
+		catch(FileUploadException e)
+		{
 
 		}
 
@@ -113,7 +116,9 @@ public class BasicFilter implements Filter {
 		ConfigWrapper config = (ConfigWrapper)actions.get(look);
 
 		if(config == null)
+		{
 			return;
+		}
 
 		try
 		{
@@ -123,7 +128,9 @@ public class BasicFilter implements Filter {
 
 			bean.doexecute((HttpServletRequest)request, (HttpServletResponse)response);
 
-		} catch (Exception e) {
+		}
+		catch(Exception e)
+		{
 			System.out.println();
 		}
 		//chain.doFilter(request, response);
@@ -133,23 +140,27 @@ public class BasicFilter implements Filter {
 		rd.forward(request, response);
 	}
 
-	public String getActionMappingName(String action) {
+	public String getActionMappingName(String action)
+	{
 
-        String value = action;
-        int question = action.indexOf("?");
-        if (question >= 0) {
-            value = value.substring(0, question);
-        }
+		String value = action;
+		int question = action.indexOf("?");
+		if(question >= 0)
+		{
+			value = value.substring(0, question);
+		}
 
-        int slash = value.lastIndexOf("/");
-        int period = value.lastIndexOf(".");
-        if ((period >= 0) && (period > slash)) {
-            value = value.substring(0, period);
-        }
+		int slash = value.lastIndexOf("/");
+		int period = value.lastIndexOf(".");
+		if((period >= 0) && (period > slash))
+		{
+			value = value.substring(0, period);
+		}
 
-        return value.startsWith("/") ? value : ("/" + value);
-    }
+		return value.startsWith("/") ? value : ("/" + value);
+	}
 
+	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		this.filterConfig = filterConfig;
@@ -157,8 +168,7 @@ public class BasicFilter implements Filter {
 		filterConfig.getServletContext();
 
 		String packagepath = filterConfig.getInitParameter("");
-		packagepath  = "";
-
+		packagepath = "";
 
 		// configs
 
@@ -167,15 +177,19 @@ public class BasicFilter implements Filter {
 		String path = filterConfig.getServletContext().getRealPath("/WEB-INF/classes" + packagepath);
 
 		// Klassen finden
-		ArrayList list  = ActionPlugin.getClasses(path, packagepath);
+		ArrayList list = ActionPlugin.getClasses(path, packagepath);
 
 		System.out.println("## looking for direct actions ##");
-		for (Iterator iterator = list.iterator(); iterator.hasNext();) {
-			try {
-				Class clazz = Class.forName((String) iterator.next());
+		for(Iterator iterator = list.iterator(); iterator.hasNext();)
+		{
+			try
+			{
+				Class clazz = Class.forName((String)iterator.next());
 
 				if(!isInterfaceImplementer(clazz, DirectInterface.class))
+				{
 					continue;
+				}
 
 				// store Actionclass and its configuration
 				ConfigWrapper wrapper = new ConfigWrapper();
@@ -189,24 +203,25 @@ public class BasicFilter implements Filter {
 
 				actions.put(wrapper.getConfig().getPath(), wrapper);
 
-			} catch(Exception e) {
+			}
+			catch(Exception e)
+			{
 				continue;
 			}
 		}
 		System.out.println("## looking for direct actions DONE ##");
 
-
-//		request.setCharacterEncoding(encoding);  // CharsetFilter
-//		response.setCharacterEncoding(encoding);
+		//		request.setCharacterEncoding(encoding);  // CharsetFilter
+		//		response.setCharacterEncoding(encoding);
 	}
 
 	String pathlower = "1";
 	String pathformat = "{PATH}";
 
-
-	public void destroy() {
+	@Override
+	public void destroy()
+	{
 	}
-
 
 	String getPathFromClassName(String fqn, String alias)
 	{
@@ -216,10 +231,12 @@ public class BasicFilter implements Filter {
 
 		// Default toLowerCase
 		if("1".equals(this.getPathlower()))
+		{
 			className = className.toLowerCase();
+		}
 
 		// Eventuell formatieren des PATH
- 		className = getPathformat().replaceAll("\\{PATH\\}", className);
+		className = getPathformat().replaceAll("\\{PATH\\}", className);
 
 		String path = normalizePath(className);
 
@@ -229,9 +246,11 @@ public class BasicFilter implements Filter {
 	/**
 	 * FQN Klassennamen ermitteln
 	 */
-	private String getClassName(String fqn) {
+	private String getClassName(String fqn)
+	{
 		String className = fqn;
-		if(className.indexOf('.') > 0){
+		if(className.indexOf('.') > 0)
+		{
 			className = className.substring(className.lastIndexOf('.') + 1);
 		}
 		return className;
@@ -242,55 +261,75 @@ public class BasicFilter implements Filter {
 		return classname.substring(0, classname.indexOf(patternstr));
 	}
 
-	private String normalizePath(String path) {
+	private String normalizePath(String path)
+	{
 		String ret = path;
 
 		if(ret == null)
+		{
 			return "";
+		}
 		if(!ret.startsWith("/"))
+		{
 			ret = "/" + ret;
+		}
 		if(ret.endsWith("/"))
+		{
 			ret = ret.substring(0, ret.length() - 1);
+		}
 		if(ret.equals("/"))
+		{
 			ret = "";
+		}
 
 		return ret;
 	}
 
-
-	public String getPathlower() {
+	public String getPathlower()
+	{
 		return pathlower;
 	}
 
-	public void setPathlower(String pathlower) {
+	public void setPathlower(String pathlower)
+	{
 		this.pathlower = pathlower;
 	}
 
-	public String getPathformat() {
+	public String getPathformat()
+	{
 		return pathformat;
 	}
 
-	public void setPathformat(String pathformat) {
+	public void setPathformat(String pathformat)
+	{
 		this.pathformat = pathformat;
 	}
 
 	/**
 	 * Subclass checker
 	 */
-	boolean isSubclass(Class target, Class superclass) {
-		for(Class s = target; s != Object.class; s = s.getSuperclass()){
-			if(s == superclass) return true;
+	boolean isSubclass(Class target, Class superclass)
+	{
+		for(Class s = target; s != Object.class; s = s.getSuperclass())
+		{
+			if(s == superclass)
+			{
+				return true;
+			}
 		}
 		return false;
 	}
 
-	boolean isInterfaceImplementer(Class target, Class superclass) {
+	boolean isInterfaceImplementer(Class target, Class superclass)
+	{
 		Class[] interfaces = target.getInterfaces();
-		for(int i=0; i < interfaces.length; i++) {
-			if(interfaces[i] == superclass) return true;
+		for(Class interface1 : interfaces)
+		{
+			if(interface1 == superclass)
+			{
+				return true;
+			}
 		}
 		return false;
 	}
 }
-
-

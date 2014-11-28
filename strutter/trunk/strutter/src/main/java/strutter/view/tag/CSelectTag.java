@@ -64,6 +64,7 @@ public class CSelectTag extends SelectTag
 		this.request = request;
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		String attname = this.getAttribute("name");
@@ -80,9 +81,13 @@ public class CSelectTag extends SelectTag
 				String[] sel = TagHelper.getFormValues(form, attname);
 
 				if(sel == null)
+				{
 					sellist = new ArrayList();
+				}
 				else
+				{
 					sellist = Arrays.asList(sel);
+				}
 
 				// Stringdaten beginnen mit dem value in option
 				// value:optiontext
@@ -107,7 +112,9 @@ public class CSelectTag extends SelectTag
 					String name = optionTag.getAttribute("values");
 
 					if(name == null)
+					{
 						name = optionTag.getAttribute("id");
+					}
 
 					if(name != null)
 					{
@@ -122,13 +129,21 @@ public class CSelectTag extends SelectTag
 						}
 
 						if(listvalues instanceof ArrayList)
+						{
 							generateOptionFrom((ArrayList)listvalues, sellist, hasvalue);
+						}
 						else if(listvalues instanceof String[])
+						{
 							generateOptionFrom((String[])listvalues, sellist, hasvalue);
+						}
 						else if(listvalues instanceof LabelValueBean[])
+						{
 							generateOptionFrom((LabelValueBean[])listvalues, sellist);
+						}
 						else if(listvalues instanceof Map)
+						{
 							generateOptionFrom((Map)listvalues, sellist);
+						}
 					}
 					else
 					{
@@ -154,28 +169,36 @@ public class CSelectTag extends SelectTag
 		OptionTag option = new OptionTag();
 
 		if(value == null)
+		{
 			value = text;
+		}
 
 		if(selected.contains(value))
 		{
 			option.setAttribute("SELECTED", null);
 
 			if(getAttribute("disabled") != null)
+			{
 				disabled += "<input type='hidden' name='" + getAttribute("name") + "' value='" + value + "'>";
+			}
 		}
 
 		if(value.indexOf('"') >= 0)
 		{
 			value = value.replaceAll("\"", "&quot;");
 		}
-		 
+
 		// option.setValue(value);
 		option.setAttribute("VALUE", value, '"');
 
 		if(clazz != null)
+		{
 			option.setAttribute("class", clazz, '"');
+		}
 		if(style != null)
+		{
 			option.setAttribute("style", style, '"');
+		}
 
 		option.setChildren(new NodeList());
 		option.getChildren().add(new TextNode(text));
@@ -220,17 +243,17 @@ public class CSelectTag extends SelectTag
 
 	final void generateOptionFrom(String[] list, List selected, boolean hasvalue) // StringArray
 	{
-		for(int i = 0; i < list.length; i++)
+		for(String element : list)
 		{
-			fillOptions(list[i], selected, hasvalue);
+			fillOptions(element, selected, hasvalue);
 		}
 	}
 
 	final void generateOptionFrom(LabelValueBean[] list, List selected) // LVBArray
 	{
-		for(int i = 0; i < list.length; i++)
+		for(LabelValueBean element : list)
 		{
-			generateOption(list[i].getLabel(), list[i].getValue(), null, null, selected);
+			generateOption(element.getLabel(), element.getValue(), null, null, selected);
 		}
 	}
 
@@ -246,6 +269,7 @@ public class CSelectTag extends SelectTag
 		}
 	}
 
+	@Override
 	public String toHtml()
 	{
 		String tag = super.toHtml();
@@ -253,7 +277,9 @@ public class CSelectTag extends SelectTag
 		try
 		{
 			if(this.getAttribute("error") != null)
+			{
 				tag = TagHelper.handleError(this, request, tag);
+			}
 		}
 		catch(Exception e)
 		{

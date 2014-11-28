@@ -32,7 +32,6 @@ import strutter.htmlparser.lexer.Page;
 import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.nodes.NodeAttribute;
 import strutter.htmlparser.nodes.TagNode;
-import strutter.htmlparser.scanners.Scanner;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
 
@@ -94,6 +93,7 @@ public class ScannerCompositeTag extends ScannerTag
 	 * this tag.
 	 * @return The resultant tag (may be unchanged).
 	 */
+	@Override
 	public TagNode scan(TagNode tag, Lexer lexer, NodeList stack) throws ParserException
 	{
 		Node node;
@@ -105,8 +105,11 @@ public class ScannerCompositeTag extends ScannerTag
 		ret = tag;
 
 		if(ret.isEmptyXmlTag())
+		{
 			ret.setEndTag(ret);
+		}
 		else
+		{
 			do
 			{
 				node = lexer.nextNode(false);
@@ -164,7 +167,9 @@ public class ScannerCompositeTag extends ScannerTag
 								}
 							}
 							else
+							{
 								addChild(ret, next);
+							}
 						}
 						else
 						{
@@ -204,9 +209,13 @@ public class ScannerCompositeTag extends ScannerTag
 										// we'll need to stop if either of those conditions isn't met
 										TagNode boffo = (TagNode)stack.elementAt(i);
 										if(name.equals(boffo.getTagName()))
+										{
 											index = i;
-										else if(isTagToBeEndedFor(boffo, next)) // check DTD
+										}
+										else if(isTagToBeEndedFor(boffo, next))
+										{
 											index = i;
+										}
 									}
 									if(-1 != index)
 									{
@@ -223,10 +232,14 @@ public class ScannerCompositeTag extends ScannerTag
 										node = null;
 									}
 									else
+									{
 										addChild(ret, next); // default behaviour
+									}
 								}
 								else
+								{
 									addChild(ret, next); // default behaviour
+								}
 							}
 						}
 					}
@@ -258,15 +271,20 @@ public class ScannerCompositeTag extends ScannerTag
 									ret = precursor;
 								}
 								else
+								{
 									node = null; // normal recursion
+								}
 							}
 							else
+							{
 								node = null; // normal recursion
+							}
 						}
 					}
 				}
 			}
 			while(null != node);
+		}
 
 		finishTag(ret, lexer);
 
@@ -281,7 +299,9 @@ public class ScannerCompositeTag extends ScannerTag
 	protected void addChild(TagNode parent, Node child)
 	{
 		if(null == parent.getChildren())
+		{
 			parent.setChildren(new NodeList());
+		}
 		child.setParent(parent);
 		parent.getChildren().add(child);
 	}
@@ -299,7 +319,9 @@ public class ScannerCompositeTag extends ScannerTag
 	        ParserException
 	{
 		if(null == tag.getEndTag())
+		{
 			tag.setEndTag(createVirtualEndTag(tag, lexer, lexer.getPage(), lexer.getCursor().getPosition()));
+		}
 		tag.getEndTag().setParent(tag);
 		tag.doSemanticAction();
 	}
@@ -352,15 +374,21 @@ public class ScannerCompositeTag extends ScannerTag
 
 		name = tag.getTagName();
 		if(tag.isEndTag())
+		{
 			ends = current.getEndTagEnders();
+		}
 		else
+		{
 			ends = current.getEnders();
-		for(int i = 0; i < ends.length; i++)
-			if(name.equalsIgnoreCase(ends[i]))
+		}
+		for(String end : ends)
+		{
+			if(name.equalsIgnoreCase(end))
 			{
 				ret = true;
 				break;
 			}
+		}
 
 		return(ret);
 	}

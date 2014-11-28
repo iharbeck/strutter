@@ -57,6 +57,7 @@ public class MetaTag
 	 * Return the set of names handled by this tag.
 	 * @return The names to be matched that create tags of this type.
 	 */
+	@Override
 	public String[] getIds()
 	{
 		return(mIds);
@@ -101,9 +102,13 @@ public class MetaTag
 		NodeAttribute equiv;
 		equiv = getAttributeEx("HTTP-EQUIV");
 		if(null != equiv)
+		{
 			equiv.setValue(httpEquiv);
+		}
 		else
+		{
 			getAttributesEx().add(new NodeAttribute("HTTP-EQUIV", httpEquiv));
+		}
 	}
 
 	/**
@@ -115,9 +120,13 @@ public class MetaTag
 		NodeAttribute content;
 		content = getAttributeEx("CONTENT");
 		if(null != content)
+		{
 			content.setValue(metaTagContents);
+		}
 		else
+		{
 			getAttributesEx().add(new NodeAttribute("CONTENT", metaTagContents));
+		}
 	}
 
 	/**
@@ -129,9 +138,13 @@ public class MetaTag
 		NodeAttribute name;
 		name = getAttributeEx("NAME");
 		if(null != name)
+		{
 			name.setValue(metaTagName);
+		}
 		else
+		{
 			getAttributesEx().add(new NodeAttribute("NAME", metaTagName));
+		}
 	}
 
 	/**
@@ -139,6 +152,7 @@ public class MetaTag
 	 * Check for a charset directive, and if found, set the charset for the page.
 	 * @exception ParserException If setting the encoding fails.
 	 */
+	@Override
 	public void doSemanticAction()
 	        throws
 	        ParserException

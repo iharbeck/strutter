@@ -97,7 +97,6 @@ public class Utils
 		wr.write(file.getFileData());
 	}
 
-
 	/*********************** Struts Request Resources ****************/
 
 	/**
@@ -211,7 +210,9 @@ public class Utils
 		/* Is there a mapping associated with this request? */
 		ActionConfig mapping = getActionConfig(request);
 		if(mapping == null)
+		{
 			return;
+		}
 
 		/* Look up the existing form bean */
 		if("request".equals(mapping.getScope()))
@@ -287,10 +288,9 @@ public class Utils
 
 		return value.startsWith("/") ? value : ("/" + value);
 	}
-	
+
 	public static final String INCLUDE_SERVLET_PATH = "javax.servlet.include.servlet_path";
 	public static final String INCLUDE_PATH_INFO = "javax.servlet.include.path_info";
-
 
 	public static String getActionMappingName(HttpServletRequest request) throws IOException
 	{

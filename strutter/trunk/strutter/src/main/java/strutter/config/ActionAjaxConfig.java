@@ -21,6 +21,7 @@ import strutter.helper.ActionHelper;
 public class ActionAjaxConfig extends FluentConfigurator
 {
 
+	@Override
 	public void configure()
 	{
 		withCreatorType("strutter", StrutterCreator.class.getName());
@@ -136,6 +137,7 @@ public class ActionAjaxConfig extends FluentConfigurator
 
 		Browser.withAllSessions(new Runnable()
 		{
+			@Override
 			public void run()
 			{
 				Collection<ScriptSession> sessions = Browser.getTargetSessions();

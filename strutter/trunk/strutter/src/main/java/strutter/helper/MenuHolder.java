@@ -57,7 +57,9 @@ public class MenuHolder
 		while((line = is.readLine()) != null)
 		{
 			if(line.trim().equals("") || line.trim().startsWith("#") || line.trim().startsWith("--"))
+			{
 				continue;
+			}
 
 			if(line.matches("\\w*:\\s?"))
 			{
@@ -68,7 +70,9 @@ public class MenuHolder
 				continue;
 			}
 			if(buf != null)
+			{
 				buf.append(line).append("\n");
+			}
 		}
 		is.close();
 	}
@@ -78,7 +82,9 @@ public class MenuHolder
 		MenuHolder holder = (MenuHolder)hsHolder.get(name);
 
 		if(holder == null)
+		{
 			throw new Exception("No class mapping for " + name + " [" + id + "]");
+		}
 
 		return holder.getContent(id);
 	}
@@ -88,10 +94,14 @@ public class MenuHolder
 		String content = ((StringBuffer)templates.get(id)).toString();
 
 		if(content == null)
+		{
 			throw new Exception("No menu template available [" + id + "]");
+		}
 
 		if(ActionHelper.isInitialized())
+		{
 			content = doLocalize(content);
+		}
 
 		return content;
 	}
@@ -124,7 +134,9 @@ public class MenuHolder
 	private final String getMessage(String key, MessageResources mr, Locale locale)
 	{
 		if(mr == null)
+		{
 			return ("XXX" + key + "XXX").substring(0, Math.min(30, key.length()));
+		}
 		String msg = mr.getMessage(locale, key).replace('?', 'X');
 		return msg.substring(0, Math.min(30, msg.length()));
 	}

@@ -107,7 +107,9 @@ public class ChainedException
 				ChainedException chain = (ChainedException)throwable;
 				Vector<String> sublist = chain.getMessageList();
 				for(int i = 0; i < sublist.size(); i++)
+				{
 					list.addElement(sublist.elementAt(i));
+				}
 			}
 			else
 			{
@@ -126,11 +128,13 @@ public class ChainedException
 		return throwable;
 	}
 
+	@Override
 	public void printStackTrace()
 	{
 		printStackTrace(System.err);
 	}
 
+	@Override
 	public void printStackTrace(PrintStream out)
 	{
 		synchronized(out)
@@ -148,6 +152,7 @@ public class ChainedException
 		}
 	}
 
+	@Override
 	public void printStackTrace(PrintWriter out)
 	{
 		synchronized(out)

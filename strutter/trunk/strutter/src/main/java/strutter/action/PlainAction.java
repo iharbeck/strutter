@@ -30,12 +30,17 @@ import strutter.helper.PopulateHelper;
 
 public abstract class PlainAction extends BaseAction
 {
+	@Override
 	public ActionForward execute(ActionMapping actionmapping, ActionForm arg1, HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		if(this instanceof FormlessInterface)
+		{
 			return execute_formless();
+		}
 		else
+		{
 			return execute();
+		}
 	}
 
 	public abstract ActionForward execute() throws Exception;
@@ -43,30 +48,37 @@ public abstract class PlainAction extends BaseAction
 	private ActionForward execute_formless() throws Exception
 	{
 		HttpServletRequest request = ActionHelper.getRequest();
-		
+
 		// Get existing Action
 		PlainAction action = (PlainAction)Utils.getActionFormFromSession(request);
 
-		if(action == null) // No Session scope or first call
-			action = (PlainAction)this.getClass().newInstance();
+		if(action == null)
+		{
+			action = this.getClass().newInstance();
+		}
 
 		action.servlet = this.servlet;
 
 		if(action instanceof FormlessInterface)
+		{
 			PopulateHelper.populate(request, action);
+		}
 
 		// Store Action (Form)
 		Utils.setActionForm(request, action);
 
 		if(action instanceof InterceptorInterface)
+		{
 			((InterceptorInterface)action).beforeExecute();
-		
+		}
+
 		ActionForward forward = action.execute();
 
 		if(action instanceof InterceptorInterface)
+		{
 			((InterceptorInterface)action).afterExecute();
-		
-		
+		}
+
 		return forward;
 	}
 

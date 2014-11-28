@@ -18,6 +18,7 @@ public class UniversalMessageResourcesFactory extends PropertyMessageResourcesFa
 {
 	private static final long serialVersionUID = 1L;
 
+	@Override
 	public MessageResources createResources(String config)
 	{
 		try

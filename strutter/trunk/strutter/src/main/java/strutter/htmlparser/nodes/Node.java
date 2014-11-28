@@ -102,6 +102,7 @@ public interface Node extends Cloneable
 	 * @return A string representation of this node suitable for printing,
 	 * that isn't too large.
 	 */
+	@Override
 	String toString();
 
 	/**

@@ -65,7 +65,9 @@ public class ActionConfig
 	{
 		roles += "," + role;
 		if(roles.charAt(0) == ',')
+		{
 			roles = roles.substring(1);
+		}
 	}
 
 	public Forward[] getForwards()
@@ -89,9 +91,13 @@ public class ActionConfig
 
 		String name;
 		if(path.indexOf('_') == -1)
+		{
 			name = "success";
+		}
 		else
+		{
 			name = path.substring(path.lastIndexOf('_') + 1, path.lastIndexOf('.'));
+		}
 
 		return name.toLowerCase();
 	}
@@ -204,9 +210,13 @@ public class ActionConfig
 	public void setPath(String path)
 	{
 		if(!path.startsWith("/"))
+		{
 			this.path = "/" + path;
+		}
 		else
+		{
 			this.path = path;
+		}
 	}
 
 	public String getScope()
@@ -331,9 +341,13 @@ class Forward
 	public void setPath(String path)
 	{
 		if(path != null && !path.startsWith("/") && !path.startsWith("~"))
+		{
 			this.path = "/" + path;
+		}
 		else
+		{
 			this.path = path;
+		}
 	}
 
 	public String getPath()

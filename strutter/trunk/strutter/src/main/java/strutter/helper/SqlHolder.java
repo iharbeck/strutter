@@ -2,7 +2,6 @@ package strutter.helper;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -29,7 +28,9 @@ public class SqlHolder
 		SqlHolder sqlholder = (SqlHolder)hsHolder.get(clazzname);
 
 		if(sqlholder == null)
+		{
 			sqlholder = addSqlHolder(Class.forName(clazzname));
+		}
 
 		return sqlholder;
 	}
@@ -66,7 +67,9 @@ public class SqlHolder
 		{
 			String cline = line.trim();
 			if(cline.equals("") || cline.startsWith("#") || cline.startsWith("--"))
+			{
 				continue;
+			}
 
 			if(cline.matches("\\w*:"))
 			{
@@ -77,7 +80,9 @@ public class SqlHolder
 				continue;
 			}
 			if(buf != null)
+			{
 				buf.append(line).append("\n");
+			}
 		}
 		is.close();
 	}
@@ -113,7 +118,9 @@ public class SqlHolder
 		SqlHolder holder = getSqlHolder(clazzname);
 
 		if(holder == null)
+		{
 			throw new Exception("No class mapping for " + clazzname + " [" + id + "]");
+		}
 
 		return holder.getContent(id, map);
 	}
@@ -123,10 +130,14 @@ public class SqlHolder
 		String content = ((StringBuffer)templates.get(id)).toString();
 
 		if(content == null)
+		{
 			throw new Exception("No SQL template available [" + id + "]");
+		}
 
 		if(map != null)
+		{
 			content = doParameter(content, map);
+		}
 
 		// if(ActionHelper.isInitialized())
 		// content = doLocalize(content);
@@ -152,7 +163,9 @@ public class SqlHolder
 			// if(val == null)
 			// val = "\n--:" + alias + "\n";
 			if(val != null)
+			{
 				buf.append(val);
+			}
 
 			start = m.end();
 		}

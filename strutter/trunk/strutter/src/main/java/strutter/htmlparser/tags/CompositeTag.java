@@ -27,7 +27,6 @@ package strutter.htmlparser.tags;
 
 import java.util.Locale;
 
-import strutter.htmlparser.nodes.AbstractNode;
 import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.nodes.TextNode;
@@ -76,9 +75,13 @@ public class CompositeTag extends TagNode
 		SimpleNodeIterator ret;
 
 		if(null != getChildren())
+		{
 			ret = getChildren().elements();
+		}
 		else
+		{
 			ret = (new NodeList()).elements();
+		}
 
 		return(ret);
 	}
@@ -111,7 +114,9 @@ public class CompositeTag extends TagNode
 	public void removeChild(int i)
 	{
 		if(null != getChildren())
+		{
 			getChildren().remove(i);
+		}
 	}
 
 	/**
@@ -129,6 +134,7 @@ public class CompositeTag extends TagNode
 	 * Return the textual contents of this tag and it's children.
 	 * @return The 'browser' text contents of this tag.
 	 */
+	@Override
 	public String toPlainTextString()
 	{
 		StringBuffer stringRepresentation = new StringBuffer();
@@ -153,7 +159,9 @@ public class CompositeTag extends TagNode
 			node = e.nextNode();
 			// eliminate virtual tags
 			if(!verbatim || !(node.getStartPosition() == node.getEndPosition()))
+			{
 				sb.append(node.toHtml());
+			}
 		}
 	}
 
@@ -167,7 +175,9 @@ public class CompositeTag extends TagNode
 	{
 		// eliminate virtual tags
 		if(!verbatim || !(mEndTag.getStartPosition() == mEndTag.getEndPosition()))
+		{
 			sb.append(getEndTag().toHtml());
+		}
 	}
 
 	/**
@@ -177,6 +187,7 @@ public class CompositeTag extends TagNode
 	 * @return This tag and it's contents (children) and the end tag
 	 * as HTML code.
 	 */
+	@Override
 	public String toHtml(boolean verbatim)
 	{
 		StringBuffer ret;
@@ -187,7 +198,9 @@ public class CompositeTag extends TagNode
 		{
 			putChildrenInto(ret, verbatim);
 			if(null != getEndTag())
+			{
 				putEndTagInto(ret, verbatim);
+			}
 		}
 		return(ret.toString());
 	}
@@ -210,13 +223,19 @@ public class CompositeTag extends TagNode
 				tag = (TagNode)node;
 				String nameAttribute = tag.getAttribute("NAME");
 				if(nameAttribute != null && nameAttribute.equals(name))
+				{
 					found = true;
+				}
 			}
 		}
 		if(found)
+		{
 			return tag;
+		}
 		else
+		{
 			return null;
+		}
 	}
 
 	/**
@@ -283,15 +302,21 @@ public class CompositeTag extends TagNode
 		ret = new NodeList();
 
 		if(!caseSensitive)
+		{
 			searchString = searchString.toUpperCase(locale);
+		}
 		for(SimpleNodeIterator e = children(); e.hasMoreNodes();)
 		{
 			node = e.nextNode();
 			text = node.toPlainTextString();
 			if(!caseSensitive)
+			{
 				text = text.toUpperCase(locale);
+			}
 			if(-1 != text.indexOf(searchString))
+			{
 				ret.add(node);
+			}
 		}
 
 		return(ret);
@@ -312,9 +337,13 @@ public class CompositeTag extends TagNode
 
 		children = getChildren();
 		if(null == children)
+		{
 			ret = new NodeList();
+		}
 		else
+		{
 			ret = children.extractAllNodesThatMatchClass(classType, recursive);
+		}
 
 		return(ret);
 	}
@@ -355,7 +384,9 @@ public class CompositeTag extends TagNode
 		{
 			node = e.nextNode();
 			if(-1 != node.toPlainTextString().toUpperCase(locale).indexOf(text))
+			{
 				return loc;
+			}
 			loc++;
 		}
 		return -1;
@@ -407,7 +438,7 @@ public class CompositeTag extends TagNode
 		StringBuffer buff = new StringBuffer();
 		for(SimpleNodeIterator e = children(); e.hasMoreNodes();)
 		{
-			Node node = (Node)e.nextNode();
+			Node node = e.nextNode();
 			buff.append(node.toHtml());
 		}
 		return buff.toString();
@@ -434,6 +465,7 @@ public class CompositeTag extends TagNode
 	 * <em>Note: If the start and end position of the end tag is the same,
 	 * then the end tag was injected (it's a virtual end tag).</em>
 	 */
+	@Override
 	public TagNode getEndTag()
 	{
 		return(mEndTag);
@@ -446,6 +478,7 @@ public class CompositeTag extends TagNode
 	 * the end tag with a name not equal to the name of the start tag,
 	 * i.e. {@.html <LABEL>The label</TITLE>}
 	 */
+	@Override
 	public void setEndTag(TagNode tag)
 	{
 		mEndTag = tag;
@@ -475,8 +508,10 @@ public class CompositeTag extends TagNode
 				{
 					CompositeTag ctag = (CompositeTag)node;
 					TextNode[] nodes = ctag.digupStringNode(searchText);
-					for(int j = 0; j < nodes.length; j++)
-						stringNodes.add(nodes[j]);
+					for(TextNode node2 : nodes)
+					{
+						stringNodes.add(node2);
+					}
 				}
 			}
 		}
@@ -492,6 +527,7 @@ public class CompositeTag extends TagNode
 	 * Return a string representation of the contents of this tag, it's children and it's end tag suitable for debugging.
 	 * @return A textual representation of the tag.
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer ret;
@@ -506,6 +542,7 @@ public class CompositeTag extends TagNode
 	 * Return the text contained in this tag.
 	 * @return The complete contents of the tag (within the angle brackets).
 	 */
+	@Override
 	public String getText()
 	{
 		String ret;
@@ -540,18 +577,24 @@ public class CompositeTag extends TagNode
 		Node node;
 
 		for(int i = 0; i < level; i++)
+		{
 			buffer.append("  ");
+		}
 		buffer.append(super.toString());
 		buffer.append(System.getProperty("line.separator"));
 		for(SimpleNodeIterator e = children(); e.hasMoreNodes();)
 		{
 			node = e.nextNode();
 			if(node instanceof CompositeTag)
+			{
 				((CompositeTag)node).toString(level + 1, buffer);
+			}
 			else
 			{
 				for(int i = 0; i <= level; i++)
+				{
 					buffer.append("  ");
+				}
 				buffer.append(node);
 				buffer.append(System.getProperty("line.separator"));
 			}
@@ -562,7 +605,9 @@ public class CompositeTag extends TagNode
 		//            if (!(getEndTag ().getStartPosition () == getEndTag ().getEndPosition ()))
 		{
 			for(int i = 0; i <= level; i++)
+			{
 				buffer.append("  ");
+			}
 			buffer.append(getEndTag().toString());
 			buffer.append(System.getProperty("line.separator"));
 		}

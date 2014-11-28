@@ -71,6 +71,7 @@ public class TextNode extends AbstractNode
 	 * This is the same as {@link #toHtml} for this type of node.
 	 * @return The contents of this text node.
 	 */
+	@Override
 	public String getText()
 	{
 		return(toHtml());
@@ -80,6 +81,7 @@ public class TextNode extends AbstractNode
 	 * Sets the string contents of the node.
 	 * @param text The new text for the node.
 	 */
+	@Override
 	public void setText(String text)
 	{
 		mText = text;
@@ -92,6 +94,7 @@ public class TextNode extends AbstractNode
 	 * This is the same as {@link #toHtml} for this type of node.
 	 * @return The contents of this text node.
 	 */
+	@Override
 	public String toPlainTextString()
 	{
 		return(toHtml());
@@ -103,13 +106,16 @@ public class TextNode extends AbstractNode
 	 * page text as possible.
 	 * @return The contents of this text node.
 	 */
+	@Override
 	public String toHtml(boolean verbatim)
 	{
 		String ret;
 
 		ret = mText;
 		if(null == ret)
+		{
 			ret = mPage.getText(getStartPosition(), getEndPosition());
+		}
 
 		return(ret);
 	}
@@ -121,6 +127,7 @@ public class TextNode extends AbstractNode
 	 * sequence and contents is truncated to 80 characters.
 	 * @return A string representation of the string node.
 	 */
+	@Override
 	public String toString()
 	{
 		int startpos;
@@ -218,10 +225,14 @@ public class TextNode extends AbstractNode
 
 		text = mText;
 		if(null == text)
+		{
 			text = mPage.getText(getStartPosition(), getEndPosition());
+		}
 
 		if(text == null || text.trim().equals(""))
+		{
 			return true;
+		}
 		return false;
 	}
 }

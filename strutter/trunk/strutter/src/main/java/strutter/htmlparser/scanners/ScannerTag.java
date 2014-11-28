@@ -65,6 +65,7 @@ public class ScannerTag implements Scanner, Serializable
 	 * this tag.
 	 * @return The resultant tag (may be unchanged).
 	 */
+	@Override
 	public TagNode scan(TagNode tag, Lexer lexer, NodeList stack) throws ParserException
 	{
 		tag.doSemanticAction();

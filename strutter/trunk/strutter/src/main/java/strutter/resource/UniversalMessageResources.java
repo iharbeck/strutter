@@ -60,6 +60,7 @@ public class UniversalMessageResources extends PropertyMessageResources
 		super(factory, Config.init(config));
 	}
 
+	@Override
 	public String getMessage(Locale locale, String key)
 	{
 		if(locale == null)
@@ -77,11 +78,14 @@ public class UniversalMessageResources extends PropertyMessageResources
 		formats.clear();
 	}
 
+	@Override
 	protected synchronized void loadLocale(String localekey)
 	{
 
 		if(locales.get(localekey) != null)
+		{
 			return;
+		}
 
 		super.loadLocale(localekey);
 
@@ -149,7 +153,7 @@ public class UniversalMessageResources extends PropertyMessageResources
 		try
 		{
 			Class clazz = Class.forName(clazzname, false, this.getClass().getClassLoader());
-			return (Connection)clazz.getMethod(methodname, clazzes).invoke(clazz, params);
+			return clazz.getMethod(methodname, clazzes).invoke(clazz, params);
 		}
 		catch(Exception e)
 		{

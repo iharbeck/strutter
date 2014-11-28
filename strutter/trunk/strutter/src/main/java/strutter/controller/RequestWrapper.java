@@ -14,11 +14,13 @@ public class RequestWrapper extends HttpServletRequestWrapper
 		super(request);
 	}
 
+	@Override
 	public boolean isUserInRole(String role)
 	{
 		return ActionHelper.hasRole(role);
 	}
 
+	@Override
 	public String getRemoteUser()
 	{
 		return ActionHelper.getUsername();

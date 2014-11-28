@@ -25,7 +25,7 @@
 
 package strutter.htmlparser.util.sort;
 
-import java.util.*;
+import java.util.Vector;
 
 /**
  * A quick sort algorithm to sort Vectors or arrays.
@@ -76,7 +76,9 @@ public class Sort
 			ordered = set.fetch(mid, ordered);
 			result = ref.compare(ordered);
 			if(0 == result)
+			{
 				ret = mid;
+			}
 			else if(0 > result)
 			{
 				hi = mid - 1;
@@ -89,7 +91,9 @@ public class Sort
 			}
 		}
 		if(-1 == ret)
+		{
 			ret = lo;
+		}
 
 		return(ret);
 	}
@@ -130,7 +134,9 @@ public class Sort
 			mid = lo + ((0 != (num & 1)) ? half : half - 1);
 			result = ref.compare(vector.elementAt(mid));
 			if(0 == result)
+			{
 				ret = mid;
+			}
 			else if(0 > result)
 			{
 				hi = mid - 1;
@@ -143,7 +149,9 @@ public class Sort
 			}
 		}
 		if(-1 == ret)
+		{
 			ret = lo;
+		}
 
 		return(ret);
 	}
@@ -184,7 +192,9 @@ public class Sort
 			mid = lo + ((0 != (num & 1)) ? half : half - 1);
 			result = ref.compare(array[mid]);
 			if(0 == result)
+			{
 				ret = mid;
+			}
 			else if(0 > result)
 			{
 				hi = mid - 1;
@@ -197,7 +207,9 @@ public class Sort
 			}
 		}
 		if(-1 == ret)
+		{
 			ret = lo;
+		}
 
 		return(ret);
 	}

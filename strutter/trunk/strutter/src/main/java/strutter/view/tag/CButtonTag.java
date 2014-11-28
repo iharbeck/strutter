@@ -19,16 +19,19 @@ public class CButtonTag extends CompositeTag
 
 	private static final String[] mIds = new String[] { "BUTTON" };
 
+	@Override
 	public String[] getIds()
 	{
 		return(mIds);
 	}
 
+	@Override
 	public String[] getEnders()
 	{
 		return(mIds);
 	}
 
+	@Override
 	public String[] getEndTagEnders()
 	{
 		return(new String[0]);
@@ -42,9 +45,12 @@ public class CButtonTag extends CompositeTag
 		ActionConfig mapping = (ActionConfig)request.getAttribute(Globals.MAPPING_KEY);
 
 		if(mapping != null && mapping.getParameter() != null)
+		{
 			this.actionname = mapping.getParameter();
+		}
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		// String name = getAttribute("name");

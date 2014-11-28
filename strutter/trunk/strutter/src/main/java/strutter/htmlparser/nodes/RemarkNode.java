@@ -70,6 +70,7 @@ public class RemarkNode extends AbstractNode
 	 * Returns the text contents of the comment tag.
 	 * @return The contents of the text inside the comment delimiters.
 	 */
+	@Override
 	public String getText()
 	{
 		int start;
@@ -81,12 +82,18 @@ public class RemarkNode extends AbstractNode
 			start = getStartPosition() + 4; // <!--
 			end = getEndPosition() - 3; // -->
 			if(start >= end)
+			{
 				ret = "";
+			}
 			else
+			{
 				ret = mPage.getText(start, end);
+			}
 		}
 		else
+		{
 			ret = mText;
+		}
 
 		return(ret);
 	}
@@ -96,11 +103,14 @@ public class RemarkNode extends AbstractNode
 	 * If the text has the remark delimiters (&lt;!-- --&gt;), these are stripped off.
 	 * @param text The new text for the node.
 	 */
+	@Override
 	public void setText(String text)
 	{
 		mText = text;
 		if(text.startsWith("<!--") && text.endsWith("-->"))
+		{
 			mText = text.substring(4, text.length() - 3);
+		}
 		nodeBegin = 0;
 		nodeEnd = mText.length();
 	}
@@ -109,6 +119,7 @@ public class RemarkNode extends AbstractNode
 	 * Return the remark text.
 	 * @return The HTML comment.
 	 */
+	@Override
 	public String toPlainTextString()
 	{
 		return("");
@@ -120,13 +131,16 @@ public class RemarkNode extends AbstractNode
 	 * page text as possible.
 	 * @return The comment, i.e. {@.html <!-- this is a comment -->}.
 	 */
+	@Override
 	public String toHtml(boolean verbatim)
 	{
 		StringBuffer buffer;
 		String ret;
 
 		if(null == mText)
+		{
 			ret = mPage.getText(getStartPosition(), getEndPosition());
+		}
 		else
 		{
 			buffer = new StringBuffer(mText.length() + 7);
@@ -146,6 +160,7 @@ public class RemarkNode extends AbstractNode
 	 * sequence and contents is truncated to 80 characters.
 	 * @return A string representation of the remark node.
 	 */
+	@Override
 	public String toString()
 	{
 		int startpos;
