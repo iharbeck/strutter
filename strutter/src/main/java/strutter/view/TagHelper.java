@@ -24,12 +24,16 @@ public class TagHelper
 		ActionMessages am = Utils.getErrors((HttpServletRequest)request);
 
 		if(am.size() == 0)
+		{
 			throw new Exception();
+		}
 
 		String att = tag.getAttribute("error");
 
 		if(att == null)
+		{
 			throw new Exception();
+		}
 
 		tag.removeAttribute("error");
 
@@ -44,11 +48,17 @@ public class TagHelper
 		{
 			att = att.toLowerCase();
 			if(att.equals("behind"))
+			{
 				return superhtml + " <span class=\"error_label\"> " + val + " </span>";
+			}
 			else if(att.equals("before"))
+			{
 				return "<span class=\"error_label\"> " + val + " </span> " + superhtml;
+			}
 			else if(att.equals("class"))
+			{
 				tag.setAttribute("class", "error_control", '"');
+			}
 		}
 
 		return superhtml;
@@ -57,7 +67,9 @@ public class TagHelper
 	public static String handleList(TagNode tag, ServletRequest request, ActionMessages am)
 	{
 		if(am == null)
+		{
 			return null;
+		}
 
 		String val = "";
 		Iterator msgs = null;
@@ -76,7 +88,9 @@ public class TagHelper
 		}
 
 		if(size == 0)
+		{
 			return null;
+		}
 
 		Locale loc = (Locale)((HttpServletRequest)request).getSession().getAttribute(Globals.LOCALE_KEY);
 		MessageResources resources = (MessageResources)request.getAttribute(Globals.MESSAGES_KEY);
@@ -85,9 +99,13 @@ public class TagHelper
 		{
 			ActionMessage msg = (ActionMessage)msgs.next();
 			if(size > 1)
+			{
 				val += "<li>" + resources.getMessage(loc, msg.getKey(), msg.getValues()) + "\n";
+			}
 			else
+			{
 				val += resources.getMessage(loc, msg.getKey(), msg.getValues());
+			}
 		}
 
 		return val;
@@ -105,14 +123,18 @@ public class TagHelper
 			//String ret = (String)BeanUtil.getProperty(form, name);
 			String ret = BeanUtils.getProperty(form, name);
 			if(ret == null)
+			{
 				return "";
+			}
 			return ret;
 		}
 		//catch(Exception e)
 		catch(NoSuchMethodException e)
 		{
 			if(!name.equals(actionname))
+			{
 				System.out.println("Strutter: missing attribute [" + name + "]");
+			}
 			//System.out.println(e);
 			return null;
 		}

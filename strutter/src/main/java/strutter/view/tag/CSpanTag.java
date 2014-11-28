@@ -19,7 +19,6 @@ package strutter.view.tag;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-
 import strutter.Utils;
 import strutter.helper.ActionHelper;
 import strutter.htmlparser.nodes.TextNode;
@@ -43,20 +42,26 @@ public class CSpanTag extends SpanTag
 		this.request = request;
 	}
 
+	@Override
 	public String toHtml()
 	{
 		if(plain)
+		{
 			return this.getChildren().toHtml();
+		}
 
 		return remove ? "" : super.toHtml();
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		String type = this.getAttribute("type");
 
 		if(type == null)
+		{
 			return;
+		}
 
 		SpanTag span = new SpanTag();
 		span.setTagName("/" + this.getTagName());
@@ -69,11 +74,17 @@ public class CSpanTag extends SpanTag
 		try
 		{
 			if(type.startsWith("text"))
+			{
 				val = TagHelper.getFormValue(form, this.getAttribute("id"));
+			}
 			else if(type.equals("error") || type.equals("errors"))
+			{
 				val = TagHelper.handleList(this, request, Utils.getErrors((HttpServletRequest)request));
+			}
 			else if(type.equals("message") || type.equals("messages"))
+			{
 				val = TagHelper.handleList(this, request, Utils.getMessages((HttpServletRequest)request));
+			}
 			else if(type.startsWith("resource"))
 			{
 				// Locale loc = (Locale)
@@ -89,9 +100,13 @@ public class CSpanTag extends SpanTag
 			}
 
 			if(type.endsWith("_min"))
+			{
 				this.removeAttribute("id");
+			}
 			else if(type.endsWith("_plain"))
+			{
 				plain = true;
+			}
 
 			if(val == null || val.equals(""))
 			{

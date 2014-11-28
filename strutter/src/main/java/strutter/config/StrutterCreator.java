@@ -19,6 +19,7 @@ public class StrutterCreator extends AbstractCreator implements Creator
 	private String actionclass;
 	private Class<?> clazz = null;
 
+	@Override
 	public Class<?> getType()
 	{
 
@@ -26,7 +27,7 @@ public class StrutterCreator extends AbstractCreator implements Creator
 		{
 			try
 			{
-				clazz = (Class<?>)getInstance().getClass();
+				clazz = getInstance().getClass();
 			}
 			catch(InstantiationException ex)
 			{
@@ -42,6 +43,7 @@ public class StrutterCreator extends AbstractCreator implements Creator
 	 * 
 	 * @see org.directwebremoting.Creator#getInstance()
 	 */
+	@Override
 	public Object getInstance() throws InstantiationException
 	{
 		Object form = null;

@@ -78,6 +78,7 @@ public class FormTag extends CompositeTag
 	 * Return the set of names handled by this tag.
 	 * @return The names to be matched that create tags of this type.
 	 */
+	@Override
 	public String[] getIds()
 	{
 		return(mIds);
@@ -87,6 +88,7 @@ public class FormTag extends CompositeTag
 	 * Return the set of tag names that cause this tag to finish.
 	 * @return The names of following tags that stop further scanning.
 	 */
+	@Override
 	public String[] getEnders()
 	{
 		return(mIds);
@@ -96,6 +98,7 @@ public class FormTag extends CompositeTag
 	 * Return the set of end tag names that cause this tag to finish.
 	 * @return The names of following end tags that stop further scanning.
 	 */
+	@Override
 	public String[] getEndTagEnders()
 	{
 		return(mEndTagEnders);
@@ -126,8 +129,10 @@ public class FormTag extends CompositeTag
 	public String getFormLocation()
 	{
 		if(null == mFormLocation)
+		{
 			// ... is it true that without an ACTION the default is to send it back to the same page?
 			mFormLocation = extractFormLocn();
+		}
 
 		return(mFormLocation);
 	}
@@ -153,7 +158,9 @@ public class FormTag extends CompositeTag
 
 		ret = getAttribute("METHOD");
 		if(null == ret)
+		{
 			ret = GET;
+		}
 
 		return(ret);
 	}
@@ -176,12 +183,18 @@ public class FormTag extends CompositeTag
 			inputTag = (InputTag)e.nextNode();
 			inputTagName = inputTag.getAttribute("NAME");
 			if(inputTagName != null && inputTagName.equalsIgnoreCase(name))
+			{
 				found = true;
+			}
 		}
 		if(found)
+		{
 			return(inputTag);
+		}
 		else
+		{
 			return(null);
+		}
 	}
 
 	/**
@@ -207,18 +220,25 @@ public class FormTag extends CompositeTag
 			textareaTag = (TextareaTag)e.nextNode();
 			String textAreaName = textareaTag.getAttribute("NAME");
 			if(textAreaName != null && textAreaName.equals(name))
+			{
 				found = true;
+			}
 		}
 		if(found)
+		{
 			return(textareaTag);
+		}
 		else
+		{
 			return(null);
+		}
 	}
 
 	/**
 	 * Return a string representation of the contents of this <code>FORM</code> tag suitable for debugging.
 	 * @return A textual representation of the form tag.
 	 */
+	@Override
 	public String toString()
 	{
 		return "FORM TAG : Form at " + getFormLocation() + "; begins at : " + getStartPosition() + "; ends at : " + getEndPosition();
@@ -234,9 +254,13 @@ public class FormTag extends CompositeTag
 
 		ret = getAttribute("ACTION");
 		if(null == ret)
+		{
 			ret = "";
+		}
 		else if(null != getPage())
+		{
 			ret = getPage().getAbsoluteURL(ret);
+		}
 
 		return(ret);
 	}

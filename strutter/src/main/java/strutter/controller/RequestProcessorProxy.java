@@ -15,7 +15,6 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,6 +73,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 	ClassLoader classloader = null;
 
+	@Override
 	public void init(ActionServlet servlet, ModuleConfig moduleConfig)
 	        throws ServletException
 	{
@@ -91,7 +91,9 @@ public class RequestProcessorProxy extends RequestProcessor
 		}
 
 		if(!(proxy instanceof ComposableRequestProcessor))
+		{
 			log.warn("ActionHelper require subclass of ComposableRequestProcessor");
+		}
 
 		CatalogFactory factory = CatalogFactory.getInstance();
 
@@ -117,6 +119,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		actionfieldname = plugin.getParameter();
 	}
 
+	@Override
 	public void destroy()
 	{
 		super.destroy();
@@ -130,6 +133,7 @@ public class RequestProcessorProxy extends RequestProcessor
 	// actionfieldname = mapping.getParameter();
 	// }
 
+	@Override
 	public void process(HttpServletRequest _request, HttpServletResponse _response) throws IOException, ServletException
 	{
 		//DEBUG System.out.println("" + System.currentTimeMillis() + _request.getRequestURL() + "?" + _request.getQueryString());
@@ -143,7 +147,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 		long start = System.currentTimeMillis();
 
-		RequestWrapper requestwrapper = new RequestWrapper((HttpServletRequest)_request);
+		RequestWrapper requestwrapper = new RequestWrapper(_request);
 
 		ActionMappingExtended mappingext = null;
 
@@ -163,7 +167,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			ActionConfig mapping = ahd.getMapping();
 
 			if(mapping instanceof ActionMappingExtended)
+			{
 				mappingext = (ActionMappingExtended)mapping;
+			}
 
 			// do the character encoding staff
 			requestwrapper.setCharacterEncoding(plugin.getEncoding()); // CharsetFilter
@@ -208,7 +214,7 @@ public class RequestProcessorProxy extends RequestProcessor
 			// }
 
 			// Wrapper
-			ResponseWrapper responsewrapper = new ResponseWrapper((HttpServletResponse)_response);
+			ResponseWrapper responsewrapper = new ResponseWrapper(_response);
 
 			proxy.process(requestwrapper, responsewrapper);
 
@@ -224,7 +230,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			}
 
 			if(doc == null)
+			{
 				return;
+			}
 
 			Object form = null;
 
@@ -245,13 +253,17 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(isMainThread && isHeading)
 			{
 				if(plugin.getDoctype().equals("1"))
+				{
 					out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\" \"http://www.w3.org/TR/html4/strict.dtd\">\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=8\"> ");
+				}
 
 				// out.write("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">\n");
 				// out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
 
 				if(plugin.getScript().equals("1") || plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1") || plugin.getTemplate().equals("1"))
+				{
 					out.write("<SCRIPT src='strutter.do?js' type='text/javascript'></SCRIPT>\n");
+				}
 			}
 
 			if(isRemoting)
@@ -267,7 +279,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			//System.out.println(doc);
 
 			if(plugin.getViewer().equals("1"))
+			{
 				doc = htmlProcessing(requestwrapper, form, doc);
+			}
 
 			String decorator = (String)requestwrapper.getAttribute("decorator_name");
 
@@ -275,10 +289,10 @@ public class RequestProcessorProxy extends RequestProcessor
 			{
 				requestwrapper.setAttribute("decorator_body", doc);
 
-				ResponseWrapper decoresponsewrapper = new ResponseWrapper((HttpServletResponse)_response);
+				ResponseWrapper decoresponsewrapper = new ResponseWrapper(_response);
 
 				RequestDispatcher dispatcher = requestwrapper.getRequestDispatcher("include/decorator/" + decorator);
-				dispatcher.include((ServletRequest)requestwrapper, (ServletResponse)decoresponsewrapper);
+				dispatcher.include(requestwrapper, decoresponsewrapper);
 
 				try
 				{
@@ -307,7 +321,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			if(isMainThread && isHeading)
 			{
 				if(plugin.getTemplate().equals("1"))
+				{
 					out.write(template);
+				}
 
 				if(plugin.getSessioncheck().equals("1"))
 				{
@@ -325,10 +341,14 @@ public class RequestProcessorProxy extends RequestProcessor
 				}
 
 				if(plugin.getCookiecheck().equals("1") || plugin.getSessioncheck().equals("1"))
+				{
 					out.write("<script>strutterloaded();</script>\n");
+				}
 
 				if(plugin.getKeepalive().equals("1"))
+				{
 					out.write("<script>addkeepalive();</script>\n");
+				}
 			}
 
 			/** AUTOINCLUDE package JS */
@@ -386,7 +406,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			ActionHelper.remove();
 
 			if(mappingext != null)
+			{
 				mappingext.setHeading(true);
+			}
 
 			try
 			{
@@ -479,7 +501,9 @@ public class RequestProcessorProxy extends RequestProcessor
 			NodeFactory factory = new NodeFactory();
 
 			if(form == null)
+			{
 				form = new Object();
+			}
 
 			factory.registerTag(new CSelectTag(form, request));
 			factory.registerTag(new CInputTag(form, request));
@@ -534,7 +558,9 @@ public class RequestProcessorProxy extends RequestProcessor
 		String internal = request.getQueryString();
 
 		if(internal == null)
+		{
 			return;
+		}
 
 		if(internal.equals("js"))
 		{
@@ -547,7 +573,9 @@ public class RequestProcessorProxy extends RequestProcessor
 				script = script.replaceAll("##sessiontimeout##", Integer.toString((session.getMaxInactiveInterval() * 1000) - (10 * 1000)));
 
 				if(actionfieldname != null)
+				{
 					script = script.replaceAll("##actionname##", actionfieldname);
+				}
 
 				ETAG_VALUE = String.valueOf(script.hashCode());
 			}
@@ -583,7 +611,7 @@ public class RequestProcessorProxy extends RequestProcessor
 		}
 		else if(internal.startsWith("killer"))
 		{
-			HttpSession session = ((HttpServletRequest)request).getSession();
+			HttpSession session = request.getSession();
 
 			try
 			{
@@ -592,9 +620,11 @@ public class RequestProcessorProxy extends RequestProcessor
 				System.out.println("kill: " + thread);
 
 				if(thread != null)
+				{
 					thread.interrupt();
+				}
 
-				((HttpServletResponse)response).sendRedirect("");
+				response.sendRedirect("");
 			}
 			catch(Exception e)
 			{
@@ -615,7 +645,9 @@ public class RequestProcessorProxy extends RequestProcessor
 
 			int data;
 			while((data = in.read()) != -1)
+			{
 				out.write(data);
+			}
 
 			response.setContentType("image/gif");
 			out.flush();
@@ -632,14 +664,18 @@ public class RequestProcessorProxy extends RequestProcessor
 	public boolean interceptorBefore() throws ServletException, IOException
 	{
 		if(!(ActionHelper.getMapping() instanceof ActionMappingExtended))
+		{
 			return false;
+		}
 
 		ActionMappingExtended mapping = (ActionMappingExtended)ActionHelper.getMapping();
 
 		for(int i = 0; mapping != null && i < mapping.getInterceptors().size(); i++)
 		{
 			if(!(mapping.getInterceptors().get(i) instanceof WebInterceptorInterface))
+			{
 				continue;
+			}
 			WebInterceptorInterface interceptor = (WebInterceptorInterface)mapping.getInterceptors().get(i);
 			ActionForward forward = interceptor.beforeView();
 
@@ -656,14 +692,18 @@ public class RequestProcessorProxy extends RequestProcessor
 	public boolean interceptorAfter() throws ServletException, IOException
 	{
 		if(!(ActionHelper.getMapping() instanceof ActionMappingExtended))
+		{
 			return false;
+		}
 
 		ActionMappingExtended mapping = (ActionMappingExtended)ActionHelper.getMapping();
 
 		for(int i = 0; mapping != null && i < mapping.getInterceptors().size(); i++)
 		{
 			if(!(mapping.getInterceptors().get(i) instanceof WebInterceptorInterface))
+			{
 				continue;
+			}
 			WebInterceptorInterface interceptor = (WebInterceptorInterface)mapping.getInterceptors().get(i);
 			ActionForward forward = interceptor.afterView();
 
@@ -685,12 +725,15 @@ public class RequestProcessorProxy extends RequestProcessor
 class BeforeRenderCommand implements Command
 {
 
+	@Override
 	public boolean execute(Context context) throws Exception
 	{
 		ActionForward helperforward = ActionHelper.endInterceptors();
 
 		if(helperforward != null)
+		{
 			((ServletActionContext)context).setForwardConfig(helperforward);
+		}
 
 		return false;
 	}
@@ -708,12 +751,14 @@ class RMatcher
 	public final void matchall(ActionHelperData ahd, StringWriter out, String val)
 	{
 		if(val == null)
+		{
 			return;
+		}
 
-		MessageResources resources = (MessageResources) ahd.getRequest().getAttribute(Globals.MESSAGES_KEY);
+		MessageResources resources = (MessageResources)ahd.getRequest().getAttribute(Globals.MESSAGES_KEY);
 
-		Locale locale = ahd.getLocale();	
-		
+		Locale locale = ahd.getLocale();
+
 		Matcher matcher = pattern.matcher(val);
 
 		// without match return without copy / change

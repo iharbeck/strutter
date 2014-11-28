@@ -136,7 +136,9 @@ public class Lexer extends NodeFactory implements Serializable
 	public void setPage(Page page)
 	{
 		if(null == page)
+		{
 			throw new IllegalArgumentException("page cannot be null");
+		}
 		// todo: sanity checks
 		mPage = page;
 	}
@@ -157,7 +159,9 @@ public class Lexer extends NodeFactory implements Serializable
 	public void setCursor(Cursor cursor)
 	{
 		if(null == cursor)
+		{
 			throw new IllegalArgumentException("cursor cannot be null");
+		}
 		// todo: sanity checks
 		mCursor = cursor;
 	}
@@ -178,7 +182,9 @@ public class Lexer extends NodeFactory implements Serializable
 	public void setNodeFactory(NodeFactory factory)
 	{
 		if(null == factory)
+		{
 			throw new IllegalArgumentException("node factory cannot be null");
+		}
 		mFactory = factory;
 	}
 
@@ -270,7 +276,9 @@ public class Lexer extends NodeFactory implements Serializable
 			Page page = getPage();
 			int lineno = page.row(mCursor);
 			if(mDebugLineTrigger < lineno)
+			{
 				mDebugLineTrigger = lineno + 1; // trigger on next line too
+			}
 		}
 		start = mCursor.getPosition();
 		ch = mPage.getCharacter(mCursor);
@@ -282,7 +290,9 @@ public class Lexer extends NodeFactory implements Serializable
 			case '<':
 				ch = mPage.getCharacter(mCursor);
 				if(Page.EOF == ch)
+				{
 					ret = makeString(start, mCursor.getPosition());
+				}
 				else if('%' == ch)
 				{
 					mPage.ungetCharacter(mCursor);
@@ -302,16 +312,22 @@ public class Lexer extends NodeFactory implements Serializable
 				{
 					ch = mPage.getCharacter(mCursor);
 					if(Page.EOF == ch)
+					{
 						ret = makeString(start, mCursor.getPosition());
+					}
 					else
 					{
-						if('>' == ch) // handle <!>
+						if('>' == ch)
+						{
 							ret = makeRemark(start, mCursor.getPosition());
+						}
 						else
 						{
 							mPage.ungetCharacter(mCursor); // remark/tag need this char
 							if('-' == ch)
+							{
 								ret = parseRemark(start, quotesmart);
+							}
 							else
 							{
 								mPage.ungetCharacter(mCursor); // tag needs prior one too
@@ -401,56 +417,86 @@ public class Lexer extends NodeFactory implements Serializable
 							break;
 						case '\'':
 							if(quotesmart && !comment)
+							{
 								if(0 == quote)
+								{
 									quote = '\''; // enter quoted state
+								}
 								else if('\'' == quote)
+								{
 									quote = 0; // exit quoted state
+								}
+							}
 							break;
 						case '"':
 							if(quotesmart && !comment)
+							{
 								if(0 == quote)
+								{
 									quote = '"'; // enter quoted state
+								}
 								else if('"' == quote)
+								{
 									quote = 0; // exit quoted state
+								}
+							}
 							break;
 						case '\\':
 							if(quotesmart)
+							{
 								if(0 != quote)
 								{
 									ch = mPage.getCharacter(mCursor); // try to consume escaped character
 									if(Page.EOF == ch)
+									{
 										done = true;
+									}
 									else if((ch != '\\') && (ch != quote))
+									{
 										// unconsume char if character was not an escapable char.
 										mPage.ungetCharacter(mCursor);
+									}
 								}
+							}
 							break;
 						case '/':
 							if(quotesmart)
+							{
 								if(0 == quote)
 								{
 									// handle multiline and double slash comments (with a quote)
 									ch = mPage.getCharacter(mCursor);
 									if(Page.EOF == ch)
+									{
 										done = true;
+									}
 									else if('/' == ch)
+									{
 										comment = true;
+									}
 									else if('*' == ch)
 									{
 										do
 										{
 											do
+											{
 												ch = mPage.getCharacter(mCursor);
+											}
 											while((Page.EOF != ch) && ('*' != ch));
 											ch = mPage.getCharacter(mCursor);
 											if(ch == '*')
+											{
 												mPage.ungetCharacter(mCursor);
+											}
 										}
 										while((Page.EOF != ch) && ('/' != ch));
 									}
 									else
+									{
 										mPage.ungetCharacter(mCursor);
+									}
 								}
+							}
 							break;
 						case '\n':
 							comment = false;
@@ -459,10 +505,14 @@ public class Lexer extends NodeFactory implements Serializable
 							if(quotesmart)
 							{
 								if(0 == quote)
+								{
 									state = 1;
+								}
 							}
 							else
+							{
 								state = 1;
+							}
 							break;
 						default:
 							break;
@@ -480,19 +530,29 @@ public class Lexer extends NodeFactory implements Serializable
 						case '!':
 							ch = mPage.getCharacter(mCursor);
 							if(Page.EOF == ch)
+							{
 								done = true;
+							}
 							else if('-' == ch)
 							{
 								ch = mPage.getCharacter(mCursor);
 								if(Page.EOF == ch)
+								{
 									done = true;
+								}
 								else if('-' == ch)
+								{
 									state = 3;
+								}
 								else
+								{
 									state = 0;
+								}
 							}
 							else
+							{
 								state = 0;
+							}
 							break;
 						default:
 							state = 0;
@@ -502,7 +562,9 @@ public class Lexer extends NodeFactory implements Serializable
 				case 2: // </
 					comment = false;
 					if(Page.EOF == ch)
+					{
 						done = true;
+					}
 					else if(Character.isLetter(ch))
 					{
 						done = true;
@@ -512,24 +574,34 @@ public class Lexer extends NodeFactory implements Serializable
 						mPage.ungetCharacter(mCursor);
 					}
 					else
+					{
 						state = 0;
+					}
 					break;
 				case 3: // <!
 					comment = false;
 					if(Page.EOF == ch)
+					{
 						done = true;
+					}
 					else if('-' == ch)
 					{
 						ch = mPage.getCharacter(mCursor);
 						if(Page.EOF == ch)
+						{
 							done = true;
+						}
 						else if('-' == ch)
 						{
 							ch = mPage.getCharacter(mCursor);
 							if(Page.EOF == ch)
+							{
 								done = true;
+							}
 							else if('>' == ch)
+							{
 								state = 0;
+							}
 							else
 							{
 								mPage.ungetCharacter(mCursor);
@@ -537,7 +609,9 @@ public class Lexer extends NodeFactory implements Serializable
 							}
 						}
 						else
+						{
 							mPage.ungetCharacter(mCursor);
+						}
 					}
 					break;
 				default:
@@ -560,6 +634,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param end The ending positiong of the string.
 	 * @return The created Text node.
 	 */
+	@Override
 	public TextNode createStringNode(Page page, int start, int end)
 	{
 		return(new TextNode(page, start, end));
@@ -572,6 +647,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param end The ending positiong of the remark.
 	 * @return The created Remark node.
 	 */
+	@Override
 	public RemarkNode createRemarkNode(Page page, int start, int end)
 	{
 		return(new RemarkNode(page, start, end));
@@ -589,6 +665,7 @@ public class Lexer extends NodeFactory implements Serializable
 	 * @param attributes The attributes contained in this tag.
 	 * @return The created Tag node.
 	 */
+	@Override
 	public TagNode createTagNode(Page page, int start, int end, Vector<NodeAttribute> attributes)
 	{
 		return(new TagNode(page, start, end, attributes));
@@ -646,29 +723,43 @@ public class Lexer extends NodeFactory implements Serializable
 		{
 			ch = mPage.getCharacter(cursor);
 			if(Page.EOF == ch)
+			{
 				done = true;
+			}
 			else
+			{
 				switch(state)
 				{
 					case 0:
-						if(0x1b == ch) // escape
+						if(0x1b == ch)
+						{
 							state = 1;
+						}
 						break;
 					case 1:
 						if('(' == ch)
+						{
 							state = 2;
+						}
 						else
+						{
 							state = 0;
+						}
 						break;
 					case 2:
 						if('B' == ch || 'J' == ch || 'H' == ch || 'I' == ch)
+						{
 							done = true;
+						}
 						else
+						{
 							state = 0;
+						}
 						break;
 					default:
 						throw new IllegalStateException("state " + state);
 				}
+			}
 		}
 	}
 
@@ -696,37 +787,44 @@ public class Lexer extends NodeFactory implements Serializable
 		{
 			ch = mPage.getCharacter(mCursor);
 			if(Page.EOF == ch)
+			{
 				done = true;
+			}
 			else if(0x1b == ch) // escape
 			{
 				ch = mPage.getCharacter(mCursor);
 				if(Page.EOF == ch)
+				{
 					done = true;
+				}
 				else if('$' == ch)
 				{
 					ch = mPage.getCharacter(mCursor);
 					if(Page.EOF == ch)
-						done = true;
-					// JIS X 0208-1978 and JIS X 0208-1983
-					else if('@' == ch || 'B' == ch)
-						scanJIS(mCursor);
-					/*
-					// JIS X 0212-1990
-					else if ('(' == ch)
 					{
-					    ch = mPage.getCharacter (mCursor);
-					    if (Page.EOF == ch)
-					        done = true;
-					    else if ('D' == ch)
-					        scanJIS (mCursor);
-					    else
-					    {
-					        mPage.ungetCharacter (mCursor);
-					        mPage.ungetCharacter (mCursor);
-					        mPage.ungetCharacter (mCursor);
-					    }
+						done = true;
 					}
-					*/
+					else if('@' == ch || 'B' == ch)
+					{
+						scanJIS(mCursor);
+						/*
+						// JIS X 0212-1990
+						else if ('(' == ch)
+						{
+						    ch = mPage.getCharacter (mCursor);
+						    if (Page.EOF == ch)
+						        done = true;
+						    else if ('D' == ch)
+						        scanJIS (mCursor);
+						    else
+						    {
+						        mPage.ungetCharacter (mCursor);
+						        mPage.ungetCharacter (mCursor);
+						        mPage.ungetCharacter (mCursor);
+						    }
+						}
+						*/
+					}
 					else
 					{
 						mPage.ungetCharacter(mCursor);
@@ -734,23 +832,30 @@ public class Lexer extends NodeFactory implements Serializable
 					}
 				}
 				else
+				{
 					mPage.ungetCharacter(mCursor);
+				}
 			}
 			else if(quotesmart && (0 == quote)
 			        && (('\'' == ch) || ('"' == ch)))
+			{
 				quote = ch; // enter quoted state
-			// patch from Gernot Fricke to handle escaped closing quote
+			}
 			else if(quotesmart && (0 != quote) && ('\\' == ch))
 			{
 				ch = mPage.getCharacter(mCursor); // try to consume escape
 				if((Page.EOF != ch)
 				        && ('\\' != ch) // escaped backslash
-				        && (ch != quote)) // escaped quote character
+				        && (ch != quote))
+				{
 					// ( reflects ["] or [']  whichever opened the quotation)
 					mPage.ungetCharacter(mCursor); // unconsume char if char not an escape
+				}
 			}
 			else if(quotesmart && (ch == quote))
+			{
 				quote = 0; // exit quoted state
+			}
 			else if(quotesmart && (0 == quote) && (ch == '/'))
 			{
 				// handle multiline and double slash comments (with a quote)
@@ -758,11 +863,15 @@ public class Lexer extends NodeFactory implements Serializable
 				// I can't handle single quotations.
 				ch = mPage.getCharacter(mCursor);
 				if(Page.EOF == ch)
+				{
 					done = true;
+				}
 				else if('/' == ch)
 				{
 					do
+					{
 						ch = mPage.getCharacter(mCursor);
+					}
 					while((Page.EOF != ch) && ('\n' != ch));
 				}
 				else if('*' == ch)
@@ -770,23 +879,30 @@ public class Lexer extends NodeFactory implements Serializable
 					do
 					{
 						do
+						{
 							ch = mPage.getCharacter(mCursor);
+						}
 						while((Page.EOF != ch) && ('*' != ch));
 						ch = mPage.getCharacter(mCursor);
 						if(ch == '*')
+						{
 							mPage.ungetCharacter(mCursor);
+						}
 					}
 					while((Page.EOF != ch) && ('/' != ch));
 				}
 				else
+				{
 					mPage.ungetCharacter(mCursor);
+				}
 			}
 			else if((0 == quote) && ('<' == ch))
 			{
 				ch = mPage.getCharacter(mCursor);
 				if(Page.EOF == ch)
+				{
 					done = true;
-				// the order of these tests might be optimized for speed:
+				}
 				else if('/' == ch || Character.isLetter(ch)
 				        || '!' == ch || '%' == ch || '?' == ch)
 				{
@@ -822,11 +938,15 @@ public class Lexer extends NodeFactory implements Serializable
 
 		length = end - start;
 		if(0 != length)
+		{
 			// got some characters
 			ret = getNodeFactory().createStringNode(
 			        this.getPage(), start, end);
+		}
 		else
+		{
 			ret = null;
+		}
 
 		return(ret);
 	}
@@ -839,8 +959,10 @@ public class Lexer extends NodeFactory implements Serializable
 	private void whitespace(Vector<NodeAttribute> attributes, int[] bookmarks)
 	{
 		if(bookmarks[1] > bookmarks[0])
+		{
 			attributes.addElement(new TagAttribute(
 			        mPage, -1, -1, bookmarks[0], bookmarks[1], (char)0));
+		}
 	}
 
 	/**
@@ -1025,7 +1147,9 @@ public class Lexer extends NodeFactory implements Serializable
 						state = 6;
 					}
 					else if('=' == ch)
+					{
 						state = 2;
+					}
 					break;
 				case 2: // equals hit
 					if((Page.EOF == ch) || ('>' == ch))
@@ -1050,7 +1174,9 @@ public class Lexer extends NodeFactory implements Serializable
 						// see Bug #891058 Bug in lexer.
 					}
 					else
+					{
 						state = 3;
+					}
 					break;
 				case 3: // within naked attribute value
 					if((Page.EOF == ch) || ('>' == ch))
@@ -1154,12 +1280,16 @@ public class Lexer extends NodeFactory implements Serializable
 		if(0 != length)
 		{ // return tag based on second character, '/', '%', Letter (ch), '!'
 			if(2 > length)
+			{
 				// this is an error
 				return(makeString(start, end));
+			}
 			ret = getNodeFactory().createTagNode(this.getPage(), start, end, attributes);
 		}
 		else
+		{
 			ret = null;
+		}
 
 		return(ret);
 	}
@@ -1220,17 +1350,26 @@ public class Lexer extends NodeFactory implements Serializable
 		{
 			ch = mPage.getCharacter(mCursor);
 			if(Page.EOF == ch)
+			{
 				done = true;
+			}
 			else
+			{
 				switch(state)
 				{
 					case 0: // prior to the first open delimiter
 						if('>' == ch)
+						{
 							done = true;
+						}
 						if('-' == ch)
+						{
 							state = 1;
+						}
 						else
+						{
 							return(parseString(start, quotesmart));
+						}
 						break;
 					case 1: // prior to the second open delimiter
 						if('-' == ch)
@@ -1238,9 +1377,13 @@ public class Lexer extends NodeFactory implements Serializable
 							// handle <!--> because netscape does
 							ch = mPage.getCharacter(mCursor);
 							if(Page.EOF == ch)
+							{
 								done = true;
+							}
 							else if('>' == ch)
+							{
 								done = true;
+							}
 							else
 							{
 								mPage.ungetCharacter(mCursor);
@@ -1248,23 +1391,35 @@ public class Lexer extends NodeFactory implements Serializable
 							}
 						}
 						else
+						{
 							return(parseString(start, quotesmart));
+						}
 						break;
 					case 2: // prior to the first closing delimiter
 						if('-' == ch)
+						{
 							state = 3;
+						}
 						else if(Page.EOF == ch)
+						{
 							return(parseString(start, quotesmart)); // no terminator
+						}
 						break;
 					case 3: // prior to the second closing delimiter
 						if('-' == ch)
+						{
 							state = 4;
+						}
 						else
+						{
 							state = 2;
+						}
 						break;
 					case 4: // prior to the terminating >
 						if('>' == ch)
+						{
 							done = true;
+						}
 						else if(Character.isWhitespace(ch))
 						{
 							// stay in state 4
@@ -1274,13 +1429,16 @@ public class Lexer extends NodeFactory implements Serializable
 							// stay in state 4
 						}
 						else
+						{
 							// bug #1345049 HTMLParser should not terminate a comment with --->
 							// should maybe issue a warning mentioning STRICT_REMARKS
 							state = 2;
+						}
 						break;
 					default:
 						throw new IllegalStateException("Somehow managed to get into invalid state  " + state);
 				}
+			}
 		}
 
 		return(makeRemark(start, mCursor.getPosition()));
@@ -1304,12 +1462,16 @@ public class Lexer extends NodeFactory implements Serializable
 		if(0 != length)
 		{ // return tag based on second character, '/', '%', Letter (ch), '!'
 			if(2 > length)
+			{
 				// this is an error
 				return(makeString(start, end));
+			}
 			ret = getNodeFactory().createRemarkNode(this.getPage(), start, end);
 		}
 		else
+		{
 			ret = null;
+		}
 
 		return(ret);
 	}
@@ -1417,16 +1579,22 @@ public class Lexer extends NodeFactory implements Serializable
 								do
 								{
 									do
+									{
 										ch = mPage.getCharacter(mCursor);
+									}
 									while((Page.EOF != ch) && ('*' != ch));
 									ch = mPage.getCharacter(mCursor);
 									if(ch == '*')
+									{
 										mPage.ungetCharacter(mCursor);
+									}
 								}
 								while((Page.EOF != ch) && ('/' != ch));
 							}
 							else if(ch != Page.EOF)
+							{
 								mPage.ungetCharacter(mCursor);
+							}
 							break;
 						default: // <%???x
 							break;
@@ -1487,10 +1655,14 @@ public class Lexer extends NodeFactory implements Serializable
 				attributes.addElement(new TagAttribute(mPage, state, state + 1, -1, -1, (char)0));
 			}
 			else
+			{
 				throw new IllegalStateException("jsp with no code!");
+			}
 		}
 		else
+		{
 			return(parseString(start, true)); // hmmm, true?
+		}
 
 		return(makeTag(start, mCursor.getPosition(), attributes));
 	}
@@ -1612,10 +1784,14 @@ public class Lexer extends NodeFactory implements Serializable
 				attributes.addElement(new TagAttribute(mPage, state, state + 1, -1, -1, (char)0));
 			}
 			else
+			{
 				throw new IllegalStateException("processing instruction with no content");
+			}
 		}
 		else
+		{
 			return(parseString(start, true)); // hmmm, true?
+		}
 
 		return(makeTag(start, mCursor.getPosition(), attributes));
 	}

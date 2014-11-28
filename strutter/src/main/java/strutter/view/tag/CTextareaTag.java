@@ -18,7 +18,6 @@ package strutter.view.tag;
 
 import javax.servlet.ServletRequest;
 
-
 import strutter.htmlparser.nodes.TextNode;
 import strutter.htmlparser.tags.TextareaTag;
 import strutter.htmlparser.util.NodeList;
@@ -38,6 +37,7 @@ public class CTextareaTag extends TextareaTag
 		this.request = request;
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		TextareaTag texta = new TextareaTag();
@@ -67,6 +67,7 @@ public class CTextareaTag extends TextareaTag
 		}
 	}
 
+	@Override
 	public String toHtml()
 	{
 		String html = super.toHtml();
@@ -74,7 +75,9 @@ public class CTextareaTag extends TextareaTag
 		try
 		{
 			if(this.getAttribute("error") != null)
+			{
 				return TagHelper.handleError(this, request, html);
+			}
 		}
 		catch(Exception e)
 		{

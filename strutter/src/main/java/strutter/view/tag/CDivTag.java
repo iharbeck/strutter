@@ -19,7 +19,6 @@ package strutter.view.tag;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-
 import strutter.Utils;
 import strutter.helper.ActionHelper;
 import strutter.htmlparser.nodes.TextNode;
@@ -42,18 +41,22 @@ public class CDivTag extends DivTag
 		this.request = request;
 	}
 
+	@Override
 	public String toHtml()
 	{
 
 		return remove ? "" : super.toHtml();
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		String type = this.getAttribute("type");
 
 		if(type == null)
+		{
 			return;
+		}
 
 		DivTag div = new DivTag();
 		div.setTagName("/" + this.getTagName());
@@ -66,12 +69,18 @@ public class CDivTag extends DivTag
 		try
 		{
 			if(type.startsWith("text"))
+			{
 				// val = BeanUtils.getProperty(form, this.getAttribute("id"));
 				val = TagHelper.getFormValue(form, this.getAttribute("id"));
+			}
 			else if(type.startsWith("error") || type.startsWith("errors"))
+			{
 				val = TagHelper.handleList(this, request, Utils.getErrors((HttpServletRequest)request));
+			}
 			else if(type.startsWith("message") || type.startsWith("messages"))
+			{
 				val = TagHelper.handleList(this, request, Utils.getMessages((HttpServletRequest)request));
+			}
 			else if(type.startsWith("resource"))
 			{
 				// Locale loc = (Locale)
@@ -89,7 +98,9 @@ public class CDivTag extends DivTag
 			this.removeAttribute("type");
 
 			if(type.endsWith("_min"))
+			{
 				this.removeAttribute("id");
+			}
 
 			if(val == null || val.equals(""))
 			{

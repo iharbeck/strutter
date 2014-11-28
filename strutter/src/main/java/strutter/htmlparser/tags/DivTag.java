@@ -56,6 +56,7 @@ public class DivTag extends CompositeTag
 	 * Return the set of names handled by this tag.
 	 * @return The names to be matched that create tags of this type.
 	 */
+	@Override
 	public String[] getIds()
 	{
 		return(mIds);
@@ -65,6 +66,7 @@ public class DivTag extends CompositeTag
 	 * Return the set of end tag names that cause this tag to finish.
 	 * @return The names of following end tags that stop further scanning.
 	 */
+	@Override
 	public String[] getEndTagEnders()
 	{
 		return(mEndTagEnders);

@@ -257,7 +257,9 @@ public class NodeAttribute implements Serializable
 		setName(name);
 		setAssignment(assignment);
 		if(0 == quote)
+		{
 			setRawValue(value);
+		}
 		else
 		{
 			setValue(value);
@@ -290,7 +292,9 @@ public class NodeAttribute implements Serializable
 	        IllegalArgumentException
 	{
 		if(0 != value.trim().length())
+		{
 			throw new IllegalArgumentException("non whitespace value");
+		}
 		else
 		{
 			setName(null);
@@ -357,7 +361,9 @@ public class NodeAttribute implements Serializable
 	public void getName(StringBuffer buffer)
 	{
 		if(null != mName)
+		{
 			buffer.append(mName);
+		}
 	}
 
 	/**
@@ -396,7 +402,9 @@ public class NodeAttribute implements Serializable
 	public void getAssignment(StringBuffer buffer)
 	{
 		if(null != mAssignment)
+		{
 			buffer.append(mAssignment);
+		}
 	}
 
 	/**
@@ -439,7 +447,9 @@ public class NodeAttribute implements Serializable
 	public void getValue(StringBuffer buffer)
 	{
 		if(null != mValue)
+		{
 			buffer.append(mValue);
+		}
 	}
 
 	/**
@@ -478,7 +488,9 @@ public class NodeAttribute implements Serializable
 	public void getQuote(StringBuffer buffer)
 	{
 		if(0 != mQuote)
+		{
 			buffer.append(mQuote);
+		}
 	}
 
 	/**
@@ -521,10 +533,14 @@ public class NodeAttribute implements Serializable
 				ret = buffer.toString();
 			}
 			else
+			{
 				ret = getValue();
+			}
 		}
 		else
+		{
 			ret = null;
+		}
 
 		return(ret);
 	}
@@ -613,9 +629,13 @@ public class NodeAttribute implements Serializable
 				if(needed)
 				{
 					if(doubleq)
+					{
 						quote = '"';
+					}
 					else if(singleq)
+					{
 						quote = '\'';
+					}
 					else
 					{
 						// uh-oh, we need to convert some quotes into character
@@ -629,9 +649,13 @@ public class NodeAttribute implements Serializable
 						{
 							ch = value.charAt(i);
 							if(quote == ch)
+							{
 								buffer.append(ref);
+							}
 							else
+							{
 								buffer.append(ch);
+							}
 						}
 						value = buffer.toString();
 					}
@@ -697,16 +721,24 @@ public class NodeAttribute implements Serializable
 		ret = 0;
 		name = getName();
 		if(null != name)
+		{
 			ret += name.length();
+		}
 		assignment = getAssignment();
 		if(null != assignment)
+		{
 			ret += assignment.length();
+		}
 		value = getValue();
 		if(null != value)
+		{
 			ret += value.length();
+		}
 		quote = getQuote();
 		if(0 != quote)
+		{
 			ret += 2;
+		}
 
 		return(ret);
 	}
@@ -727,6 +759,7 @@ public class NodeAttribute implements Serializable
 	 * </code>
 	 * @return A string that can be used within a tag.
 	 */
+	@Override
 	public String toString()
 	{
 		int length;

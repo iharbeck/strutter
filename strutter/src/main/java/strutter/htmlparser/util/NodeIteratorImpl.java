@@ -31,7 +31,6 @@ import strutter.htmlparser.lexer.Page;
 import strutter.htmlparser.nodes.Node;
 import strutter.htmlparser.nodes.TagNode;
 import strutter.htmlparser.scanners.Scanner;
-import strutter.htmlparser.util.NodeIterator;
 import strutter.htmlparser.util.exception.ParserException;
 
 public class NodeIteratorImpl implements NodeIterator
@@ -49,6 +48,7 @@ public class NodeIteratorImpl implements NodeIterator
 	 * Check if more nodes are available.
 	 * @return <code>true</code> if a call to <code>nextNode()</code> will succeed.
 	 */
+	@Override
 	public boolean hasMoreNodes() throws ParserException
 	{
 		boolean ret;
@@ -64,6 +64,7 @@ public class NodeIteratorImpl implements NodeIterator
 	 * @return The next node in the HTML stream, or null if there are no more nodes.
 	 * @exception ParserException If an unrecoverable error occurs.
 	 */
+	@Override
 	public Node nextNode() throws ParserException
 	{
 		TagNode tag;

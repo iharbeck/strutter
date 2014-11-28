@@ -203,6 +203,7 @@ public class TagAttribute
 	 * @return The name, or <code>null</code> if it's just a whitepace
 	 * 'attribute'.
 	 */
+	@Override
 	public String getName()
 	{
 		String ret;
@@ -225,6 +226,7 @@ public class TagAttribute
 	 * @param buffer The buffer to place the name in.
 	 * @see #getName()
 	 */
+	@Override
 	public void getName(StringBuffer buffer)
 	{
 		String name;
@@ -233,10 +235,14 @@ public class TagAttribute
 		if(null == name)
 		{
 			if((null != mPage) && (0 <= mNameStart))
+			{
 				mPage.getText(buffer, mNameStart, mNameEnd);
+			}
 		}
 		else
+		{
 			buffer.append(name);
+		}
 	}
 
 	/**
@@ -245,6 +251,7 @@ public class TagAttribute
 	 * can include whitespace on either or both sides of an equals sign.
 	 * @return The assignment string.
 	 */
+	@Override
 	public String getAssignment()
 	{
 		String ret;
@@ -258,7 +265,9 @@ public class TagAttribute
 				// remove a possible quote included in the assignment
 				// since mValueStart points at the real start of the value
 				if(ret.endsWith("\"") || ret.endsWith("'"))
+				{
 					ret = ret.substring(0, ret.length() - 1);
+				}
 				setAssignment(ret); // cache the value
 			}
 		}
@@ -271,6 +280,7 @@ public class TagAttribute
 	 * @param buffer The buffer to place the assignment string in.
 	 * @see #getAssignment()
 	 */
+	@Override
 	public void getAssignment(StringBuffer buffer)
 	{
 		int length;
@@ -288,11 +298,15 @@ public class TagAttribute
 				length = buffer.length() - 1;
 				ch = buffer.charAt(length);
 				if(('\'' == ch) || ('"' == ch))
+				{
 					buffer.setLength(length);
+				}
 			}
 		}
 		else
+		{
 			buffer.append(assignment);
+		}
 	}
 
 	/**
@@ -305,6 +319,7 @@ public class TagAttribute
 	 * @return The value, or <code>null</code> if it's a stand-alone or
 	 * empty attribute, or the text if it's just a whitepace 'attribute'.
 	 */
+	@Override
 	public String getValue()
 	{
 		String ret;
@@ -327,6 +342,7 @@ public class TagAttribute
 	 * @param buffer The buffer to place the value in.
 	 * @see #getValue()
 	 */
+	@Override
 	public void getValue(StringBuffer buffer)
 	{
 		String value;
@@ -335,10 +351,14 @@ public class TagAttribute
 		if(null == value)
 		{
 			if((null != mPage) && (0 <= mValueEnd))
+			{
 				mPage.getText(buffer, mValueStart, mValueEnd);
+			}
 		}
 		else
+		{
 			buffer.append(value);
+		}
 	}
 
 	/**
@@ -348,6 +368,7 @@ public class TagAttribute
 	 * @return The value, or <code>null</code> if it's a stand-alone attribute,
 	 * or the text if it's just a whitepace 'attribute'.
 	 */
+	@Override
 	public String getRawValue()
 	{
 		char quote;
@@ -374,6 +395,7 @@ public class TagAttribute
 	 * @param buffer The string buffer to append the attribute value to.
 	 * @see #getRawValue()
 	 */
+	@Override
 	public void getRawValue(StringBuffer buffer)
 	{
 		char quote;
@@ -383,20 +405,30 @@ public class TagAttribute
 			if(0 <= mValueEnd)
 			{
 				if(0 != (quote = getQuote()))
+				{
 					buffer.append(quote);
+				}
 				if(mValueStart != mValueEnd)
+				{
 					mPage.getText(buffer, mValueStart, mValueEnd);
+				}
 				if(0 != quote)
+				{
 					buffer.append(quote);
+				}
 			}
 		}
 		else
 		{
 			if(0 != (quote = getQuote()))
+			{
 				buffer.append(quote);
+			}
 			buffer.append(mValue);
 			if(0 != quote)
+			{
 				buffer.append(quote);
+			}
 		}
 	}
 
@@ -504,6 +536,7 @@ public class TagAttribute
 	 * @return <code>true</code> if this attribute is whitespace,
 	 * <code>false</code> if it is a real attribute.
 	 */
+	@Override
 	public boolean isWhitespace()
 	{
 		return(((null == super.getName()) && (null == mPage))
@@ -515,6 +548,7 @@ public class TagAttribute
 	 * @return <code>true</code> if this attribute is a standalone attribute.
 	 * <code>false</code> if has an equals sign.
 	 */
+	@Override
 	public boolean isStandAlone()
 	{
 		return(!isWhitespace() // not whitespace
@@ -530,6 +564,7 @@ public class TagAttribute
 	 * @return <code>true</code> if this attribute is an empty attribute.
 	 * <code>false</code> if has an equals sign and a value.
 	 */
+	@Override
 	public boolean isEmpty()
 	{
 		return(!isWhitespace() // not whitespace
@@ -545,6 +580,7 @@ public class TagAttribute
 	 * @return <code>true</code> if this attribute has a value.
 	 * <code>false</code> if it is empty or standalone.
 	 */
+	@Override
 	public boolean isValued()
 	{
 		return((null != super.getValue()) // an explicit value provided
@@ -556,6 +592,7 @@ public class TagAttribute
 	 * Get the length of the string value of this attribute.
 	 * @return The number of characters required to express this attribute.
 	 */
+	@Override
 	public int getLength()
 	{
 		String name;
@@ -567,22 +604,36 @@ public class TagAttribute
 		ret = 0;
 		name = super.getName();
 		if(null != name)
+		{
 			ret += name.length();
+		}
 		else if((null != mPage) && (0 <= mNameStart) && (0 <= mNameEnd))
+		{
 			ret += mNameEnd - mNameStart;
+		}
 		assignment = super.getAssignment();
 		if(null != assignment)
+		{
 			ret += assignment.length();
+		}
 		else if((null != mPage) && (0 <= mNameEnd) && (0 <= mValueStart))
+		{
 			ret += mValueStart - mNameEnd;
+		}
 		value = super.getValue();
 		if(null != value)
+		{
 			ret += value.length();
+		}
 		else if((null != mPage) && (0 <= mValueStart) && (0 <= mValueEnd))
+		{
 			ret += mValueEnd - mValueStart;
+		}
 		quote = getQuote();
 		if(0 != quote)
+		{
 			ret += 2;
+		}
 
 		return(ret);
 	}

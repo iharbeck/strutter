@@ -18,6 +18,7 @@ public class CFormTag extends FormTag
 		this.actionfieldname = actionfieldname;
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		super.doSemanticAction();
@@ -61,6 +62,7 @@ public class CFormTag extends FormTag
 	 * 
 	 * @return The names of following end tags that stop further scanning.
 	 */
+	@Override
 	public String[] getEndTagEnders()
 	{
 		return(new String[] {});

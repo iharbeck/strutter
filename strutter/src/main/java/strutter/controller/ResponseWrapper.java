@@ -19,12 +19,17 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 		super(response);
 	}
 
+	@Override
 	public PrintWriter getWriter() throws java.io.IOException
 	{
 		if(writer != null)
+		{
 			throw new IllegalStateException("repeated getWriter() call");
+		}
 		if(stream != null)
+		{
 			throw new IllegalStateException("getOutputStream() was called first");
+		}
 
 		writer = new StringWriter(16 * 1024);
 		return new PrintWriter(writer);
@@ -32,6 +37,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 
 	private ByteArrayOutputStream stream;
 
+	@Override
 	public ServletOutputStream getOutputStream() throws java.io.IOException
 	{
 		if(writer != null)
@@ -46,29 +52,34 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 
 		return new ServletOutputStream()
 		{
+			@Override
 			public void write(int i) throws java.io.IOException
 			{
 				stream.write(i);
 			}
 
 			// Servlet API 3.1
-            public boolean isReady()
-            {
-	            return true;
-            }
-            
-//            public void setWriteListener(WriteListener arg0)
-//            {
-//            }
+			public boolean isReady()
+			{
+				return true;
+			}
+
+			//            public void setWriteListener(WriteListener arg0)
+			//            {
+			//            }
 		};
 	}
 
 	public String toString(String encoding) throws Exception
 	{
 		if(writer != null)
+		{
 			return writer.toString();
+		}
 		if(stream != null)
+		{
 			return stream.toString(encoding);
+		}
 		return null;
 	}
 
@@ -84,9 +95,13 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 		try
 		{
 			if(writer != null)
+			{
 				writer.close();
+			}
 			if(stream != null)
+			{
 				stream.close();
+			}
 		}
 		catch(Exception e)
 		{

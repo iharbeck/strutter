@@ -38,7 +38,7 @@ public class StringSource
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final int EOF = -1;
 
 	/**
@@ -133,9 +133,13 @@ public class StringSource
 		int ret;
 
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else if(mOffset >= mString.length())
+		{
 			ret = EOF;
+		}
 		else
 		{
 			ret = mString.charAt(mOffset);
@@ -160,16 +164,22 @@ public class StringSource
 		int ret;
 
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else
 		{
 			length = mString.length();
 			if(mOffset >= length)
+			{
 				ret = EOF;
+			}
 			else
 			{
 				if(len > length - mOffset)
+				{
 					len = length - mOffset;
+				}
 				mString.getChars(mOffset, mOffset + len, cbuf, off);
 				mOffset += len;
 				ret = len;
@@ -201,7 +211,9 @@ public class StringSource
 	public boolean ready() throws IOException
 	{
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		return(mOffset < mString.length());
 	}
 
@@ -215,11 +227,17 @@ public class StringSource
 	        IllegalStateException
 	{
 		if(null == mString)
+		{
 			throw new IllegalStateException("source is closed");
+		}
 		else if(-1 != mMark)
+		{
 			mOffset = mMark;
+		}
 		else
+		{
 			mOffset = 0;
+		}
 	}
 
 	/**
@@ -242,7 +260,9 @@ public class StringSource
 	public void mark(int readAheadLimit) throws IOException
 	{
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		mMark = mOffset;
 	}
 
@@ -263,16 +283,24 @@ public class StringSource
 		long ret;
 
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		if(0 > n)
+		{
 			throw new IllegalArgumentException("cannot skip backwards");
+		}
 		else
 		{
 			length = mString.length();
 			if(mOffset >= length)
+			{
 				n = 0L;
+			}
 			else if(n > length - mOffset)
+			{
 				n = length - mOffset;
+			}
 			mOffset += n;
 			ret = n;
 		}
@@ -291,11 +319,17 @@ public class StringSource
 	public void unread() throws IOException
 	{
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else if(mOffset <= 0)
+		{
 			throw new IOException("can't unread no characters");
+		}
 		else
+		{
 			mOffset--;
+		}
 	}
 
 	/**
@@ -310,11 +344,17 @@ public class StringSource
 		char ret;
 
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else if(offset >= mOffset)
+		{
 			throw new IOException("read beyond current offset");
+		}
 		else
+		{
 			ret = mString.charAt(offset);
+		}
 
 		return(ret);
 	}
@@ -333,13 +373,19 @@ public class StringSource
 	public void getCharacters(char[] array, int offset, int start, int end) throws IOException
 	{
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else
 		{
 			if(end > mOffset)
+			{
 				throw new IOException("read beyond current offset");
+			}
 			else
+			{
 				mString.getChars(start, end, array, offset);
+			}
 		}
 	}
 
@@ -357,13 +403,19 @@ public class StringSource
 		String ret;
 
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else
 		{
 			if(offset + length > mOffset)
+			{
 				throw new IOException("read beyond end of string");
+			}
 			else
+			{
 				ret = mString.substring(offset, offset + length);
+			}
 		}
 
 		return(ret);
@@ -381,13 +433,19 @@ public class StringSource
 	public void getCharacters(StringBuffer buffer, int offset, int length) throws IOException
 	{
 		if(null == mString)
+		{
 			throw new IOException("source is closed");
+		}
 		else
 		{
 			if(offset + length > mOffset)
+			{
 				throw new IOException("read beyond end of string");
+			}
 			else
+			{
 				buffer.append(mString.substring(offset, offset + length));
+			}
 		}
 	}
 
@@ -416,9 +474,13 @@ public class StringSource
 		int ret;
 
 		if(null == mString)
+		{
 			ret = EOF;
+		}
 		else
+		{
 			ret = mOffset;
+		}
 
 		return(ret);
 	}
@@ -433,9 +495,13 @@ public class StringSource
 		int ret;
 
 		if(null == mString)
+		{
 			ret = 0;
+		}
 		else
+		{
 			ret = mString.length() - mOffset;
+		}
 
 		return(ret);
 	}

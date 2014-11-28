@@ -33,8 +33,8 @@ import org.w3c.dom.traversal.NodeFilter;
 import strutter.htmlparser.lexer.Lexer;
 import strutter.htmlparser.lexer.Page;
 import strutter.htmlparser.nodes.Node;
-import strutter.htmlparser.util.NodeIteratorImpl;
 import strutter.htmlparser.util.NodeIterator;
+import strutter.htmlparser.util.NodeIteratorImpl;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
 
@@ -165,13 +165,19 @@ public class Parser implements Serializable
 		NodeFactory factory;
 
 		if(null == lexer)
+		{
 			throw new IllegalArgumentException("lexer cannot be null");
+		}
 		// move a node factory that's been set to the new lexer
 		factory = null;
 		if(null != mLexer)
+		{
 			factory = mLexer.getNodeFactory();
+		}
 		if(null != factory)
+		{
 			lexer.setNodeFactory(factory);
+		}
 		mLexer = lexer;
 	}
 
@@ -194,7 +200,9 @@ public class Parser implements Serializable
 	public void setNodeFactory(NodeFactory factory)
 	{
 		if(null == factory)
+		{
 			throw new IllegalArgumentException("node factory cannot be null");
+		}
 		mLexer.setNodeFactory(factory);
 	}
 
@@ -333,8 +341,12 @@ public class Parser implements Serializable
 	public void setInputHTML(String inputHTML) throws ParserException
 	{
 		if(null == inputHTML)
+		{
 			throw new IllegalArgumentException("html cannot be null");
+		}
 		if(!"".equals(inputHTML))
+		{
 			setLexer(new Lexer(new Page(inputHTML)));
+		}
 	}
 }

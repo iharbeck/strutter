@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -45,25 +44,24 @@ public class PlainDispatchAction extends BaseAction
 	public ActionForward dispatch(String name) throws Exception
 	{
 		ActionHelperData ahd = ActionHelper.getActionHelperData();
-		
+
 		return dispatchMethod(ahd.getMapping(), null, ahd.getRequest(), ahd.getResponse(), name);
 	}
 
-	
 	private void inject(Object target, Object value, Class annotation) throws Exception
 	{
 		Field[] fieldList = target.getClass().getDeclaredFields();
 
-        for (Field afield : fieldList) 
-        {
-            if(afield.isAnnotationPresent(annotation))
-            {
-            	afield.setAccessible(true);
-            	afield.set(target, value);
-            }
-        } 
+		for(Field afield : fieldList)
+		{
+			if(afield.isAnnotationPresent(annotation))
+			{
+				afield.setAccessible(true);
+				afield.set(target, value);
+			}
+		}
 	}
-	
+
 	private Object object(Object source, String objname) throws Exception
 	{
 		Field field = source.getClass().getDeclaredField(objname);
@@ -71,7 +69,7 @@ public class PlainDispatchAction extends BaseAction
 
 		return field.get(this);
 	}
-	
+
 	/**
 	 * try to get method name: doView, do_view, view try to call with and in a
 	 * second step without parameters
@@ -81,7 +79,9 @@ public class PlainDispatchAction extends BaseAction
 		if(name == null || name.equals(""))
 		{
 			if(mapping instanceof ActionMappingExtended)
+			{
 				name = ((ActionMappingExtended)mapping).getUnspecified();
+			}
 		}
 
 		ActionMethodWrapper methodwrapper = (ActionMethodWrapper)methods.get(name);
@@ -90,23 +90,23 @@ public class PlainDispatchAction extends BaseAction
 
 		String objname = null;
 		String func = name;
-		
+
 		Class clazz = this.getClass();
-		
+
 		if(name.contains("."))
 		{
 			String parse[] = name.split("\\.");
-			
+
 			objname = parse[0];
 			func = parse[1];
-		
+
 			obj = object(this, objname);
-			
+
 			clazz = obj.getClass();
-			
+
 			inject(obj, this, WireActionForm.class);
 		}
-		
+
 		if(methodwrapper == null)
 		{
 			boolean parameter = true;
@@ -161,6 +161,7 @@ public class PlainDispatchAction extends BaseAction
 		}
 	}
 
+	@Override
 	public ActionForward execute(ActionMapping actionmapping, ActionForm actionform,
 	        HttpServletRequest request, HttpServletResponse response)
 	        throws Exception
@@ -184,26 +185,34 @@ public class PlainDispatchAction extends BaseAction
 			// Get existing Action if session scoped
 			PlainDispatchAction action = (PlainDispatchAction)Utils.getActionFormFromSession(request);
 
-			if(action == null) // No Session scope or first call
-				action = (PlainDispatchAction)getClass().newInstance();
+			if(action == null)
+			{
+				action = getClass().newInstance();
+			}
 
 			action.setServlet(this.servlet);
 
 			Map properties = PopulateHelper.populate(request, action);
- 
+
 			if(name == null && properties.get(parameter) != null)
+			{
 				name = ((String[])properties.get(parameter))[0];
+			}
 
 			// Store Action (Form)
-			Utils.setActionForm(request, (Action)action);
+			Utils.setActionForm(request, action);
 
 			if(action instanceof InterceptorInterface)
+			{
 				((InterceptorInterface)action).beforeExecute();
+			}
 
 			ActionForward forward = action.dispatchMethod(actionmapping, null, request, response, name);
-			
+
 			if(action instanceof InterceptorInterface)
+			{
 				((InterceptorInterface)action).afterExecute();
+			}
 
 			return forward;
 		}

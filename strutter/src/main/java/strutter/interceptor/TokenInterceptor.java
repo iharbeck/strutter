@@ -26,14 +26,17 @@ import strutter.helper.ActionHelperData;
 
 public class TokenInterceptor implements WebInterceptorInterface
 {
+	@Override
 	public ActionForward beforeMethod() throws ServletException
 	{
 		ActionHelperData ahd = ActionHelper.getActionHelperData();
-		
+
 		String token = ActionHelper.getParameter("TOKEN");
 
 		if(token == null)
+		{
 			return null;
+		}
 
 		HttpSession session = ActionHelper.getSession();
 		ActionForward fw = null;
@@ -50,16 +53,19 @@ public class TokenInterceptor implements WebInterceptorInterface
 		return fw;
 	}
 
+	@Override
 	public ActionForward afterMethod()
 	{
 		return null;
 	}
 
+	@Override
 	public ActionForward afterView()
 	{
 		return null;
 	}
 
+	@Override
 	public ActionForward beforeView()
 	{
 		return null;

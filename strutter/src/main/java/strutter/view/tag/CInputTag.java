@@ -23,7 +23,6 @@ import java.util.Locale;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.Globals;
 import org.apache.struts.config.ActionConfig;
 import org.apache.struts.util.MessageResources;
@@ -50,9 +49,12 @@ public class CInputTag extends InputTag
 		ActionConfig mapping = (ActionConfig)request.getAttribute(Globals.MAPPING_KEY);
 
 		if(mapping != null && mapping.getParameter() != null)
+		{
 			this.actionname = mapping.getParameter();
+		}
 	}
 
+	@Override
 	public void doSemanticAction() throws ParserException
 	{
 		String type = getAttribute("type");
@@ -60,7 +62,9 @@ public class CInputTag extends InputTag
 		String attname = getAttribute("name");
 
 		if(type != null)
+		{
 			type = type.toLowerCase();
+		}
 
 		String valuetext = this.getAttribute("value");
 
@@ -86,7 +90,7 @@ public class CInputTag extends InputTag
 						{
 							value = value.replaceAll("\"", "&quot;");
 						}
-						
+
 						this.setAttribute("value", value, '"');
 						processed = true;
 					}
@@ -121,13 +125,17 @@ public class CInputTag extends InputTag
 				else
 				{
 					if(valuetext.length() == 0)
+					{
 						this.removeAttribute("value");
+					}
 				}
 				return;
 			}
 
 			if(processed)
+			{
 				return;
+			}
 
 			// BUTTON HANDLING
 			if(valuetext == null || !valuetext.startsWith("$"))
@@ -148,7 +156,7 @@ public class CInputTag extends InputTag
 					{
 						valuetext = valuetext.replaceAll("\"", "&quot;");
 					}
-					
+
 					setAttribute("value", valuetext, '"');
 				}
 			}
@@ -161,14 +169,21 @@ public class CInputTag extends InputTag
 	void setSelected(String value, List selected)
 	{
 		if(value == null)
+		{
 			return;
+		}
 
 		if(selected.contains(value))
+		{
 			this.setAttribute("checked", "", '"');
+		}
 		else
+		{
 			this.removeAttribute("checked");
+		}
 	}
 
+	@Override
 	public String toHtml()
 	{
 		String tag = super.toHtml();
@@ -176,7 +191,9 @@ public class CInputTag extends InputTag
 		try
 		{
 			if(this.getAttribute("error") != null)
+			{
 				tag = TagHelper.handleError(this, request, tag);
+			}
 		}
 		catch(Exception e)
 		{
@@ -185,7 +202,9 @@ public class CInputTag extends InputTag
 		// int length = checkboxfix.length() + disabled.length() + tag.length();
 
 		if(extend == null)
+		{
 			return tag;
+		}
 
 		return extend + tag;
 	}

@@ -83,6 +83,7 @@ public class ActionPlugin implements PlugIn
 	/**
 	 * Initialisieren
 	 */
+	@Override
 	public void init(ActionServlet servlet, ModuleConfig module) throws ServletException
 	{
 		this.servlet = servlet;
@@ -109,28 +110,30 @@ public class ActionPlugin implements PlugIn
 			// read all classes from package folder
 			ArrayList list = new ArrayList();
 
-			for(int i = 0; i < packages.length; i++)
+			for(String package1 : packages)
 			{
-				String packagepath = packages[i];
+				String packagepath = package1;
 
 				packagepath = normalizePath(packagepath.replace('.', '/'));
-				
-				URL url =  ActionPlugin.class.getResource("/ROOT");
-				String path = null; 
-				
+
+				URL url = ActionPlugin.class.getResource("/ROOT");
+				String path = null;
+
 				if(url != null)
+				{
 					path = url.getPath();
-				
+				}
+
 				if(path != null)
 				{
-					path = path.substring(0, path.length()-4);
+					path = path.substring(0, path.length() - 4);
 				}
 				else
 				{
 					path = servlet.getServletContext().getRealPath("/WEB-INF/classes");
 				}
 
-				list.addAll(ActionPlugin.getClasses(path, packages[i]));
+				list.addAll(ActionPlugin.getClasses(path, package1));
 			}
 
 			// register classes
@@ -179,6 +182,7 @@ public class ActionPlugin implements PlugIn
 		System.out.println("### Strutter initialized ###");
 	}
 
+	@Override
 	public void destroy()
 	{
 	}
@@ -217,12 +221,13 @@ public class ActionPlugin implements PlugIn
 	static void listFolder(ArrayList list, File f, String pack)
 	{
 		if(!f.isDirectory())
+		{
 			return;
+		}
 
 		File[] files = f.listFiles();
-		for(int i = 0; i < files.length; i++)
+		for(File sub : files)
 		{
-			File sub = files[i];
 			String name = pack + (pack.equals("") ? "" : ".") + sub.getName();
 
 			if(sub.isDirectory())
@@ -243,9 +248,13 @@ public class ActionPlugin implements PlugIn
 	boolean registAutorun(Class actionClass) throws Exception
 	{
 		if(actionClass.isInterface())
+		{
 			return false;
+		}
 		if(!isInterfaceImplementer(actionClass, ConfigAutorunInterface.class))
+		{
 			return false;
+		}
 
 		ConfigAutorunInterface autorun = (ConfigAutorunInterface)actionClass.newInstance();
 		autorun.init(servlet, module);
@@ -256,9 +265,13 @@ public class ActionPlugin implements PlugIn
 	boolean registAuthority(Class actionClass) throws Exception
 	{
 		if(actionClass.isInterface())
+		{
 			return false;
+		}
 		if(!isInterfaceImplementer(actionClass, ConfigAuthorityInterface.class))
+		{
 			return false;
+		}
 
 		ConfigAuthorityInterface authority = (ConfigAuthorityInterface)actionClass.newInstance();
 		ActionHelper.setAuthority(authority);
@@ -272,11 +285,17 @@ public class ActionPlugin implements PlugIn
 	boolean registAction(ModuleConfig moduleConfig, Class actionClass) throws Exception
 	{
 		if(actionClass.isInterface())
+		{
 			return false;
+		}
 		if((actionClass.getModifiers() & Modifier.ABSTRACT) != 0)
+		{
 			return false;
+		}
 		if(!isSubclass(actionClass, Action.class) && !isInterfaceImplementer(actionClass, ConfigZeroInterface.class))
+		{
 			return false;
+		}
 
 		ActionConfig conf = null;
 
@@ -313,7 +332,7 @@ public class ActionPlugin implements PlugIn
 			return false;
 		}
 
-		ActionConfig action = (ActionConfig)conf;
+		ActionConfig action = conf;
 		ActionMappingExtended actionmapping = new ActionMappingExtended();
 
 		dwrpojos.addAll(action.getRemoting());
@@ -334,24 +353,38 @@ public class ActionPlugin implements PlugIn
 
 		// DispatcherAction actionalias
 		if(action.getParameter() != null)
+		{
 			actionmapping.setParameter(action.getParameter());
+		}
 		else if(getParameter() != null)
+		{
 			actionmapping.setParameter(getParameter());
+		}
 		else
+		{
 			actionmapping.setParameter("action");
+		}
 
 		if(action.getScope() != null)
+		{
 			actionmapping.setScope(action.getScope());
+		}
 		else if(getParameter() != null)
+		{
 			actionmapping.setScope(getScope());
+		}
 		else
+		{
 			actionmapping.setScope("session");
+		}
 
 		String action_views = views;
 
 		if((action.getPackageby() != null && action.getPackageby().equals(ActionConfig.PACKAGEBY_FEATURE)) ||
 		        getPackageby().equals(ActionConfig.PACKAGEBY_FEATURE))
+		{
 			action_views = "/WEB-INF/classes/" + getPackageName(fqn).replace('.', '/');
+		}
 
 		actionmapping.setInput(action_views + action.getInput());
 
@@ -359,7 +392,9 @@ public class ActionPlugin implements PlugIn
 		String path = action.getPath();
 
 		if(isEmpty(path))
+		{
 			path = getPathFromClassName(fqn, getAliasaction());
+		}
 
 		actionmapping.setPath(path);
 
@@ -398,7 +433,9 @@ public class ActionPlugin implements PlugIn
 		}
 
 		if(!isEmpty(action.getRoles()))
+		{
 			actionmapping.setRoles(action.getRoles());
+		}
 
 		for(String key : action.getProperties().keySet())
 		{
@@ -413,22 +450,24 @@ public class ActionPlugin implements PlugIn
 
 		Forward[] forwards = action.getForwards();
 
-		for(int i = 0; i < forwards.length; i++)
+		for(Forward forward : forwards)
 		{
-			Forward forward = forwards[i];
-
 			ActionForward aforward = new ActionForward();
 
 			aforward.setName(forward.getName());
 
 			if(forward.getName().startsWith("#")) // forward to internal action
-												  // method
+			                                      // method
 			{
 				String targetclass = forward.getPath();
 				if(targetclass == null)
+				{
 					targetclass = actionmapping.getPath();
+				}
 				else
+				{
 					targetclass = getPathFromClassName(targetclass, getAliasaction());
+				}
 
 				String fpath = targetclass + ".do?" +
 				        actionmapping.getParameter() + "=" + forward.getName().substring(1);
@@ -437,16 +476,24 @@ public class ActionPlugin implements PlugIn
 			else
 			{ // general forward
 				if(forward.getPath().indexOf(".do") > 0 || forward.getPath().startsWith("~"))
+				{
 					aforward.setPath(forward.getPath().replaceAll("~", ""));
+				}
 				else
+				{
 					aforward.setPath(action_views + forward.getPath());
+				}
 			}
 			aforward.setRedirect(forward.isRedirect());
 
 			if(forward.isGlobal())
+			{
 				moduleConfig.addForwardConfig(aforward);
+			}
 			else
+			{
 				actionmapping.addForwardConfig(aforward);
+			}
 
 			printForward(aforward);
 		}
@@ -458,7 +505,9 @@ public class ActionPlugin implements PlugIn
 			String packageviews = "/WEB-INF/classes/" + getPackageName(fqn).replace('.', '/');
 
 			if(!action_views.equals(packageviews))
+			{
 				findForwards(packageviews, path, actionmapping);
+			}
 		}
 
 		actionmapping.addInterceptors(action.getInterceptors());
@@ -471,15 +520,17 @@ public class ActionPlugin implements PlugIn
 	{
 		String[] defaultpages = aliasview.split(",");
 
-		for(int i = 0; i < defaultpages.length; i++)
+		for(String defaultpage : defaultpages)
 		{
-			String file = viewsfolder + actionpath + "_" + defaultpages[i] + ".jsp";
+			String file = viewsfolder + actionpath + "_" + defaultpage + ".jsp";
 
 			if(!new File(servlet.getServletContext().getRealPath(file)).exists())
+			{
 				continue;
+			}
 
 			ActionForward aforward = new ActionForward();
-			aforward.setName(defaultpages[i]);
+			aforward.setName(defaultpage);
 			aforward.setPath(file);
 			aforward.setRedirect(false);
 
@@ -500,11 +551,15 @@ public class ActionPlugin implements PlugIn
 	String registForm(ModuleConfig moduleConfig, Class formClass)
 	{
 		if(formClass.isInterface())
+		{
 			return null;
+		}
 		if((formClass.getModifiers() & Modifier.ABSTRACT) != 0)
+		{
 			return null;
-		// if(!isSubclass(formClass, ActionForm.class))
-		// return null;
+			// if(!isSubclass(formClass, ActionForm.class))
+			// return null;
+		}
 
 		FormBeanConfig formBean = new FormBeanConfig();
 
@@ -525,9 +580,13 @@ public class ActionPlugin implements PlugIn
 	{
 		int pos = classname.indexOf(patternstr);
 		if(pos > -1)
+		{
 			return classname.substring(0, classname.indexOf(patternstr));
+		}
 		else
+		{
 			return classname;
+		}
 	}
 
 	/**
@@ -541,7 +600,9 @@ public class ActionPlugin implements PlugIn
 
 		// Default toLowerCase
 		if("1".equals(this.getPathlower()))
+		{
 			className = className.toLowerCase();
+		}
 
 		// Eventuell formatieren des PATH
 		className = getPathformat().replaceAll("\\{PATH\\}", className);
@@ -590,7 +651,9 @@ public class ActionPlugin implements PlugIn
 		for(Class s = target; s != Object.class; s = s.getSuperclass())
 		{
 			if(s == superclass)
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -602,20 +665,26 @@ public class ActionPlugin implements PlugIn
 			Class[] interfaces = s.getInterfaces();
 
 			if(inInterfaceList(interfaces, superclass))
+			{
 				return true;
+			}
 		}
 		return false;
 	}
 
 	boolean inInterfaceList(Class[] interfaces, Class superclass) throws Exception
 	{
-		for(int i = 0; i < interfaces.length; i++)
+		for(Class interface1 : interfaces)
 		{
 			// System.out.println(interfaces[i]);
-			if(interfaces[i] == superclass)
+			if(interface1 == superclass)
+			{
 				return true;
-			if(inInterfaceList(interfaces[i].getInterfaces(), superclass))
+			}
+			if(inInterfaceList(interface1.getInterfaces(), superclass))
+			{
 				return true;
+			}
 		}
 		return false;
 	}
@@ -639,7 +708,9 @@ public class ActionPlugin implements PlugIn
 	private String getPackageName(String fqn)
 	{
 		if(fqn.indexOf('.') < 0)
+		{
 			return "";
+		}
 		return fqn.substring(0, fqn.lastIndexOf('.'));
 	}
 
@@ -653,13 +724,21 @@ public class ActionPlugin implements PlugIn
 		String ret = path;
 
 		if(ret == null)
+		{
 			return "";
+		}
 		if(!ret.startsWith("/"))
+		{
 			ret = "/" + ret;
+		}
 		if(ret.endsWith("/"))
+		{
 			ret = ret.substring(0, ret.length() - 1);
+		}
 		if(ret.equals("/"))
+		{
 			ret = "";
+		}
 
 		return ret;
 	}
@@ -747,12 +826,18 @@ public class ActionPlugin implements PlugIn
 	public void setViews(String views)
 	{
 		if(!views.startsWith("/"))
+		{
 			this.views = "/" + views;
+		}
 		else
+		{
 			this.views = views;
+		}
 
 		if(views.endsWith("/"))
+		{
 			views = views.substring(0, views.length() - 1);
+		}
 
 		this.views = views;
 	}

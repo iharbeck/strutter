@@ -107,7 +107,9 @@ public class Cursor
 	{
 		mPosition--;
 		if(0 > mPosition)
+		{
 			mPosition = 0;
+		}
 	}
 
 	/**
@@ -132,6 +134,7 @@ public class Cursor
 	 * @return A string of the form "n[r,c]", where n is the character position,
 	 * r is the row (zero based) and c is the column (zero based) on the page.
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer ret;
@@ -140,14 +143,22 @@ public class Cursor
 		ret.append(getPosition());
 		ret.append("[");
 		if(null != mPage)
+		{
 			ret.append(mPage.row(this));
+		}
 		else
+		{
 			ret.append("?");
+		}
 		ret.append(",");
 		if(null != mPage)
+		{
 			ret.append(mPage.column(this));
+		}
 		else
+		{
 			ret.append("?");
+		}
 		ret.append("]");
 
 		return(ret.toString());
@@ -165,6 +176,7 @@ public class Cursor
 	 * or greater than that object.
 	 * @see strutter.htmlparser.util.sort.Ordered
 	 */
+	@Override
 	public int compare(Object that)
 	{
 		Cursor r = (Cursor)that;

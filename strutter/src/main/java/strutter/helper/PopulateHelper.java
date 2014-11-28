@@ -3,7 +3,6 @@ package strutter.helper;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.print.attribute.HashPrintJobAttributeSet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,7 +23,7 @@ public class PopulateHelper
 	private static Log log = LogFactory.getLog(PopulateHelper.class);
 
 	public static Map populate(HttpServletRequest request, Object bean) throws ServletException
-	{ 
+	{
 		Map parameters = null;
 
 		String contentType = request.getContentType();
@@ -33,7 +32,7 @@ public class PopulateHelper
 
 		// Webservice will not implement FormlessInterface
 		if(bean instanceof FormlessInterface)
-		{ 
+		{
 			((FormlessInterface)bean).reset();
 		}
 
@@ -74,17 +73,16 @@ public class PopulateHelper
 
 		try
 		{
-		    // Exclude 
+			// Exclude 
 			// ^class\..*,^dojo\..*,^struts\..*,^session\..*,^request\..*,^application\..*,^servlet(Request|Response)\..*,^parameters\..*,^action:.*,^method:.*
-			
+
 			//parameters.remove("class");
-			
+
 			HashMap tMap = new HashMap();
-			
+
 			tMap.putAll(parameters);
 			tMap.remove("class");
-			
-			
+
 			//BeanUtil.populateBean(bean, parameters);
 			BeanUtils.populate(bean, tMap);
 		}
@@ -92,7 +90,7 @@ public class PopulateHelper
 		{
 			throw new ServletException("BeanUtils.populate", e);
 		}
-		
+
 		return parameters;
 	}
 
@@ -101,21 +99,21 @@ public class PopulateHelper
 	        MultipartRequestHandler multipartHandler)
 	{
 		return multipartHandler.getAllElements();
-		
-//		Map parameters = new HashMap(multipartHandler.getAllElements().size() + request.getParameterMap().size());
-//		
-//
-//		if(request instanceof MultipartRequestWrapper)
-//		{
-//			parameters.putAll(multipartHandler.getAllElements());
-//		}
-//		else
-//		{
-//			parameters.putAll(request.getParameterMap());
-//			//log.debug("Gathering multipart parameters for unwrapped request");
-//		}
-//
-//		return parameters;
+
+		//		Map parameters = new HashMap(multipartHandler.getAllElements().size() + request.getParameterMap().size());
+		//		
+		//
+		//		if(request instanceof MultipartRequestWrapper)
+		//		{
+		//			parameters.putAll(multipartHandler.getAllElements());
+		//		}
+		//		else
+		//		{
+		//			parameters.putAll(request.getParameterMap());
+		//			//log.debug("Gathering multipart parameters for unwrapped request");
+		//		}
+		//
+		//		return parameters;
 	}
 
 	private static MultipartRequestHandler getMultipartHandler(HttpServletRequest request)

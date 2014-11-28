@@ -28,7 +28,6 @@ package strutter.htmlparser.util;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-import strutter.htmlparser.nodes.AbstractNode;
 import strutter.htmlparser.nodes.Node;
 
 public class NodeList implements Serializable
@@ -52,7 +51,9 @@ public class NodeList implements Serializable
 	public void add(Node node)
 	{
 		if(size == capacity)
+		{
 			adjustVectorCapacity();
+		}
 		nodeData[size++] = node;
 	}
 
@@ -63,7 +64,9 @@ public class NodeList implements Serializable
 	public void add(NodeList list)
 	{
 		for(int i = 0; i < list.size; i++)
+		{
 			add(list.nodeData[i]);
+		}
 	}
 
 	/**
@@ -73,7 +76,9 @@ public class NodeList implements Serializable
 	public void prepend(Node node)
 	{
 		if(size == capacity)
+		{
 			adjustVectorCapacity();
+		}
 		System.arraycopy(nodeData, 0, nodeData, 1, size);
 		size++;
 		nodeData[0] = node;
@@ -109,11 +114,13 @@ public class NodeList implements Serializable
 		{
 			int count = 0;
 
+			@Override
 			public boolean hasMoreNodes()
 			{
 				return count < size;
 			}
 
+			@Override
 			public Node nextNode()
 			{
 				synchronized(NodeList.this)
@@ -152,7 +159,9 @@ public class NodeList implements Serializable
 
 		ret = new StringBuffer();
 		for(int i = 0; i < size; i++)
+		{
 			ret.append(nodeData[i].toHtml(verbatim));
+		}
 
 		return(ret.toString());
 	}
@@ -202,8 +211,12 @@ public class NodeList implements Serializable
 
 		ret = -1;
 		for(int i = 0; (i < size) && (-1 == ret); i++)
+		{
 			if(nodeData[i].equals(node))
+			{
 				ret = i;
+			}
+		}
 
 		return(ret);
 	}
@@ -213,13 +226,16 @@ public class NodeList implements Serializable
 	 * Suitable for debugging.
 	 * @return A string representation of the list. 
 	 */
+	@Override
 	public String toString()
 	{
 		StringBuffer ret;
 
 		ret = new StringBuffer();
 		for(int i = 0; i < size; i++)
+		{
 			ret.append(nodeData[i]);
+		}
 
 		return(ret.toString());
 	}
@@ -255,12 +271,16 @@ public class NodeList implements Serializable
 		{
 			node = nodeData[i];
 			if(accept(node, clazz))
+			{
 				ret.add(node);
+			}
 			if(recursive)
 			{
 				children = node.getChildren();
 				if(null != children)
+				{
 					ret.add(children.extractAllNodesThatMatchClass(clazz, recursive));
+				}
 			}
 		}
 

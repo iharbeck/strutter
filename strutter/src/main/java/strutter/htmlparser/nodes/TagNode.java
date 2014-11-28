@@ -138,9 +138,13 @@ public class TagNode extends AbstractNode
 
 			names = getIds();
 			if((null != names) && (0 != names.length))
+			{
 				setTagName(names[0]);
+			}
 			else
+			{
 				setTagName(""); // make sure it's not null
+			}
 		}
 	}
 
@@ -170,7 +174,9 @@ public class TagNode extends AbstractNode
 
 		attribute = getAttributeEx(name);
 		if(null != attribute)
+		{
 			ret = attribute.getValue();
+		}
 
 		return(ret);
 	}
@@ -198,24 +204,36 @@ public class TagNode extends AbstractNode
 		singleq = true;
 		doubleq = true;
 		if(null != value)
+		{
 			for(int i = 0; i < value.length(); i++)
 			{
 				ch = value.charAt(i);
 				if(Character.isWhitespace(ch))
+				{
 					needed = true;
+				}
 				else if('\'' == ch)
+				{
 					singleq = false;
+				}
 				else if('"' == ch)
+				{
 					doubleq = false;
+				}
 			}
+		}
 
 		// now apply quoting
 		if(needed)
 		{
 			if(doubleq)
+			{
 				quote = '"';
+			}
 			else if(singleq)
+			{
 				quote = '\'';
+			}
 			else
 			{
 				// uh-oh, we need to convert some quotes into character references
@@ -228,24 +246,34 @@ public class TagNode extends AbstractNode
 				{
 					ch = value.charAt(i);
 					if(quote == ch)
+					{
 						buffer.append(ref);
+					}
 					else
+					{
 						buffer.append(ch);
+					}
 				}
 				value = buffer.toString();
 			}
 		}
 		else
+		{
 			quote = 0;
+		}
 		attribute = getAttributeEx(key);
 		if(null != attribute)
 		{ // see if we can splice it in rather than replace it
 			attribute.setValue(value);
 			if(0 != quote)
+			{
 				attribute.setQuote(quote);
+			}
 		}
 		else
+		{
 			setAttribute(key, value, quote);
+		}
 	}
 
 	/**
@@ -258,7 +286,9 @@ public class TagNode extends AbstractNode
 
 		attribute = getAttributeEx(key);
 		if(null != attribute)
+		{
 			getAttributesEx().remove(attribute);
+		}
 	}
 
 	/**
@@ -347,11 +377,13 @@ public class TagNode extends AbstractNode
 				test = attributes.elementAt(i);
 				test_name = test.getName();
 				if(null != test_name)
+				{
 					if(test_name.equalsIgnoreCase(name))
 					{
 						attributes.setElementAt(attribute, i);
 						replaced = true;
 					}
+				}
 			}
 			// see bug #1761484 tag.setAttribute() not compatible with <tag/>
 			if(!replaced)
@@ -383,7 +415,9 @@ public class TagNode extends AbstractNode
 						length++;
 						// need to insert whitespace if there is a value and it's not quoted
 						if((null != attribute.getValue()) && (0 == attribute.getQuote()))
+						{
 							attributes.insertElementAt(new NodeAttribute(" "), length - 1);
+						}
 						replaced = true;
 					}
 				}
@@ -393,7 +427,9 @@ public class TagNode extends AbstractNode
 		{
 			// add whitespace between attributes
 			if((0 != length) && !(attributes.elementAt(length - 1)).isWhitespace())
+			{
 				attributes.addElement(new NodeAttribute(" "));
+			}
 			attributes.addElement(attribute);
 		}
 	}
@@ -431,9 +467,13 @@ public class TagNode extends AbstractNode
 		{
 			ret = ret.toUpperCase(Locale.ENGLISH);
 			if(ret.startsWith("/"))
+			{
 				ret = ret.substring(1);
+			}
 			if(ret.endsWith("/"))
+			{
 				ret = ret.substring(0, ret.length() - 1);
+			}
 		}
 
 		return(ret);
@@ -453,7 +493,9 @@ public class TagNode extends AbstractNode
 
 		attributes = getAttributesEx();
 		if(0 != attributes.size())
+		{
 			ret = (attributes.elementAt(0)).getName();
+		}
 
 		return(ret);
 	}
@@ -478,16 +520,22 @@ public class TagNode extends AbstractNode
 			setAttributesEx(attributes);
 		}
 		if(0 == attributes.size())
+		{
 			// nothing added yet
 			attributes.addElement(attribute);
+		}
 		else
 		{
 			zeroth = attributes.elementAt(0);
 			// check for attribute that looks like a name
 			if((null == zeroth.getValue()) && (0 == zeroth.getQuote()))
+			{
 				attributes.setElementAt(attribute, 0);
+			}
 			else
+			{
 				attributes.insertElementAt(attribute, 0);
+			}
 		}
 	}
 
@@ -495,6 +543,7 @@ public class TagNode extends AbstractNode
 	 * Return the text contained in this tag.
 	 * @return The complete contents of the tag (within the angle brackets).
 	 */
+	@Override
 	public String getText()
 	{
 		String ret;
@@ -557,6 +606,7 @@ public class TagNode extends AbstractNode
 	 * Parses the given text to create the tag contents.
 	 * @param text A string of the form &lt;TAGNAME xx="yy"&gt;.
 	 */
+	@Override
 	public void setText(String text)
 	{
 		Lexer lexer;
@@ -582,6 +632,7 @@ public class TagNode extends AbstractNode
 	 * @return An empty string (tag contents do not display in a browser).
 	 * If you want this tags HTML equivalent, use {@link #toHtml toHtml()}.
 	 */
+	@Override
 	public String toPlainTextString()
 	{
 		return("");
@@ -595,6 +646,7 @@ public class TagNode extends AbstractNode
 	 * @return The tag as an HTML fragment.
 	 * @see strutter.htmlparser.nodes.Node#toHtml()
 	 */
+	@Override
 	public String toHtml(boolean verbatim)
 	{
 		return(toTagHtml());
@@ -639,6 +691,7 @@ public class TagNode extends AbstractNode
 	 * Print the contents of the tag.
 	 * @return An string describing the tag. For text that looks like HTML use #toHtml().
 	 */
+	@Override
 	public String toString()
 	{
 		String text;
@@ -650,9 +703,13 @@ public class TagNode extends AbstractNode
 		text = getText();
 		ret = new StringBuffer(20 + text.length());
 		if(isEndTag())
+		{
 			type = "End";
+		}
 		else
+		{
 			type = "Tag";
+		}
 		start = new Cursor(getPage(), getStartPosition());
 		end = new Cursor(getPage(), getEndPosition());
 		ret.append(type);
@@ -668,7 +725,9 @@ public class TagNode extends AbstractNode
 			ret.append("...");
 		}
 		else
+		{
 			ret.append(text);
+		}
 
 		return(ret.toString());
 	}
@@ -740,12 +799,16 @@ public class TagNode extends AbstractNode
 				length = name.length();
 				value = attribute.getValue();
 				if(null == value)
+				{
 					if(name.charAt(length - 1) == '/')
 					{
 						// already exists, remove if requested
 						if(!emptyXmlTag)
+						{
 							if(1 == length)
+							{
 								attributes.removeElementAt(size - 1);
+							}
 							else
 							{
 								// this shouldn't happen, but covers the case
@@ -756,6 +819,7 @@ public class TagNode extends AbstractNode
 								attributes.removeElementAt(size - 1);
 								attributes.addElement(attribute);
 							}
+						}
 					}
 					else
 					{
@@ -768,6 +832,7 @@ public class TagNode extends AbstractNode
 							attributes.addElement(attribute);
 						}
 					}
+				}
 				else
 				{
 					// some valued attribute, add whitespace + slash if requested

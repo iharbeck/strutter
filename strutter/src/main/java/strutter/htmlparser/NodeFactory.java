@@ -159,8 +159,10 @@ public class NodeFactory
 		String[] ids;
 
 		ids = tag.getIds();
-		for(int i = 0; i < ids.length; i++)
-			put(ids[i].toUpperCase(Locale.ENGLISH), tag);
+		for(String id : ids)
+		{
+			put(id.toUpperCase(Locale.ENGLISH), tag);
+		}
 	}
 
 	/**
@@ -183,9 +185,13 @@ public class NodeFactory
 	public void setTextPrototype(TextNode text)
 	{
 		if(null == text)
+		{
 			mText = new TextNode(null, 0, 0);
+		}
 		else
+		{
 			mText = text;
+		}
 	}
 
 	/**
@@ -208,9 +214,13 @@ public class NodeFactory
 	public void setRemarkPrototype(RemarkNode remark)
 	{
 		if(null == remark)
+		{
 			mRemark = new RemarkNode(null, 0, 0);
+		}
 		else
+		{
 			mRemark = remark;
+		}
 	}
 
 	/**
@@ -314,7 +324,9 @@ public class NodeFactory
 					if(!id.startsWith("/"))
 					{
 						if(id.endsWith("/"))
+						{
 							id = id.substring(0, id.length() - 1);
+						}
 						prototype = mBlastocyst.get(id);
 						if(null != prototype)
 						{

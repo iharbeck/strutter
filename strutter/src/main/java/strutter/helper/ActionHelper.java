@@ -54,6 +54,7 @@ public class ActionHelper
 
 	private static class ThreadLocalActionHelper extends InheritableThreadLocal
 	{
+		@Override
 		public Object initialValue()
 		{
 			return new ActionHelperData();
@@ -67,10 +68,12 @@ public class ActionHelper
 		WebContext ctx = WebContextFactory.get();
 
 		if(ctx == null)
+		{
 			return;
+		}
 
 		clear();
-    
+
 		try
 		{
 			ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
@@ -79,20 +82,22 @@ public class ActionHelper
 		{
 		}
 	}
-	
+
 	private static void clear()
 	{
 		helper.set(null);
 		helper.remove();
 	}
-	
+
 	private static final ActionHelperData me()
 	{
 		ActionHelperData data = (ActionHelperData)helper.get();
 
 		if(!data.isInitialized())
+		{
 			System.out.println("DWR init missing");
-			
+		}
+
 		return data;
 	}
 
@@ -135,11 +140,11 @@ public class ActionHelper
 		}
 	}
 
-//	public final boolean hasObject(String name)
-//	{
-//		Object form = Utils.getActionForm(me().getRequest());
-//		return(TagHelper.getFormObject(form, name) != null);
-//	}
+	//	public final boolean hasObject(String name)
+	//	{
+	//		Object form = Utils.getActionForm(me().getRequest());
+	//		return(TagHelper.getFormObject(form, name) != null);
+	//	}
 
 	public final static Object getObject(String name)
 	{
@@ -158,7 +163,9 @@ public class ActionHelper
 		Object form = Utils.getActionFormFromSession(me().getRequest());
 
 		if(form == null)
+		{
 			throw new Exception("FormularClass not defined use FormlessInterface");
+		}
 
 		return form;
 	}
@@ -255,10 +262,12 @@ public class ActionHelper
 	public static ActionHelperData init(ServletContext servletcontext, HttpServletRequest request, HttpServletResponse response) throws IOException
 	{
 		if(ActionHelper.servletcontext == null)
+		{
 			ActionHelper.servletcontext = servletcontext;
+		}
 
 		ActionHelperData me = (ActionHelperData)helper.get();
-		
+
 		me.plusThreadcount();
 		// System.out.println("up:" + me.threadcount + " " +
 		// request.getRequestURI());
@@ -270,7 +279,9 @@ public class ActionHelper
 		me.setLocale((Locale)request.getSession().getAttribute(Globals.LOCALE_KEY));
 
 		if(me.getLocale() == null)
+		{
 			me.setLocale(request.getLocale());
+		}
 
 		me.setErrormsgs(getMsg(request, Globals.ERROR_KEY));
 		me.setInfomsgs(getMsg(request, Globals.MESSAGE_KEY));
@@ -347,7 +358,7 @@ public class ActionHelper
 	{
 		return me().isInitialized();
 	}
-	
+
 	public static ActionHelperData getActionHelperData()
 	{
 		return me();
@@ -368,9 +379,13 @@ public class ActionHelper
 		ActionMapping mapping;
 
 		if(action == null)
+		{
 			mapping = ActionHelper.getActionMapping();
+		}
 		else
+		{
 			mapping = ActionHelper.getActionMapping(action);
+		}
 
 		String path = mapping.getPath() + ".do?" + mapping.getParameter() + "=" + actionmethod;
 		return new ActionForward(path, true);
@@ -390,15 +405,19 @@ public class ActionHelper
 	public static ActionForward findForward(String forward) throws ServletException
 	{
 		ActionMapping mapping = getMapping();
-		
+
 		if(mapping == null)
+		{
 			return new ActionForward(forward);
-		
+		}
+
 		ActionForward f = mapping.findForward(forward);
-		
+
 		if(f == null)
+		{
 			throw new ServletException("missing forward: " + forward);
-		
+		}
+
 		return f;
 	}
 
@@ -413,7 +432,9 @@ public class ActionHelper
 		ModuleConfig mConfig = (ModuleConfig)servletcontext.getAttribute(Globals.MODULE_KEY);
 
 		if(mConfig != null)
+		{
 			return (ActionMapping)mConfig.findActionConfig(actionname);
+		}
 
 		return null;
 	}
@@ -444,20 +465,20 @@ public class ActionHelper
 			addErrors();
 			addMessages();
 
-/*			if(me().getMapping() instanceof ActionMappingExtended)
-			{
-				for(int i = 0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
-				{
-					ActionInterceptorInterface interceptor = (ActionInterceptorInterface)((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
-					ActionForward forward = interceptor.afterMethod();
+			/*			if(me().getMapping() instanceof ActionMappingExtended)
+						{
+							for(int i = 0; i < ((ActionMappingExtended)me().getMapping()).getInterceptors().size(); i++)
+							{
+								ActionInterceptorInterface interceptor = (ActionInterceptorInterface)((ActionMappingExtended)me().getMapping()).getInterceptors().get(i);
+								ActionForward forward = interceptor.afterMethod();
 
-					if(forward != null)
-					{
-						return forward;
-					}
-				}
-			}
-*/
+								if(forward != null)
+								{
+									return forward;
+								}
+							}
+						}
+			*/
 		}
 		finally
 		{
@@ -471,7 +492,9 @@ public class ActionHelper
 		ActionMessages errors = data.getErrormsgs();
 
 		if(errors == null || errors.size() == 0)
+		{
 			return;
+		}
 
 		HttpServletRequest request = data.getRequest();
 
@@ -486,7 +509,9 @@ public class ActionHelper
 		try
 		{
 			if(requestErrors != errors)
+			{
 				requestErrors.add(errors);
+			}
 		}
 		catch(Exception e)
 		{
@@ -516,17 +541,21 @@ public class ActionHelper
 		MessageResources resources = (UniversalMessageResources)me().getRequest().getAttribute(Globals.MESSAGES_KEY);
 
 		if(resources instanceof UniversalMessageResources)
+		{
 			((UniversalMessageResources)resources).reload();
+		}
 	}
 
 	protected static void addMessages()
 	{
 		ActionHelperData data = me();
-		
+
 		ActionMessages messages = data.getInfomsgs();
 
 		if(messages == null || messages.size() == 0)
+		{
 			return;
+		}
 
 		HttpServletRequest request = data.getRequest();
 
@@ -541,7 +570,9 @@ public class ActionHelper
 		try
 		{
 			if(requestMessages != messages)
+			{
 				requestMessages.add(messages);
+			}
 		}
 		catch(Exception e)
 		{
@@ -625,21 +656,27 @@ public class ActionHelper
 	public static void validate(boolean condition, String property, String alias)
 	{
 		if(condition)
+		{
 			addError(property, alias);
+		}
 	}
 
 	public static void validate(boolean condition, String alias)
 	{
 		if(condition)
+		{
 			addError(alias);
+		}
 	}
 
 	public static void setLocale(String language)
 	{
 		Locale locale = new Locale(language);
 		if(language != null)
+		{
 			getSession().setAttribute(Globals.LOCALE_KEY, locale);
-		
+		}
+
 		me().setLocale(locale);
 	}
 
@@ -693,27 +730,35 @@ public class ActionHelper
 	public static boolean isWSAction()
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)
+		{
 			return ((ActionMappingExtended)ActionHelper.getMapping()).isWsaction();
+		}
 		return false;
 	}
 
 	public static boolean isRemoteAction()
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)
+		{
 			return ((ActionMappingExtended)ActionHelper.getMapping()).isRemoteaction();
+		}
 		return false;
 	}
 
 	public static boolean isHeading()
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)
+		{
 			return ((ActionMappingExtended)ActionHelper.getMapping()).isHeading();
+		}
 		return true;
 	}
 
 	public static void setHeading(boolean heading)
 	{
 		if(ActionHelper.getMapping() instanceof ActionMappingExtended)
+		{
 			((ActionMappingExtended)ActionHelper.getMapping()).setHeading(heading);
+		}
 	}
 }
