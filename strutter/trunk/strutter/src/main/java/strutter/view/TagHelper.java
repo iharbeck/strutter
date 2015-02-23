@@ -100,7 +100,7 @@ public class TagHelper
 			ActionMessage msg = (ActionMessage)msgs.next();
 			if(size > 1)
 			{
-				val += "<li>" + resources.getMessage(loc, msg.getKey(), msg.getValues()) + "\n";
+				val += "<li>" + resources.getMessage(loc, msg.getKey(), msg.getValues()) + "</li>\n";
 			}
 			else
 			{
