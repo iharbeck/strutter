@@ -56,9 +56,7 @@ public class SqlHolder
 		System.out.println(filename);
 		System.out.println(clazz.getCanonicalName());
 
-		String filepath = clazz.getResource(filename + ".sql").getPath();
-
-		BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(filepath), "UTF8"));
+		BufferedReader is = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(filename + ".sql"), "UTF8"));
 
 		StringBuffer buf = null;
 
