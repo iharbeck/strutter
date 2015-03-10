@@ -77,6 +77,7 @@ public class ActionHelper
 		try
 		{
 			ActionHelper.init(ctx.getServletContext(), ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
+			ActionHelper.me().minusThreadcount();
 		}
 		catch(Exception e)
 		{
