@@ -106,7 +106,7 @@ public class ActionPlugin implements PlugIn
 		{
 			String[] packages = packageroot.split(",");
 
-			// Package Root für Form Action Klassen
+			// Package Root fï¿½r Form Action Klassen
 			// read all classes from package folder
 			ArrayList list = new ArrayList();
 
@@ -133,6 +133,7 @@ public class ActionPlugin implements PlugIn
 					path = servlet.getServletContext().getRealPath("/WEB-INF/classes");
 				}
 
+				
 				list.addAll(ActionPlugin.getClasses(path, package1));
 			}
 
@@ -239,6 +240,10 @@ public class ActionPlugin implements PlugIn
 				if(name.endsWith(".class"))
 				{
 					String cname = name.substring(0, name.length() - ".class".length());
+					
+					if(cname.contains(".test.") || cname.endsWith("Test") || cname.matches(".*\\.Test[A-Z].*"))
+						continue;
+					
 					list.add(cname);
 				}
 			}
@@ -388,7 +393,7 @@ public class ActionPlugin implements PlugIn
 
 		actionmapping.setInput(action_views + action.getInput());
 
-		// Autopath oder überschrieben
+		// Autopath oder ï¿½berschrieben
 		String path = action.getPath();
 
 		if(isEmpty(path))
