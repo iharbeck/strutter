@@ -4,9 +4,16 @@
 	<groupId>org.ogni</groupId>
 	<artifactId>strutter</artifactId>
 	<packaging>jar</packaging>
-	<version>1.07.016</version>
+	<version>1.07.018</version>
 	
 	<build>
+	
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/java</directory>
+			</resource>
+		</resources>
+	
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
