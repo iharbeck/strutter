@@ -92,9 +92,14 @@ public class ActionHelper
 
 	private static final ActionHelperData me()
 	{
+		return me(false);
+	}
+	
+	private static final ActionHelperData me(boolean silence)
+	{
 		ActionHelperData data = (ActionHelperData)helper.get();
 
-		if(!data.isInitialized())
+		if(!silence && !data.isInitialized())
 		{
 			System.out.println("DWR init missing");
 		}
@@ -357,7 +362,7 @@ public class ActionHelper
 
 	public static boolean isInitialized()
 	{
-		return me().isInitialized();
+		return me(true).isInitialized();
 	}
 
 	public static ActionHelperData getActionHelperData()
