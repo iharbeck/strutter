@@ -4,7 +4,7 @@
 	<groupId>org.ogni</groupId>
 	<artifactId>strutter</artifactId>
 	<packaging>jar</packaging>
-	<version>1.07.018</version>
+	<version>1.07.019</version>
 	
 	<build>
 	
