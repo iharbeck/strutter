@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+    <form-beans/>
+    <global-forwards/>
+   	<action-mappings/>
+
+	<controller contentType="text/html;charset=UTF-8" locale="true" nocache="true"/>
+
+<!--
+	   parameter="ApplicationResources;gawky.database.DB#getConnection():select key, value from translation locale=?"
+
+ -->
+	<message-resources
+	   null="false"
+	   parameter="ApplicationResources;gawky.database.DB#getConnection():select key, value from translation locale=?"
+	   factory="strutter.resource.UniversalMessageResourcesFactory"
+	/>
+
+	<plug-in className="strutter.config.ActionPlugin">
+    	<!--
+    	<set-property property="packageroot"     value="action"/>
+    	<set-property property="aliasaction"  	 value="Action"/>
+    	<set-property property="aliasform"   	 value="ActionForm"/>
+    	<set-property property="aliasview" 		 value="view,list,update,create"/>
+    	<set-property property="pathformat"   	 value="Frm{PATH}"/>
+    	<set-property property="pathlower"    	 value="1"/>
+    	<set-property property="parameter"    	 value="action"/>
+    	<set-property property="scope"        	 value="session"/>
+    	<set-property property="views"        	 value="views"/>
+
+    	<set-property property="encoding"        value="UTF-8"/>
+    	<set-property property="viewer"          value="1"/>
+    	<set-property property="keepalive"       value="1"/>
+    	<set-property property="script"          value="1"/>
+    	<set-property property="template"        value="1"/>
+    	
+    	//TODO add documentation
+    	<set-property property="sessioncheck"    value="1"/>
+    	<set-property property="cookiecheck"     value="1"/>
+    	<set-property property="doctype"         value="1"/>
+    	<set-property property="packageby"       value="layer"/>
+    	-->
+   	</plug-in>
+</struts-config>
