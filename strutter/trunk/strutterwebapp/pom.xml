@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.ogni</groupId>
 			<artifactId>strutter</artifactId>
-			<version>1.07.014</version>
+			<version>1.07.020</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
