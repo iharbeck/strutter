@@ -159,4 +159,13 @@
 		</dependency>
 		
 	</dependencies>
+	
+    <distributionManagement>
+        <repository>
+            <id>public.maven.repository</id>
+            <name>Public Local Repository</name>
+            <url>file:///Users/iharbeck/Documents/workspace/git_maven/</url>
+        </repository>
+    </distributionManagement>
+	
 </project>
