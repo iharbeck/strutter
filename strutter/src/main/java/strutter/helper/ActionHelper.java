@@ -16,18 +16,6 @@
 
 package strutter.helper;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -38,7 +26,6 @@ import org.apache.struts.upload.FormFile;
 import org.apache.struts.util.MessageResources;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
-
 import strutter.Utils;
 import strutter.config.ActionMappingExtended;
 import strutter.config.tags.ConfigAuthorityInterface;
@@ -46,6 +33,17 @@ import strutter.controller.ConfigWrapper;
 import strutter.interceptor.ActionInterceptorInterface;
 import strutter.resource.UniversalMessageResources;
 import strutter.view.TagHelper;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class ActionHelper
 {
