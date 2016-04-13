@@ -1,14 +1,15 @@
 package strutter.controller;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import javax.servlet.ServletOutputStream;
 //import javax.servlet.WriteListener;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 public class ResponseWrapper extends HttpServletResponseWrapper
 {
@@ -64,9 +65,9 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 				return true;
 			}
 
-			//            public void setWriteListener(WriteListener arg0)
-			//            {
-			//            }
+			// Servlet API 3.1
+			public void setWriteListener(WriteListener writeListener) {
+			}
 		};
 	}
 
@@ -107,4 +108,6 @@ public class ResponseWrapper extends HttpServletResponseWrapper
 		{
 		}
 	}
+
+
 }
