@@ -16,6 +16,12 @@
 
 package strutter.helper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import strutter.config.tags.ConfigWSInterface;
+
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -23,14 +29,6 @@ import java.io.DataOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import strutter.config.tags.ConfigWSInterface;
 
 public class WSActionHelper
 {
@@ -76,7 +74,7 @@ public class WSActionHelper
 		{
 			try
 			{
-				method = bean.getClass().getMethod(name, null);
+				method = bean.getClass().getMethod(name, (Class<?>[]) null);
 			}
 			catch(Exception e)
 			{
@@ -91,7 +89,7 @@ public class WSActionHelper
 
 			try
 			{
-				method.invoke(bean, null);
+				method.invoke(bean, (Object[]) null);
 			}
 			catch(ClassCastException e)
 			{

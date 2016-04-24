@@ -1,15 +1,14 @@
 package strutter.action;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ActionMethodWrapper
 {
@@ -33,7 +32,7 @@ public class ActionMethodWrapper
 			}
 			else
 			{
-				forward = (ActionForward)method.invoke(action, null);
+				forward = (ActionForward)method.invoke(action, (Object[]) null);
 			}
 		}
 		catch(ClassCastException e)
