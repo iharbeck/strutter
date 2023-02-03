@@ -16,14 +16,6 @@
 
 package strutter.config;
 
-import java.io.File;
-import java.lang.reflect.Modifier;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import javax.servlet.ServletException;
-
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionServlet;
@@ -31,16 +23,17 @@ import org.apache.struts.action.PlugIn;
 import org.apache.struts.config.ControllerConfig;
 import org.apache.struts.config.FormBeanConfig;
 import org.apache.struts.config.ModuleConfig;
-
-import strutter.config.tags.ConfigAuthorityInterface;
-import strutter.config.tags.ConfigAutorunInterface;
-import strutter.config.tags.ConfigInterface;
-import strutter.config.tags.ConfigRemotingInterface;
-import strutter.config.tags.ConfigWSInterface;
-import strutter.config.tags.ConfigZeroInterface;
+import strutter.config.tags.*;
 import strutter.controller.RequestProcessorProxy;
 import strutter.helper.ActionHelper;
 import strutter.helper.SqlHolder;
+
+import javax.servlet.ServletException;
+import java.io.File;
+import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ActionPlugin implements PlugIn
 {
@@ -106,7 +99,7 @@ public class ActionPlugin implements PlugIn
 		{
 			String[] packages = packageroot.split(",");
 
-			// Package Root f�r Form Action Klassen
+			// Package Root für Form Action Klassen
 			// read all classes from package folder
 			ArrayList list = new ArrayList();
 
@@ -393,7 +386,7 @@ public class ActionPlugin implements PlugIn
 
 		actionmapping.setInput(action_views + action.getInput());
 
-		// Autopath oder �berschrieben
+		// Autopath oder überschrieben
 		String path = action.getPath();
 
 		if(isEmpty(path))

@@ -16,18 +16,8 @@
 
 package strutter.view.tag;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.struts.util.LabelValueBean;
-
 import strutter.Utils;
 import strutter.htmlparser.nodes.TextNode;
 import strutter.htmlparser.tags.OptionTag;
@@ -35,6 +25,10 @@ import strutter.htmlparser.tags.SelectTag;
 import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 //TODO my own LabelValueBean
 
@@ -102,7 +96,7 @@ public class CSelectTag extends SelectTag
 				// alle optionen ermitteln
 				NodeList list = this.children.extractAllNodesThatMatchClass(OptionTag.class);
 
-				// Alle bestehenden optionen l�schen
+				// Alle bestehenden optionen löschen
 				this.getChildren().removeAll();
 
 				for(int i = 0; i < list.size(); i++)
