@@ -141,7 +141,7 @@ public class CSelectTag extends SelectTag
 					}
 					else
 					{
-						generateOption(optionTag.getChildrenHTML(), optionTag.getValue(), optionTag.getAttribute("class"), optionTag.getAttribute("style"), sellist);
+						generateOption(optionTag.getChildrenHTML(), optionTag.getValue(), optionTag.getAttribute("class"), optionTag.getAttribute("style"), optionTag.getAttribute("disabled"),  sellist);
 					}
 				}
 			}
@@ -155,7 +155,7 @@ public class CSelectTag extends SelectTag
 		}
 	}
 
-	final void generateOption(String text, String value, String clazz, String style, List selected)
+	final void generateOption(String text, String value, String clazz, String style, String disabled, List selected)
 	{
 		OptionTag endTag = new OptionTag();
 		endTag.setTagName("/OPTION");
@@ -194,6 +194,12 @@ public class CSelectTag extends SelectTag
 			option.setAttribute("style", style, '"');
 		}
 
+		if(disabled != null)
+		{
+			option.setAttribute("disabled", disabled, '"');
+		}
+
+
 		option.setChildren(new NodeList());
 		option.getChildren().add(new TextNode(text));
 
@@ -209,7 +215,7 @@ public class CSelectTag extends SelectTag
 			if(list.get(i) instanceof LabelValueBean)
 			{
 				LabelValueBean opt = (LabelValueBean)list.get(i);
-				generateOption(opt.getLabel(), opt.getValue(), null, null, selected);
+				generateOption(opt.getLabel(), opt.getValue(), null, null, null, selected);
 			}
 			else
 			{
@@ -227,12 +233,12 @@ public class CSelectTag extends SelectTag
 			String[] val = value.split(":");
 			if(val.length > 1)
 			{
-				generateOption(val[1], val[0], null, null, selected);
+				generateOption(val[1], val[0], null, null, null, selected);
 				return;
 			}
 		}
 
-		generateOption(value, null, null, null, selected);
+		generateOption(value, null, null, null, null, selected);
 	}
 
 	final void generateOptionFrom(String[] list, List selected, boolean hasvalue) // StringArray
@@ -247,7 +253,7 @@ public class CSelectTag extends SelectTag
 	{
 		for(LabelValueBean element : list)
 		{
-			generateOption(element.getLabel(), element.getValue(), null, null, selected);
+			generateOption(element.getLabel(), element.getValue(), null, null, null, selected);
 		}
 	}
 
@@ -259,7 +265,7 @@ public class CSelectTag extends SelectTag
 		for(Iterator it = key.iterator(); it.hasNext();)
 		{
 			String k = (String)it.next();
-			generateOption((String)list.get(k), k, null, null, selected);
+			generateOption((String)list.get(k), k, null, null, null, selected);
 		}
 	}
 
