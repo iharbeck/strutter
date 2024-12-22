@@ -26,8 +26,8 @@ import strutter.htmlparser.util.NodeList;
 import strutter.htmlparser.util.exception.ParserException;
 import strutter.view.TagHelper;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 
 //TODO my own LabelValueBean

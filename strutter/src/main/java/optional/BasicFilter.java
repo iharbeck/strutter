@@ -22,22 +22,22 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.core.FileItemFactory;
+import org.apache.commons.fileupload2.core.FileUploadException;
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import strutter.config.ActionConfig;
 import strutter.config.ActionPlugin;
 
@@ -92,15 +92,15 @@ public class BasicFilter implements Filter
 
 		System.out.println(">>" + look);
 
-		boolean isMultipart = ServletFileUpload.isMultipartContent((HttpServletRequest)request);
+		boolean isMultipart = JakartaServletFileUpload.isMultipartContent((HttpServletRequest)request);
 
 		try
 		{
 			// Create a factory for disk-based file items
-			FileItemFactory factory = new DiskFileItemFactory();
+			FileItemFactory factory = new DiskFileItemFactory.Builder().get();
 
 			// Create a new file upload handler
-			ServletFileUpload upload = new ServletFileUpload(factory);
+			JakartaServletFileUpload upload = new JakartaServletFileUpload(factory);
 
 			// Parse the request
 			List /* FileItem */items = upload.parseRequest((HttpServletRequest)request);

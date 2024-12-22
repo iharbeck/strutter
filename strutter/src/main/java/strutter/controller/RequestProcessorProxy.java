@@ -11,14 +11,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
@@ -92,7 +92,7 @@ public class RequestProcessorProxy extends RequestProcessor
 
 		if(!(proxy instanceof ComposableRequestProcessor))
 		{
-			log.warn("ActionHelper require subclass of ComposableRequestProcessor");
+			servlet.log("ActionHelper require subclass of ComposableRequestProcessor");
 		}
 
 		CatalogFactory factory = CatalogFactory.getInstance();
@@ -195,7 +195,7 @@ public class RequestProcessorProxy extends RequestProcessor
 				}
 				catch(Exception e)
 				{
-					log.error("WSDispatcher", e);
+					servlet.log("WSDispatcher", e);
 				}
 
 				return;

@@ -1,6 +1,6 @@
 package strutter.view.tag;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 import org.apache.struts.Globals;
 import org.apache.struts.config.ActionConfig;

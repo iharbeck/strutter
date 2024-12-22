@@ -89,10 +89,10 @@ public class UniversalMessageResources extends PropertyMessageResources
 
 		super.loadLocale(localekey);
 
-		if(log.isTraceEnabled())
-		{
-			log.trace("Getting properties from database");
-		}
+		//if(log.isTraceEnabled())
+		//{
+		//	log.trace("Getting properties from database");
+		//}
 
 		Connection conn = null;
 		PreparedStatement ps = null;

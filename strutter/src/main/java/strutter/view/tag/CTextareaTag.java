@@ -16,7 +16,7 @@
 
 package strutter.view.tag;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 import strutter.htmlparser.nodes.TextNode;
 import strutter.htmlparser.tags.TextareaTag;

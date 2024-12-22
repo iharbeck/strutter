@@ -16,13 +16,13 @@
 
 package strutter.action;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.actions.BaseAction;
+import org.apache.struts.extras.actions.BaseAction;
 
 import strutter.Utils;
 import strutter.helper.ActionHelper;

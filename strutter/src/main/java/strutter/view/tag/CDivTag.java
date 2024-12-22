@@ -16,8 +16,8 @@
 
 package strutter.view.tag;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import strutter.Utils;
 import strutter.helper.ActionHelper;

@@ -28,7 +28,7 @@ import strutter.controller.RequestProcessorProxy;
 import strutter.helper.ActionHelper;
 import strutter.helper.SqlHolder;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.io.File;
 import java.lang.reflect.Modifier;
 import java.net.URL;

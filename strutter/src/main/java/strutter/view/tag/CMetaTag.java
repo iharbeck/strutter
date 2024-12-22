@@ -1,6 +1,6 @@
 package strutter.view.tag;
 
-import javax.servlet.ServletRequest;
+import jakarta.servlet.ServletRequest;
 
 import strutter.htmlparser.tags.MetaTag;
 import strutter.htmlparser.util.exception.ParserException;

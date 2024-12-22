@@ -16,8 +16,8 @@
 
 package strutter.interceptor;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForward;
 
