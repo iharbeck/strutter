@@ -1,6 +1,7 @@
 package strutter.helper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.servlet.ServletException;
@@ -83,6 +84,15 @@ public class PopulateHelper
 			tMap.putAll(parameters);
 			tMap.remove("class");
 
+			if(tMap.containsKey("attachment_file"))
+			{
+				List li = (List)tMap.get("attachment_file");
+
+				tMap.put("attachment_file", null);
+
+				if (li != null && li.size() > 0)
+					tMap.put("attachment_file", li.get(0));
+			}
 			//BeanUtil.populateBean(bean, parameters);
 			BeanUtils.populate(bean, tMap);
 		}
